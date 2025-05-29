@@ -18,7 +18,9 @@ your-project/
 ├── CLAUDE.md               # This file (required for Claude Code)
 ├── BMAD-CLAUDE-CODE-GUIDE.md  # Quick reference (optional)
 ├── bmad-agent/             # BMAD Method assets
-│   ├── templates/
+│   ├── templates-claude/   # Enhanced templates for Claude Code
+│   ├── templates/          # Original templates (legacy)
+│   ├── personas-claude/    # Streamlined personas for Claude Code
 │   ├── tasks/
 │   ├── checklists/
 │   └── data/
@@ -339,15 +341,18 @@ Before marking any artifact complete:
 
 ## BMAD Method Reference
 
-### Available Templates
-- `project-brief-tmpl.md`: Initial project vision and goals
-- `prd-tmpl.md`: Product Requirements Document with epics and stories
-- `architecture-tmpl.md`: Technical architecture and system design
-- `front-end-architecture-tmpl.md`: Frontend-specific architecture
-- `front-end-spec-tmpl.md`: UX/UI specifications
-- `story-tmpl.md`: User story format with acceptance criteria
-- `planning-journal-tmpl.md`: Session tracking journal
-- `session-state-tmpl.md`: Current state tracking
+### Available Templates (Enhanced for Claude Code)
+- `templates-claude/project-brief-tmpl.md`: Initial project vision and goals with platform considerations
+- `templates-claude/prd-tmpl.md`: Product Requirements Document with epics, platform economics, and multi-tenant features
+- `templates-claude/architecture-tmpl.md`: Technical architecture and system design (streamlined for Claude Code)
+- `templates-claude/platform-architecture-tmpl.md`: Specialized template for marketplace and multi-tenant platforms
+- `templates-claude/data-architecture-tmpl.md`: Data architecture for complex platforms (Data Architect persona)
+- `templates-claude/front-end-architecture-tmpl.md`: Frontend-specific architecture with modern frameworks
+- `templates-claude/front-end-spec-tmpl.md`: Comprehensive UX/UI specifications with accessibility
+- `templates-claude/story-tmpl.md`: Enhanced user story template with technical guidance
+- `templates-claude/doc-sharding-tmpl.md`: Document organization and sharding plan
+- `templates-claude/planning-journal-tmpl.md`: Session tracking journal
+- `templates-claude/session-state-tmpl.md`: Current state tracking
 
 ### Available Personas (Claude Code Optimized)
 - `analyst.md`: Discovery, brainstorming, research expert
