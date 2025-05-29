@@ -14,6 +14,14 @@ If you are not sure what to do in the Web Agent - try `/help` to get a list of c
 
 After you clone the project to your local machine, you can copy the `bmad-agent` folder to your project root. This will put the templates, checklists, and other assets the local agents will need to use the agents from your IDE instead of the Web Agent. Minimally to build your project you will want the sm.ide.md and dev.ide.md so you can draft and build your project incrementally.
 
+### Claude Code (VS Code) Setup
+
+If you're using Claude Code in VS Code, copy these additional files to your project root:
+1. `CLAUDE.md` - Enables Claude Code to understand and use the BMAD Method
+2. `BMAD-CLAUDE-CODE-GUIDE.md` - Quick reference for BMAD workflows (optional but recommended)
+
+This allows Claude Code to guide you through the complete BMAD workflow using the templates and checklists.
+
 Here are the more [Setup and Usage Instructions](./docs/instruction.md) for IDE, WEB and Task setup.
 
 Starting with the latest version of the BMad Agents for the BMad Method is very easy - all you need to do is copy `bmad-agent` folder to your project. The dedicated dev and sm that existing in previous versions are still available and are in the `bmad-agent/personas` folder with the .ide.md extension. Copy and paste the contents into your specific IDE's method of configuring a custom agent mode. The dev and sm both are configured for architecture and prd artifacts to be in (project-root)/docs and stories will be generated and developed in/from your (project-root)/docs/stories.
