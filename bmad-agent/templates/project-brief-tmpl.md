@@ -1,51 +1,51 @@
-# Project Brief: {Project Name}
+# Project Brief: [Project Name]
 
-## Introduction / Problem Statement
+## Vision Statement
+[What is the transformative vision for this project? What change will it bring to the world?]
 
-{Describe the core idea, the problem being solved, or the opportunity being addressed. Why is this project needed?}
+## Problem Statement
+[What specific problem are we solving? Who experiences this problem and why does it matter?]
 
-## Vision & Goals
+## Target Users
+[Who are the primary users? What are their needs, contexts, and constraints?]
 
-- **Vision:** {Describe the high-level desired future state or impact of this project.}
-- **Primary Goals:** {List 2-5 specific, measurable, achievable, relevant, time-bound (SMART) goals for the Minimum Viable Product (MVP).}
-  - Goal 1: ...
-  - Goal 2: ...
-- **Success Metrics (Initial Ideas):** {How will we measure if the project/MVP is successful? List potential KPIs.}
+## Core Value Proposition
+[What unique value does this solution provide? Why would users choose this over alternatives?]
 
-## Target Audience / Users
+## Domain Context
+[What domain-specific knowledge or regulations apply? Industry standards, compliance requirements, or specialized terminology?]
 
-{Describe the primary users of this product/system. Who are they? What are their key characteristics or needs relevant to this project?}
+## Success Metrics
+[How will we measure success? What are the key performance indicators?]
 
-## Key Features / Scope (High-Level Ideas for MVP)
+## Technical Considerations
 
-{List the core functionalities or features envisioned for the MVP. Keep this high-level; details will go in the PRD/Epics.}
+### Development Philosophy
+[What principles will guide technical decisions? Examples: Developer experience, maintainability, performance, accessibility]
 
-- Feature Idea 1: ...
-- Feature Idea 2: ...
-- Feature Idea N: ...
+### Deployment Context
+- **Scale**: [Single instance, multi-tenant, global distribution?]
+- **Users**: [Concurrent users, geographic distribution, usage patterns]
+- **Environment**: [Cloud, on-premise, hybrid, edge?]
+- **Constraints**: [Budget, timeline, regulatory, technical debt]
 
-## Post MVP Features / Scope and Ideas
+### Integration Landscape
+[What external systems, APIs, or services will this integrate with?]
 
-{List the core functionalities or features envisioned as potential for POST MVP. Keep this high-level; details will go in the PRD/Epics/Architecture.}
+## Project Constraints
+- **Timeline**: [Key milestones and deadlines]
+- **Budget**: [Resource constraints and trade-offs]
+- **Team**: [Available skills and capacity]
+- **Technical**: [Existing systems, migration needs, platform limitations]
 
-- Feature Idea 1: ...
-- Feature Idea 2: ...
-- Feature Idea N: ...
+## Risk Factors
+[What could prevent success? Technical, business, or organizational risks?]
 
-## Known Technical Constraints or Preferences
+## Out of Scope
+[What are we explicitly NOT doing in this project?]
 
-- **Constraints:** {List any known limitations and technical mandates or preferences - e.g., budget, timeline, specific technology mandates, required integrations, compliance needs.}
-- **Initial Architectural Preferences (if any):** {Capture any early thoughts or strong preferences regarding repository structure (e.g., monorepo, polyrepo) and overall service architecture (e.g., monolith, microservices, serverless components). This is not a final decision point but for initial awareness.}
-- **Risks:** {Identify potential risks - e.g., technical challenges, resource availability, market acceptance, dependencies.}
-- **User Preferences:** {Any specific requests from the user that are not a high level feature that could direct technology or library choices, or anything else that came up in the brainstorming or drafting of the PRD that is not included in prior document sections}
+## Open Questions
+[What key decisions or unknowns need to be resolved?]
 
-## Relevant Research (Optional)
-
-{Link to or summarize findings from any initial research conducted (e.g., `deep-research-report-BA.md`).}
-
-## PM Prompt
-
-This Project Brief provides the full context for {Project Name}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section 1 at a time, asking for any necessary clarification or suggesting improvements as your mode 1 programming allows.
-
-<example_handoff_prompt>
-This Project Brief provides the full context for Mealmate. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section 1 at a time, asking for any necessary clarification or suggesting improvements as your mode 1 programming allows.</example_handoff_prompt>
+---
+*This brief serves as the north star for all project decisions. It should be referenced throughout development to ensure alignment with the original vision.*

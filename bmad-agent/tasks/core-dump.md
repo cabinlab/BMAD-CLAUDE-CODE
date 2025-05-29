@@ -1,74 +1,121 @@
-# Core Dump Task
+# Task: Session Memory Core Dump
 
-## Purpose
+**Persona**: Orchestrator  
+**Phase**: Session Management  
+**Prerequisites**: Active session with completed work
 
-To create a concise memory recording file (`.ai/core-dump-n.md`) that captures the essential context of the current agent session, enabling seamless continuation of work in future agent sessions. This task ensures persistent context across agent conversations while maintaining minimal token usage for efficient context loading.
+## Objective
+Create persistent session memory that enables seamless continuation of work across Claude Code sessions.
 
-## Inputs for this Task
+## Process
 
-- Current session conversation history and accomplishments
-- Files created, modified, or deleted during the session
-- Key decisions made and procedures followed
-- Current project state and next logical steps
-- User requests and agent responses that shaped the session
+### 1. Session Assessment
+- [ ] Review current session accomplishments
+- [ ] Identify key decisions made during session
+- [ ] Document current project state and phase
+- [ ] Note any blocking issues or dependencies
 
-## Task Execution Instructions
+### 2. Context Capture
+- [ ] Document files created, modified, or deleted
+- [ ] Record important conversations and decisions
+- [ ] Capture current persona state and handoffs
+- [ ] Note any changes to project direction or scope
 
-### 0. Check Existing Core Dump
+### 3. Progress Documentation
+- [ ] List completed tasks and deliverables
+- [ ] Document work in progress with current status
+- [ ] Identify next logical steps and priorities
+- [ ] Note any assumptions or constraints discovered
 
-Before proceeding, check if `.ai/core-dump.md` already exists:
+### 4. State Preservation
+- [ ] Record current position in BMAD workflow
+- [ ] Document active stories or epics being worked
+- [ ] Capture technical decisions and their rationale
+- [ ] Note stakeholder feedback or approvals received
 
-- If file exists, ask user: "Core dump file exists. Should I: 1. Overwrite, 2. Update, 3. Append or 4. Create new?"
-- **Overwrite**: Replace entire file with new content
-- **Update**: Merge new session info with existing content, updating relevant sections
-- **Append**: Add new session as a separate entry while preserving existing content
-- **Create New**: Create a new file, appending the next possible -# to the file, such as core-dump-3.md if 1 and 2 already exist.
-- If file doesn't exist, proceed with creation of `core-dump-1.md`
+### 5. Future Session Preparation
+- [ ] Identify what needs to be done next session
+- [ ] Document any context the next session will need
+- [ ] Note any files or information to review first
+- [ ] Capture any specific user preferences or constraints
 
-### 1. Analyze Session Context
+## Core Dump Structure
 
-- Review the entire conversation to identify key accomplishments
-- Note any specific tasks, procedures, or workflows that were executed
-- Identify important decisions made or problems solved
-- Capture the user's working style and preferences observed during the session
+### Session Summary
+- [ ] Session date and duration
+- [ ] Primary persona(s) used during session
+- [ ] Main objectives and outcomes
+- [ ] Key accomplishments and deliverables
 
-### 2. Document What Was Accomplished
+### Project State
+- [ ] Current BMAD phase (Discovery, Design, Implementation)
+- [ ] Active epic and story status
+- [ ] Recent changes to scope or direction
+- [ ] Current blockers or dependencies
 
-- **Primary Actions**: List the main tasks completed concisely
-- **Story Progress**: For story work, use format "Tasks Complete: 1-6, 8. Next Task Pending: 7, 9"
-- **Problem Solving**: Document any challenges encountered and how they were resolved
-- **User Communications**: Summarize key user requests, preferences, and discussion points
+### File Changes
+- [ ] New files created with purpose
+- [ ] Modified files with key changes
+- [ ] Deleted files with rationale
+- [ ] Important configuration or setup changes
 
-### 3. Record File System Changes (Concise Format)
+### Key Decisions
+- [ ] Technical decisions made with rationale
+- [ ] Scope or priority changes with approval
+- [ ] Architecture or design choices
+- [ ] Process or workflow adjustments
 
-- **Files Created**: `filename.ext` (brief purpose/size)
-- **Files Modified**: `filename.ext` (what changed)
-- **Files Deleted**: `filename.ext` (why removed)
-- Focus on essential details, avoid verbose descriptions
+### Next Session Plan
+- [ ] Immediate next steps to take
+- [ ] Files to review or reference
+- [ ] Personas to engage first
+- [ ] Outstanding questions or decisions needed
 
-### 4. Capture Current Project State
+### Context Notes
+- [ ] Important user preferences or constraints
+- [ ] Domain-specific knowledge discovered
+- [ ] External dependencies or integrations
+- [ ] Quality standards or requirements noted
 
-- **Project Progress**: Where the project stands after this session
-- **Current Issues**: Any blockers or problems that need resolution
-- **Next Logical Steps**: What would be the natural next actions to take
+## Memory Optimization
 
-### 5. Create/Update Core Dump File
+### Essential Information
+- [ ] Critical for project continuity
+- [ ] Recent and relevant decisions
+- [ ] Active work status and blockers
+- [ ] User-specific preferences
 
-Based on user's choice from step 0, handle the file accordingly:
+### Condensed Format
+- [ ] Bullet points over paragraphs
+- [ ] Links to files rather than full content
+- [ ] Key decisions with brief rationale
+- [ ] Current state without full history
 
-### 6. Optimize for Minimal Context
+### Reference Links
+- [ ] Point to detailed documentation
+- [ ] Link to specific sections in large files
+- [ ] Reference external resources
+- [ ] Include file paths for easy access
 
-- Keep descriptions concise but informative
-- Use abbreviated formats where possible (file sizes, task numbers)
-- Focus on actionable information rather than detailed explanations
-- Avoid redundant information that can be found in project documentation
-- Prioritize information that would be lost without this recording
-- Ensure the file can be quickly scanned and understood
+## Deliverables
+- Session state file using `session-state-tmpl.md`
+- Core dump with essential context for next session
+- File change log with rationale
+- Next session preparation notes
 
-### 7. Validate Completeness
+## Quality Validation
+- [ ] Contains essential information for continuity
+- [ ] Concise enough for efficient loading
+- [ ] References detailed docs rather than duplicating
+- [ ] Clear action items for next session
 
-- Verify all significant session activities are captured
-- Ensure a future agent could understand the current state
-- Check that file changes are accurately recorded
-- Confirm next steps are clear and actionable
-- Verify user communication style and preferences are noted
+## Handoff Process
+Session end → Core dump creation for future session continuity
+Project milestones → Enhanced documentation in planning journal
+Major decisions → Update to relevant project documentation
+
+## Notes
+- Keep core dump concise but comprehensive
+- Focus on actionable information for next session
+- Link to detailed documentation rather than duplicating
+- Update regularly during long sessions to capture progress

@@ -1,102 +1,262 @@
-# Document Sharding Plan Template
+# Documentation Organization: [Project Name]
 
-This plan directs the agent on how to break down large source documents into smaller, granular files during its Librarian Phase. The agent will refer to this plan to identify source documents, the specific sections to extract, and the target filenames for the sharded content.
+## Documentation Structure
+
+```
+docs/
+├── index.md                    # Project hub and navigation
+├── project-brief.md           # Vision and goals
+├── prd.md                     # Product requirements
+├── architecture/
+│   ├── overview.md            # System architecture
+│   ├── frontend.md            # Frontend architecture
+│   ├── backend.md             # Backend architecture
+│   ├── data.md                # Data architecture
+│   ├── infrastructure.md      # Deployment architecture
+│   └── decisions/             # Architecture Decision Records
+│       ├── adr-001-xxx.md
+│       └── adr-002-xxx.md
+├── design/
+│   ├── design-system.md       # Visual design system
+│   ├── ux-patterns.md         # UX patterns and flows
+│   └── mockups/               # Design files/links
+├── api/
+│   ├── overview.md            # API design principles
+│   ├── reference/             # Endpoint documentation
+│   │   ├── auth.md
+│   │   ├── users.md
+│   │   └── [domain].md
+│   └── examples.md            # Usage examples
+├── development/
+│   ├── setup.md               # Developer setup guide
+│   ├── conventions.md         # Code conventions
+│   ├── testing.md             # Testing strategy
+│   └── workflows.md           # Development workflows
+├── deployment/
+│   ├── environments.md        # Environment details
+│   ├── ci-cd.md              # Pipeline documentation
+│   ├── monitoring.md          # Observability setup
+│   └── runbooks/              # Operational guides
+├── stories/
+│   ├── epics/
+│   │   ├── epic-001-xxx.md
+│   │   └── epic-002-xxx.md
+│   └── current-sprint/
+│       ├── story-001.md
+│       └── story-002.md
+└── planning/
+    ├── journal.md             # Planning journal
+    ├── sessions/              # Session states
+    │   ├── 2024-01-15.md
+    │   └── 2024-01-16.md
+    └── retrospectives/
+        └── sprint-01.md
+```
+
+## Document Templates
+
+### index.md (Project Hub)
+```markdown
+# [Project Name]
+
+## Quick Links
+- [Vision & Goals](./project-brief.md)
+- [Product Requirements](./prd.md)
+- [Architecture Overview](./architecture/overview.md)
+- [API Documentation](./api/overview.md)
+- [Current Sprint Stories](./stories/current-sprint/)
+
+## Project Status
+- **Phase**: [Current phase]
+- **Sprint**: [Current sprint]
+- **Next Milestone**: [Date and deliverable]
+
+## Getting Started
+- [Developer Setup](./development/setup.md)
+- [Architecture Overview](./architecture/overview.md)
+- [Contribution Guide](./development/workflows.md)
+
+## Key Decisions
+[Link to recent ADRs or important decisions]
+
+## Team Resources
+[Links to team tools, communication channels, etc.]
+```
+
+### Epic Template
+```markdown
+# Epic: [Epic Title]
+
+**Epic ID**: EPIC-001  
+**Status**: [Not Started | In Progress | Complete]  
+**Target Release**: [Version/Date]
+
+## Epic Overview
+[What this epic accomplishes]
+
+## Business Value
+[Why this epic matters]
+
+## Success Criteria
+- [ ] [Measurable outcome]
+- [ ] [Measurable outcome]
+
+## Stories
+| Story ID | Title | Status | Points |
+|----------|-------|--------|--------|
+| STORY-001 | [Title] | [Status] | [Points] |
+| STORY-002 | [Title] | [Status] | [Points] |
+
+## Dependencies
+[Other epics or external dependencies]
+
+## Progress Tracking
+- **Started**: [Date]
+- **Stories Completed**: X of Y
+- **Points Completed**: X of Y
+```
+
+## Document Relationships
+
+### Upstream Documents
+```
+Project Brief
+    └─> PRD
+        └─> Architecture
+            └─> Stories
+```
+
+### Cross-References
+- Stories reference Architecture sections
+- API docs reference Data Architecture
+- Runbooks reference Infrastructure
+- ADRs reference all affected documents
+
+## Sharding Strategy
+
+### When to Split Documents
+
+#### Size Triggers
+- Document exceeds 500 lines
+- Page load time exceeds 2 seconds
+- Multiple teams editing simultaneously
+
+#### Complexity Triggers
+- More than 5 major sections
+- Deep nesting (>3 levels)
+- Mixed audiences (dev/business/ops)
+
+### How to Split
+
+#### By Audience
+- Technical vs Business documentation
+- Internal vs External documentation
+- Role-specific guides
+
+#### By Lifecycle
+- Planning documents (relatively static)
+- Active development docs (frequent updates)
+- Reference docs (versioned)
+
+#### By Component
+- Frontend / Backend / Infrastructure
+- Feature-specific documentation
+- Service-specific documentation
+
+## Naming Conventions
+
+### Files
+- `kebab-case.md` for all markdown files
+- Prefix with numbers for ordering: `01-setup.md`
+- Include ID in stories: `story-001-user-auth.md`
+- Date format for sessions: `YYYY-MM-DD.md`
+
+### Directories
+- Lowercase, no spaces
+- Plural for collections: `stories/`, `runbooks/`
+- Singular for concepts: `architecture/`, `deployment/`
+
+## Linking Strategy
+
+### Internal Links
+- Use relative paths: `../architecture/overview.md`
+- Link to specific sections: `overview.md#deployment`
+- Maintain link integrity when moving files
+
+### External Links
+- Centralize in index.md when possible
+- Include link checker in CI/CD
+- Document external dependencies
+
+## Version Control
+
+### What to Track
+- All markdown files
+- Diagrams as code (Mermaid, PlantUML)
+- Configuration examples
+- Skip generated documentation
+
+### Commit Messages
+- `docs: add API authentication guide`
+- `docs: update architecture for new service`
+- `docs: fix broken links in setup guide`
+
+## Maintenance
+
+### Regular Reviews
+- **Weekly**: Update sprint stories
+- **Sprint End**: Archive completed stories
+- **Monthly**: Review and update architecture
+- **Quarterly**: Audit all documentation
+
+### Deprecation Process
+1. Mark as deprecated with date
+2. Add pointer to replacement
+3. Keep for 2 releases
+4. Archive in `docs/archive/`
+
+### Quality Checks
+- [ ] No broken internal links
+- [ ] All code examples tested
+- [ ] Diagrams match implementation
+- [ ] No sensitive data exposed
+- [ ] Consistent formatting
+
+## Search & Discovery
+
+### Metadata Headers
+```markdown
+---
+title: Component Architecture
+tags: [architecture, backend, microservices]
+updated: 2024-01-15
+author: TeamMember
+---
+```
+
+### Table of Contents
+- Include for documents >100 lines
+- Use tool to auto-generate
+- Keep max 2 levels deep
+
+### Indexing
+- Maintain searchable index.md
+- Use consistent terminology
+- Include glossary for domain terms
+
+## Tools & Automation
+
+### Recommended Tools
+- **Diagrams**: Mermaid, PlantUML
+- **API Docs**: OpenAPI/Swagger
+- **Link Checking**: markdown-link-check
+- **Formatting**: Prettier with markdown
+
+### CI/CD Integration
+- Automated link checking
+- Spell checking
+- Format validation
+- Deploy to documentation site
 
 ---
-
-## 1. Source Document: PRD (Project Requirements Document)
-
-- **Note to Agent:** Confirm the exact filename of the PRD with the user (e.g., `PRD.md`, `ProjectRequirements.md`, `prdx.y.z.md`).
-
-### 1.1. Epic Granulation
-
-- **Instruction:** For each Epic identified within the PRD:
-- **Source Section(s) to Copy:** The complete text for the Epic, including its main description, goals, and all associated user stories or detailed requirements under that Epic. Ensure to capture content starting from a heading like "**Epic X:**" up to the next such heading or end of the "Epic Overview" section.
-- **Target File Pattern:** `docs/epic-<id>.md`
-  - _Agent Note: `<id>` should correspond to the Epic number._
-
----
-
-## 2. Source Document: Main Architecture Document
-
-- **Note to Agent:** Confirm the exact filename with the user (e.g., `architecture.md`, `SystemArchitecture.md`).
-
-### 2.1. Core Architecture Granules
-
-- **Source Section(s) to Copy:** Section(s) detailing "API Reference", "API Endpoints", or "Service Interfaces".
-- **Target File:** `docs/api-reference.md`
-
-- **Source Section(s) to Copy:** Section(s) detailing "Data Models", "Database Schema", "Entity Definitions".
-- **Target File:** `docs/data-models.md`
-
-- **Source Section(s) to Copy:** Section(s) titled "Environment Variables Documentation", "Configuration Settings", "Deployment Parameters", or relevant subsections within "Infrastructure and Deployment Overview" if a dedicated section is not found.
-- **Target File:** `docs/environment-vars.md`
-
-  - _Agent Note: Prioritize a dedicated 'Environment Variables' section or linked 'environment-vars.md' source if available. If not, extract relevant configuration details from 'Infrastructure and Deployment Overview'. This shard is for specific variable definitions and usage._
-
-- **Source Section(s) to Copy:** Section(s) detailing "Project Structure".
-- **Target File:** `docs/project-structure.md`
-
-  - _Agent Note: If the project involves multiple repositories (not a monorepo), ensure this file clearly describes the structure of each relevant repository or links to sub-files if necessary._
-
-- **Source Section(s) to Copy:** Section(s) detailing "Technology Stack", "Key Technologies", "Libraries and Frameworks", or "Definitive Tech Stack Selections".
-- **Target File:** `docs/tech-stack.md`
-
-- **Source Section(s) to Copy:** Sections detailing "Coding Standards", "Development Guidelines", "Best Practices", "Testing Strategy", "Testing Decisions", "QA Processes", "Overall Testing Strategy", "Error Handling Strategy", and "Security Best Practices".
-- **Target File:** `docs/operational-guidelines.md`
-
-  - _Agent Note: This file consolidates several key operational aspects. Ensure that the content from each source section ("Coding Standards", "Testing Strategy", "Error Handling Strategy", "Security Best Practices") is clearly delineated under its own H3 (###) or H4 (####) heading within this document._
-
-- **Source Section(s) to Copy:** Section(s) titled "Component View" (including sub-sections like "Architectural / Design Patterns Adopted").
-- **Target File:** `docs/component-view.md`
-
-- **Source Section(s) to Copy:** Section(s) titled "Core Workflow / Sequence Diagrams" (including all sub-diagrams).
-- **Target File:** `docs/sequence-diagrams.md`
-
-- **Source Section(s) to Copy:** Section(s) titled "Infrastructure and Deployment Overview".
-- **Target File:** `docs/infra-deployment.md`
-
-  - _Agent Note: This is for the broader overview, distinct from the specific `docs/environment-vars.md`._
-
-- **Source Section(s) to Copy:** Section(s) titled "Key Reference Documents".
-- **Target File:** `docs/key-references.md`
-
----
-
-## 3. Source Document(s): Front-End Specific Documentation
-
-- **Note to Agent:** Confirm filenames with the user (e.g., `front-end-architecture.md`, `front-end-spec.md`, `ui-guidelines.md`). Multiple FE documents might exist.
-
-### 3.1. Front-End Granules
-
-- **Source Section(s) to Copy:** Section(s) detailing "Front-End Project Structure" or "Detailed Frontend Directory Structure".
-- **Target File:** `docs/front-end-project-structure.md`
-
-- **Source Section(s) to Copy:** Section(s) detailing "UI Style Guide", "Brand Guidelines", "Visual Design Specifications", or "Styling Approach".
-- **Target File:** `docs/front-end-style-guide.md`
-
-  - _Agent Note: This section might be a sub-section or refer to other documents (e.g., `ui-ux-spec.txt`). Extract the core styling philosophy and approach defined within the frontend architecture document itself._
-
-- **Source Section(s) to Copy:** Section(s) detailing "Component Library", "Reusable UI Components Guide", "Atomic Design Elements", or "Component Breakdown & Implementation Details".
-- **Target File:** `docs/front-end-component-guide.md`
-
-- **Source Section(s) to Copy:** Section(s) detailing "Front-End Coding Standards" (specifically for UI development, e.g., JavaScript/TypeScript style, CSS naming conventions, accessibility best practices for FE).
-- **Target File:** `docs/front-end-coding-standards.md`
-
-  - _Agent Note: A dedicated top-level section for this might not exist. If not found, this shard might be empty or require cross-referencing with the main architecture's coding standards. Extract any front-end-specific coding conventions mentioned._
-
-- **Source Section(s) to Copy:** Section(s) titled "State Management In-Depth".
-- **Target File:** `docs/front-end-state-management.md`
-
-- **Source Section(s) to Copy:** Section(s) titled "API Interaction Layer".
-- **Target File:** `docs/front-end-api-interaction.md`
-
-- **Source Section(s) to Copy:** Section(s) titled "Routing Strategy".
-- **Target File:** `docs/front-end-routing-strategy.md`
-
-- **Source Section(s) to Copy:** Section(s) titled "Frontend Testing Strategy".
-- **Target File:** `docs/front-end-testing-strategy.md`
-
----
-
-CRITICAL: **Index Management:** After creating the files, update `docs/index.md` as needed to reference and describe each doc - do not mention granules or where it was sharded from, just doc purpose - as the index also contains other doc references potentially.
+*This organization structure should evolve with the project. Adjust based on team needs and project complexity.*

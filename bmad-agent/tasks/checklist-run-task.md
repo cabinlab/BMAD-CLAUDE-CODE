@@ -1,135 +1,131 @@
-# Checklist Validation Task
+# Task: Execute Quality Checklist
 
-This task provides instructions for validating documentation against checklists. The agent should follow these instructions to ensure thorough and systematic validation of documents.
+**Persona**: Orchestrator  
+**Phase**: Quality Gate (any phase)  
+**Prerequisites**: Completed deliverable requiring validation
 
-## Context
+## Objective
+Run structured quality validation using BMAD checklists to ensure deliverables meet standards before phase progression.
 
-The BMAD Method uses various checklists to ensure quality and completeness of different artifacts. The mapping between checklists and their required documents is defined in `checklist-mappings`. This allows for easy addition of new checklists without modifying this task.
+## Process
 
-## Instructions
+### 1. Checklist Selection
+- [ ] Identify appropriate checklist for current deliverable
+- [ ] Confirm checklist version and relevance
+- [ ] Review checklist scope and requirements
+- [ ] Prepare any supporting documentation needed
 
-1. **Initial Assessment**
+### 2. Systematic Validation
+- [ ] Work through checklist items sequentially
+- [ ] Validate each item against actual deliverable
+- [ ] Document findings and evidence for each item
+- [ ] Mark items as passed, failed, or not applicable
 
-   - Check `checklist-mappings` for available checklists
-   - If user provides a checklist name:
-     - Look for exact match in checklist-mappings.yml
-     - If no exact match, try fuzzy matching (e.g. "architecture checklist" -> "architect-checklist")
-     - If multiple matches found, ask user to clarify
-     - Once matched, use the checklist_file path from the mapping
-   - If no checklist specified:
-     - Ask the user which checklist they want to use
-     - Present available options from checklist-mappings.yml
-   - Confirm if they want to work through the checklist:
-     - Section by section (interactive mode)
-     - All at once (YOLO mode)
+### 3. Gap Analysis
+- [ ] Identify items that don't meet standards
+- [ ] Assess severity and impact of each gap
+- [ ] Determine if gaps are blockers or can be addressed later
+- [ ] Document specific remediation needed
 
-2. **Document Location**
+### 4. Remediation Planning
+- [ ] Prioritize gaps by importance and effort
+- [ ] Assign responsibility for addressing each gap
+- [ ] Set timeline for gap resolution
+- [ ] Plan re-validation after remediation
 
-   - Look up the required documents and default locations in `checklist-mappings`
-   - For each required document:
-     - Check all default locations specified in the mapping
-     - If not found, ask the user for the document location
-   - Verify all required documents are accessible
+### 5. Stakeholder Review
+- [ ] Present checklist results to relevant stakeholders
+- [ ] Discuss any failed items and remediation plans
+- [ ] Get approval to proceed or requirement to fix gaps
+- [ ] Document final decisions and approvals
 
-3. **Checklist Processing**
+### 6. Documentation
+- [ ] Complete checklist with all findings
+- [ ] Document any exceptions or deviations approved
+- [ ] Update project documentation with validation status
+- [ ] Archive checklist results for audit trail
 
-   If in interactive mode:
+## Available Checklists
 
-   - Work through each section of the checklist one at a time
-   - For each section:
-     - Review all items in the section
-     - Check each item against the relevant documentation
-     - Present findings for that section
-     - Get user confirmation before proceeding to next section
+### Product Management
+- **pm-checklist.md**: PRD quality and completeness validation
+- **po-master-checklist.md**: Product owner deliverable validation
+- **story-draft-checklist.md**: User story quality validation
+- **story-dod-checklist.md**: Story completion and definition of done
 
-   If in YOLO mode:
+### Architecture & Design
+- **architect-checklist.md**: Technical architecture quality validation
+- **frontend-architecture-checklist.md**: Frontend design validation
 
-   - Process all sections at once
-   - Create a comprehensive report of all findings
-   - Present the complete analysis to the user
+### Process & Change
+- **change-checklist.md**: Change impact and management validation
 
-4. **Validation Approach**
+## Validation Approach
 
-   For each checklist item:
+### Evidence-Based Assessment
+- [ ] Review actual deliverable content
+- [ ] Check against documented requirements
+- [ ] Validate with stakeholder feedback
+- [ ] Verify alignment with project goals
 
-   - Read and understand the requirement
-   - Look for evidence in the documentation that satisfies the requirement
-   - Consider both explicit mentions and implicit coverage
-   - Mark items as:
-     - ✅ PASS: Requirement clearly met
-     - ❌ FAIL: Requirement not met or insufficient coverage
-     - ⚠️ PARTIAL: Some aspects covered but needs improvement
-     - N/A: Not applicable to this case
+### Objective Evaluation
+- [ ] Use clear pass/fail criteria where possible
+- [ ] Document specific evidence for each assessment
+- [ ] Avoid subjective judgments without rationale
+- [ ] Consider both letter and spirit of requirements
 
-5. **Section Analysis**
+### Risk-Based Prioritization
+- [ ] Focus on items critical to project success
+- [ ] Consider downstream impact of gaps
+- [ ] Balance perfection with progress
+- [ ] Identify must-fix vs nice-to-fix items
 
-   For each section:
+## Quality Standards
 
-   - Calculate pass rate
-   - Identify common themes in failed items
-   - Provide specific recommendations for improvement
-   - In interactive mode, discuss findings with user
-   - Document any user decisions or explanations
+### Completeness
+- [ ] All required sections present
+- [ ] Sufficient detail for intended audience
+- [ ] All dependencies and assumptions documented
+- [ ] Clear success criteria defined
 
-6. **Final Report**
+### Clarity
+- [ ] Unambiguous language and requirements
+- [ ] Clear ownership and responsibilities
+- [ ] Testable and measurable criteria
+- [ ] Consistent terminology throughout
 
-   Prepare a summary that includes:
+### Alignment
+- [ ] Consistent with project vision and goals
+- [ ] Aligned with architecture and constraints
+- [ ] Compatible with other project deliverables
+- [ ] Meets stakeholder expectations
 
-   - Overall checklist completion status
-   - Pass rates by section
-   - List of failed items with context
-   - Specific recommendations for improvement
-   - Any sections or items marked as N/A with justification
+### Quality
+- [ ] Professional presentation and format
+- [ ] Accurate and up-to-date information
+- [ ] Appropriate level of detail
+- [ ] Follows established templates and standards
 
-## Special Considerations
+## Deliverables
+- Completed checklist with validation results
+- Gap analysis with remediation recommendations
+- Stakeholder approval or remediation plan
+- Updated project documentation reflecting validation status
 
-1. **Architecture Checklist**
+## Escalation Process
+- Minor gaps → Document and plan remediation
+- Major gaps → Block progression until resolved
+- Scope issues → Escalate to Product Manager
+- Technical issues → Escalate to Architect
 
-   - Focus on technical completeness and clarity
-   - Verify all system components are addressed
-   - Check for security and scalability considerations
-   - Ensure deployment and operational aspects are covered
+## Handoff Process
+Quality validation complete → Resume normal workflow progression
+Gaps identified → Return to appropriate persona for remediation
+Major issues → Escalate to relevant decision makers
+Process complete → Update project status and continue
 
-2. **Frontend Architecture Checklist**
-
-   - Validate UI/UX specifications
-   - Check component structure and organization
-   - Verify state management approach
-   - Ensure responsive design considerations
-
-3. **PM Checklist**
-
-   - Focus on product requirements clarity
-   - Verify user stories and acceptance criteria
-   - Check market and user research coverage
-   - Ensure technical feasibility is addressed
-
-4. **Story Checklists**
-   - Verify clear acceptance criteria
-   - Check for technical context and dependencies
-   - Ensure testability is addressed
-   - Validate user value is clearly stated
-
-## Success Criteria
-
-The checklist validation is complete when:
-
-1. All applicable items have been assessed
-2. Clear pass/fail status for each item
-3. Specific recommendations provided for failed items
-4. User has reviewed and acknowledged findings
-5. Final report documents all decisions and rationales
-
-## Example Interaction
-
-Agent: "Let me check the available checklists... According to checklist-mappings.yml, we have several options. Which would you like to use?"
-
-User: "The architect checklist"
-
-Agent: "Would you like to work through it section by section (interactive) or get a complete analysis all at once (YOLO mode)?"
-
-User: "Interactive please"
-
-Agent: "According to the mappings, I need to check for architecture.md. The default location is docs/architecture.md. Should I look there?"
-
-[Continue interaction based on user responses...]
+## Notes
+- Don't let perfect be the enemy of good - focus on critical quality
+- Document rationale for any checklist items marked as not applicable
+- Use checklists as guidance, not rigid rules
+- Balance quality gates with development velocity

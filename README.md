@@ -1,6 +1,6 @@
 # BMAD-CLAUDE-CODE: The BMAD Method for Claude Code
 
-This fork adapts the BMAD Method (Breakthrough Method of Agile AI-driven Development) specifically for use with Claude Code in VS Code, providing a structured approach to AI-driven software development.
+This optimized version of the BMAD Method (Breakthrough Method of Agile AI-driven Development) is specifically designed for Claude Code, providing a comprehensive framework for professional software development with AI assistance.
 
 ## Quick Start
 
@@ -39,13 +39,14 @@ The script will:
 
 ## What is BMAD-CLAUDE-CODE?
 
-This is a specialized version of the BMAD Method that works seamlessly with Claude Code's capabilities:
+This is a specialized version of the BMAD Method optimized for Claude Code's capabilities:
 
-- **Full Planning Support**: Claude Code can embody different agent roles (Analyst, PM, Architect, PO, SM)
+- **6 Streamlined Personas**: Claude Code embodies Analyst, Product Manager, Architect, Designer, Developer, and Orchestrator roles
+- **Architecture-Agnostic Templates**: Modern templates supporting microservices, monoliths, serverless, and edge computing
+- **Implementation Excellence**: Enhanced tasks for coding, testing, debugging, and deployment
+- **Comprehensive Quality Gates**: 13 validation checklists ensure professional standards
 - **Session Continuity**: Multi-session planning with context preservation
-- **Template-Driven**: Consistent, high-quality artifacts using proven templates
-- **Quality Assured**: Built-in checklists ensure nothing is missed
-- **Document-Centric**: All decisions and progress tracked in markdown files
+- **Built-in Friction**: Personas challenge each other to improve decision quality
 
 ## Using BMAD with Claude Code
 
@@ -62,10 +63,10 @@ Claude Code: I see we were working on the PRD as the Product Manager...
 ```
 
 ### Key Commands
-- **"Be my [role]"** - Claude adopts specific agent mindset
-- **"Create a [document]"** - Uses appropriate template
-- **"Run [checklist]"** - Executes quality checks
-- **"Show planning status"** - Reviews progress
+- **"Act as the BMAD [Persona]"** - Claude adopts specific persona mindset
+- **"Create a [document]"** - Uses appropriate BMAD template
+- **"Run [checklist]"** - Executes quality validation
+- **"Show planning status"** - Reviews progress and next steps
 
 ## Project Structure
 
@@ -103,49 +104,90 @@ The BMAD Method is a revolutionary approach that elevates "vibe coding" to advan
 ## BMAD Workflow Phases
 
 ### 1. Discovery & Analysis
-Claude Code acts as your Business Analyst to understand requirements:
-- Explores business needs and user problems
-- Identifies constraints and success criteria
-- Creates structured project brief
+**Analyst** persona investigates and challenges assumptions:
+- Deep research into problem space and constraints
+- Competitive analysis and market validation
+- Edge case identification and risk assessment
 
 ### 2. Product Definition
-Claude Code becomes your Product Manager to define the product:
-- Creates comprehensive PRD with epics
-- Defines success metrics and user stories
-- Prioritizes features based on value
+**Product Manager** persona transforms research into requirements:
+- Creates comprehensive PRD with prioritized features
+- Defines user stories with clear acceptance criteria
+- Establishes success metrics and MVP scope
 
-### 3. Technical Architecture
-Claude Code serves as your Architect to design the system:
-- Creates scalable technical architecture
-- Defines technology stack and data models
-- Designs for maintainability and growth
+### 3. Technical & UX Design
+**Architect** and **Designer** personas create system design:
+- Architecture patterns for scalability and maintainability
+- API specifications and security modeling
+- User experience flows and interface design
 
-### 4. Story Creation & Implementation
-Claude Code helps as Scrum Master and Developer:
-- Generates detailed user stories
-- Tracks implementation progress
-- Maintains Definition of Done
+### 4. Implementation & Quality
+**Developer** persona builds with quality focus:
+- Test-driven implementation with comprehensive coverage
+- Debugging, refactoring, and performance optimization
+- CI/CD pipeline setup and deployment automation
+
+### 5. Process & Continuity
+**Orchestrator** persona maintains project discipline:
+- Quality gates and validation checkpoints
+- Change management and course correction
+- Session continuity and knowledge preservation
 
 ## Available Resources
 
-### Templates (`bmad-agent/templates/`)
-- `project-brief-tmpl.md` - Vision and goals
-- `prd-tmpl.md` - Product requirements
-- `architecture-tmpl.md` - System design
-- `story-tmpl.md` - User stories
-- `planning-journal-tmpl.md` - Session tracking
+### Templates (`bmad-agent/templates/`) - 9 Total
+**Core Templates:**
+- `project-brief-tmpl.md` - Vision and problem definition
+- `prd-tmpl.md` - Product requirements with pattern guidance
+- `architecture-tmpl.md` - System design with architecture patterns
+- `story-tmpl.md` - User stories with comprehensive DoD
 
-### Tasks (`bmad-agent/tasks/`)
-- `create-prd.md` - PRD creation process
-- `create-architecture.md` - Architecture design
-- `create-next-story-task.md` - Story generation
-- `correct-course.md` - Problem analysis
+**Specialized Templates:**
+- `front-end-architecture-tmpl.md` - Frontend technical design
+- `front-end-spec-tmpl.md` - UI/UX specifications
+- `session-state-tmpl.md` - Session continuity tracking
+- `planning-journal-tmpl.md` - Decision history across sessions
+- `doc-sharding-tmpl.md` - Documentation organization
 
-### Checklists (`bmad-agent/checklists/`)
-- `pm-checklist.md` - Product quality
-- `architect-checklist.md` - Architecture review
-- `story-draft-checklist.md` - Story validation
+### Tasks (`bmad-agent/tasks/`) - 13 Total
+**Core Tasks:**
+- `create-prd.md` - Requirements definition
+- `create-architecture.md` - System design
+- `create-next-story.md` - User story creation
+- `create-deep-research.md` - Investigation and analysis
+
+**Implementation Tasks:**
+- `implement-story.md` - Guided code implementation
+- `generate-tests.md` - Comprehensive test creation
+- `create-api-specification.md` - API design and contracts
+- `security-threat-model.md` - Security analysis
+- `debug-issue.md` - Systematic debugging
+- `create-deployment-pipeline.md` - CI/CD setup
+
+**Process Tasks:**
+- `correct-course.md` - Change management
+- `core-dump.md` - Session memory capture
+- `checklist-run-task.md` - Quality gate execution
+
+### Checklists (`bmad-agent/checklists/`) - 13 Total
+**Product & Requirements:**
+- `pm-checklist.md` - PRD quality validation
+- `po-master-checklist.md` - Backlog readiness
+- `story-draft-checklist.md` - Story quality validation
 - `story-dod-checklist.md` - Definition of Done
+
+**Architecture & Design:**
+- `architect-checklist.md` - System architecture review
+- `frontend-architecture-checklist.md` - Frontend design validation
+- `api-design-checklist.md` - API specification quality
+- `security-threat-model-checklist.md` - Security analysis validation
+
+**Implementation & Quality:**
+- `implementation-quality-checklist.md` - Code quality standards
+- `test-suite-quality-checklist.md` - Test coverage validation
+- `deployment-pipeline-checklist.md` - CI/CD quality validation
+- `debug-process-checklist.md` - Issue resolution validation
+- `change-checklist.md` - Change management validation
 
 ## Getting Started Examples
 
@@ -180,41 +222,53 @@ Let's validate each aspect...
 
 ## Contributing
 
-This fork is specifically adapted for Claude Code. For contributions:
-1. Focus on Claude Code compatibility
-2. Maintain template and checklist quality
-3. Enhance session continuity features
-4. Improve documentation clarity
+This fork is very experimental, and probably not at a point contributions make sense.
 
-See [contributing guidelines](docs/CONTRIBUTING.md) for more details.
+## Recent Enhancements (Latest Session)
+
+This version includes major optimizations completed in December 2024:
+
+**🎯 Streamlined Persona System:**
+- Consolidated from 8+ personas to 6 focused roles
+- Added built-in friction for better decision quality
+- Eliminated implementation-specific assumptions (marketplace, multi-tenant)
+
+**🏗️ Architecture-Agnostic Design:**
+- Templates now support any architecture pattern (monolith, microservices, serverless, edge)
+- Pattern selection guides with professional examples
+- No forced technology or deployment assumptions
+
+**⚡ Implementation Excellence:**
+- 6 new tasks leveraging Claude Code's coding strengths
+- Comprehensive quality checklists (13 total)
+- Test-driven development and deployment automation focus
+
+**📋 Professional Quality Gates:**
+- Consistent checklist format with Purpose/Used By/Frequency
+- Complete coverage from discovery through deployment
+- Built-in phase discipline prevents rushing to implementation
 
 ## Changes from Original BMAD-METHOD
 
-This fork optimizes BMAD specifically for Claude Code by:
+**Architecture:**
+- 6 streamlined personas instead of multiple specialized agents
+- Architecture-agnostic templates supporting modern patterns
+- Enhanced for both simple projects and enterprise-scale systems
 
-**Added:**
-- `CLAUDE.md` & `CLAUDE-ENHANCED.md` - Claude Code instructions
-- `BMAD-CLAUDE-CODE-GUIDE.md` - Quick reference
-- `BMAD-SESSION-CONTINUITY.md` - Multi-session planning
-- Session management templates
-- Setup scripts for quick start
-- `personas-claude/` - Optimized personas for Claude Code
-- Data Architect persona for complex platforms
+**Implementation Focus:**
+- Added comprehensive implementation and testing tasks
+- Security threat modeling and API design tasks
+- CI/CD pipeline and infrastructure automation tasks
 
-**Enhanced:**
-- Streamlined all personas (80%+ size reduction)
-- Added production-ready capabilities to Architect, PM, and SM
-- Enhanced for multi-tenant platforms and marketplace architectures
-- Added security, DevOps, and operational excellence focus
+**Quality Assurance:**
+- 13 validation checklists ensure professional standards
+- Phase gates prevent skipping important planning stages
+- Session continuity templates for multi-session projects
 
-**Removed:**
-- Web orchestrator files (build scripts, configs)
-- IDE-specific agents (.ide.md files)
-- Legacy versions (V1, V2)
-- Demo outputs
-- ~135 files, ~22K lines
-
-The core BMAD templates, tasks, and checklists remain intact, with personas now optimized for both simple projects and production-scale platforms.
+**Claude Code Optimization:**
+- Personas embody different perspectives within single Claude instance
+- External memory through documentation templates
+- Quality friction built into persona interactions
 
 ## Credits
 

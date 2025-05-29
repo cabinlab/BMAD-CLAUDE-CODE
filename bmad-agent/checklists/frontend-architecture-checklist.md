@@ -1,7 +1,10 @@
 # Frontend Architecture Document Review Checklist
 
-## Purpose
-This checklist is for the Design Architect to use after completing the "Frontend Architecture Mode" and populating the `front-end-architecture-tmpl.txt` (or `.md`) document. It ensures all sections are comprehensively covered and meet quality standards before finalization.
+**Purpose**: Validate frontend architecture design and UX specifications for frontend architecture tasks.  
+**Used By**: Architect and Designer personas during frontend system design  
+**Frequency**: Before finalizing frontend architecture and transitioning to implementation
+
+This checklist is for the Designer and Architect personas to use after completing frontend architecture design and populating the `front-end-architecture-tmpl.md` document. It ensures all sections are comprehensively covered and meet quality standards before finalization.
 
 ---
 
@@ -144,6 +147,6 @@ This checklist is for the Design Architect to use after completing the "Frontend
 ## Final Review Sign-off
 
 - [ ] Have all placeholders (e.g., `{Project Name}`, `{e.g., ...}`) been filled in or removed where appropriate?
-- [ ] Has the document been reviewed for clarity, consistency, and completeness by the Design Architect?
+- [ ] Has the document been reviewed for clarity, consistency, and completeness by the Designer and Architect personas?
 - [ ] Are all linked documents (Main Architecture, UI/UX Spec) finalized or stable enough for this document to rely on?
 - [ ] Is the document ready to be shared with the development team? 

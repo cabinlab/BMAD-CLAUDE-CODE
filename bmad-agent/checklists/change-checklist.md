@@ -1,6 +1,8 @@
 # Change Navigation Checklist
 
-**Purpose:** To systematically guide the selected Agent and user through the analysis and planning required when a significant change (pivot, tech issue, missing requirement, failed story) is identified during the BMAD workflow.
+**Purpose**: Guide systematic change analysis and planning for the `correct-course` task.  
+**Used By**: Orchestrator persona during change management and all personas during scope adjustments  
+**Frequency**: When significant changes, pivots, or issues are identified during development
 
 **Instructions:** Review each item with the user. Mark `[x]` for completed/confirmed, `[N/A]` if not applicable, or add notes for discussion points.
 
@@ -80,7 +82,7 @@ _(Ensure all agreed-upon points from previous sections are captured in the propo
 - [ ] **Recommended Path Forward:** Chosen solution with rationale.
 - [ ] **PRD MVP Impact:** Changes to scope/goals (if any).
 - [ ] **High-Level Action Plan:** Next steps for stories/updates.
-- [ ] **Agent Handoff Plan:** Identify roles needed (PM, Arch, Design Arch, PO).
+- [ ] **Persona Handoff Plan:** Identify personas needed (Product Manager, Architect, Designer, Developer, Orchestrator).
 
 ## 6. Final Review & Handoff
 

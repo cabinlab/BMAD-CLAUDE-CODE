@@ -1,84 +1,249 @@
-# {Project Name} UI/UX Specification
+# Frontend Specification: [Project Name]
 
-## Introduction
+## Design Overview
+[Brief description of the overall design approach and visual identity]
 
-{State the purpose - to define the user experience goals, information architecture, user flows, and visual design specifications for the project's user interface.}
+## Design System
 
-- **Link to Primary Design Files:** {e.g., Figma, Sketch, Adobe XD URL}
-- **Link to Deployed Storybook / Design System:** {URL, if applicable}
+### Visual Foundation
 
-## Overall UX Goals & Principles
+#### Color Palette
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Primary | #[hex] | [Main CTAs, brand elements] |
+| Secondary | #[hex] | [Supporting actions, accents] |
+| Success | #[hex] | [Positive feedback, confirmations] |
+| Warning | #[hex] | [Cautions, alerts] |
+| Error | #[hex] | [Errors, destructive actions] |
+| Neutral | #[hex] | [Text, borders, backgrounds] |
 
-- **Target User Personas:** {Reference personas or briefly describe key user types and their goals.}
-- **Usability Goals:** {e.g., Ease of learning, efficiency of use, error prevention.}
-- **Design Principles:** {List 3-5 core principles guiding the UI/UX design - e.g., "Clarity over cleverness", "Consistency", "Provide feedback".}
+#### Typography
+| Element | Font | Size | Weight | Line Height |
+|---------|------|------|--------|-------------|
+| H1 | [Font family] | [px/rem] | [weight] | [ratio] |
+| H2 | [Font family] | [px/rem] | [weight] | [ratio] |
+| Body | [Font family] | [px/rem] | [weight] | [ratio] |
+| Caption | [Font family] | [px/rem] | [weight] | [ratio] |
 
-## Information Architecture (IA)
+#### Spacing System
+- Base unit: [8px/4px]
+- Scale: [xs: 4px, sm: 8px, md: 16px, lg: 24px, xl: 32px]
 
-- **Site Map / Screen Inventory:**
-  ```mermaid
-  graph TD
-      A[Homepage] --> B(Dashboard);
-      A --> C{Settings};
-      B --> D[View Details];
-      C --> E[Profile Settings];
-      C --> F[Notification Settings];
-  ```
-  _(Or provide a list of all screens/pages)_
-- **Navigation Structure:** {Describe primary navigation (e.g., top bar, sidebar), secondary navigation, breadcrumbs, etc.}
+#### Grid System
+- Columns: [12/16/24]
+- Gutter: [px]
+- Breakpoints:
+  - Mobile: [< 768px]
+  - Tablet: [768px - 1024px]
+  - Desktop: [> 1024px]
 
-## User Flows
+### Component Library
 
-{Detail key user tasks. Use diagrams or descriptions.}
+#### Buttons
+- **Primary**: [Design description, states]
+- **Secondary**: [Design description, states]
+- **Text/Ghost**: [Design description, states]
+- **Icon**: [Design description, states]
 
-### {User Flow Name, e.g., User Login}
+#### Forms
+- **Text Input**: [Design, validation states, helper text]
+- **Select/Dropdown**: [Design, multi-select capability]
+- **Checkbox/Radio**: [Design, group behavior]
+- **Toggle**: [Design, on/off states]
 
-- **Goal:** {What the user wants to achieve.}
-- **Steps / Diagram:**
-  ```mermaid
-  graph TD
-      Start --> EnterCredentials[Enter Email/Password];
-      EnterCredentials --> ClickLogin[Click Login Button];
-      ClickLogin --> CheckAuth{Auth OK?};
-      CheckAuth -- Yes --> Dashboard;
-      CheckAuth -- No --> ShowError[Show Error Message];
-      ShowError --> EnterCredentials;
-  ```
-  _(Or: Link to specific flow diagram in Figma/Miro)_
+#### Navigation
+- **Header**: [Layout, responsive behavior]
+- **Sidebar**: [Collapsible, items, states]
+- **Breadcrumbs**: [Style, truncation]
+- **Tabs**: [Style, active states]
 
-### {Another User Flow Name}
+#### Feedback
+- **Toast/Snackbar**: [Position, duration, actions]
+- **Modal/Dialog**: [Overlay, sizes, close behavior]
+- **Loading**: [Spinner, skeleton, progress]
+- **Empty States**: [Illustration, messaging]
 
-{...}
+#### Data Display
+- **Tables**: [Sorting, filtering, pagination]
+- **Cards**: [Layout, actions, states]
+- **Lists**: [Density options, actions]
+- **Charts**: [Types, color usage, interactions]
 
-## Wireframes & Mockups
+## Page Layouts
 
-{Reference the main design file link above. Optionally embed key mockups or describe main screen layouts.}
+### [Page Name]
+#### Desktop Layout
+```
+[ASCII art or description of desktop layout]
++------------------+
+|     Header       |
++------+----------+
+| Nav  |  Content  |
+|      |           |
++------+-----------+
+```
 
-- **Screen / View Name 1:** {Description of layout and key elements. Link to specific Figma frame/page.}
-- **Screen / View Name 2:** {...}
+#### Mobile Layout
+```
+[ASCII art or description of mobile layout]
+```
 
-## Component Library / Design System Reference
+#### Key Elements
+- [Element 1]: [Purpose and behavior]
+- [Element 2]: [Purpose and behavior]
 
-## Branding & Style Guide Reference
+[Repeat for each major page]
 
-{Link to the primary source or define key elements here.}
+## Interaction Patterns
 
-- **Color Palette:** {Primary, Secondary, Accent, Feedback colors (hex codes).}
-- **Typography:** {Font families, sizes, weights for headings, body, etc.}
-- **Iconography:** {Link to icon set, usage notes.}
-- **Spacing & Grid:** {Define margins, padding, grid system rules.}
+### Navigation Flow
+[How users move through the application]
 
-## Accessibility (AX) Requirements
+### Micro-interactions
+- **Hover States**: [Behavior across components]
+- **Focus States**: [Keyboard navigation indicators]
+- **Transitions**: [Animation timing and easing]
+- **Feedback**: [User action confirmations]
 
-- **Target Compliance:** {e.g., WCAG 2.1 AA}
-- **Specific Requirements:** {Keyboard navigation patterns, ARIA landmarks/attributes for complex components, color contrast minimums.}
+### Gestures (Mobile)
+- **Swipe**: [Actions and contexts]
+- **Pull-to-refresh**: [Implementation]
+- **Long press**: [Context menus]
 
-## Responsiveness
+## Responsive Behavior
 
-- **Breakpoints:** {Define pixel values for mobile, tablet, desktop, etc.}
-- **Adaptation Strategy:** {Describe how layout and components adapt across breakpoints. Reference designs.}
+### Breakpoint Strategy
+- **Mobile-First**: [Progressive enhancement approach]
+- **Content Priority**: [What shows/hides at each breakpoint]
+- **Touch Targets**: [Minimum sizes for mobile]
 
-## Change Log
+### Adaptive Components
+[How components change across breakpoints]
 
-| Change        | Date       | Version | Description         | Author         |
-| ------------- | ---------- | ------- | ------------------- | -------------- |
+## Accessibility Requirements
+
+### WCAG Compliance
+- **Level**: [A, AA, or AAA]
+- **Color Contrast**: [Ratios for text/backgrounds]
+- **Focus Management**: [Tab order, skip links]
+- **Screen Reader**: [ARIA labels, live regions]
+
+### Keyboard Navigation
+- **Tab Order**: [Logical flow]
+- **Shortcuts**: [If applicable]
+- **Focus Trapping**: [Modals, dropdowns]
+
+### Alternative Content
+- **Images**: [Alt text requirements]
+- **Videos**: [Captions, transcripts]
+- **Icons**: [Descriptive labels]
+
+## Motion & Animation
+
+### Principles
+- **Purpose**: [Why animations exist]
+- **Duration**: [Timing guidelines]
+- **Easing**: [Standard curves]
+
+### System Animations
+- **Page Transitions**: [Between routes]
+- **Component States**: [Enter/exit]
+- **Loading States**: [Skeleton screens, spinners]
+
+### Reduced Motion
+[Respect prefers-reduced-motion settings]
+
+## Dark Mode Support
+[If applicable]
+
+### Color Adjustments
+- **Backgrounds**: [Dark palette]
+- **Text**: [Contrast requirements]
+- **Components**: [Border/shadow adjustments]
+
+### Implementation
+- **Toggle**: [User preference storage]
+- **System Sync**: [OS preference detection]
+
+## Content Guidelines
+
+### Voice & Tone
+- **Personality**: [Professional, friendly, casual]
+- **Language**: [Technical level, jargon usage]
+
+### Messaging Patterns
+- **Error Messages**: [Helpful, actionable]
+- **Empty States**: [Encouraging, guiding]
+- **Success Messages**: [Celebratory but brief]
+- **Loading Messages**: [Informative, honest]
+
+### Microcopy
+- **Button Labels**: [Action-oriented]
+- **Form Labels**: [Clear, concise]
+- **Tooltips**: [Helpful, not required]
+
+## Asset Requirements
+
+### Icons
+- **Style**: [Line, filled, duo-tone]
+- **Library**: [Font Awesome, custom, etc.]
+- **Sizes**: [Standard dimensions]
+
+### Images
+- **Formats**: [WebP, JPEG, PNG usage]
+- **Optimization**: [Compression, lazy loading]
+- **Responsive**: [Srcset implementation]
+
+### Illustrations
+[If applicable - style, usage, consistency]
+
+## Browser & Device Support
+
+### Browsers
+- **Chrome**: [Version+]
+- **Firefox**: [Version+]
+- **Safari**: [Version+]
+- **Edge**: [Version+]
+
+### Devices
+- **Mobile**: [iOS/Android minimum versions]
+- **Tablet**: [Specific considerations]
+- **Desktop**: [Minimum resolution]
+
+## Performance Targets
+
+### Loading
+- **Initial Load**: [Target time]
+- **Subsequent Navigation**: [Target time]
+- **Interaction Response**: [Target latency]
+
+### Bundle Size
+- **CSS**: [Target size]
+- **JavaScript**: [Target size]
+- **Images**: [Optimization requirements]
+
+## Implementation Notes
+
+### CSS Architecture
+[Methodology - BEM, CSS Modules, Styled Components]
+
+### Component Props
+[Naming conventions, prop types]
+
+### State Management
+[UI state handling approach]
+
+## Design Handoff
+
+### Design Tools
+- **Source Files**: [Figma, Sketch, XD]
+- **Prototypes**: [Interactive demos]
+- **Assets**: [Export location/format]
+
+### Developer Resources
+- **Style Guide**: [Living documentation]
+- **Component Storybook**: [If applicable]
+- **Design Tokens**: [If applicable]
+
+---
+*This specification should be treated as a living document and updated as the design evolves.*

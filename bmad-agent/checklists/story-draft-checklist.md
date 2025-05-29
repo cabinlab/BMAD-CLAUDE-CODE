@@ -1,6 +1,10 @@
 # Story Draft Checklist
 
-The Scrum Master should use this checklist to validate that each story contains sufficient context for a developer agent to implement it successfully, while assuming the dev agent has reasonable capabilities to figure things out.
+**Purpose**: Validate user story quality and implementation readiness for the `create-next-story` task.  
+**Used By**: Product Manager persona during story creation and Orchestrator during quality gates  
+**Frequency**: Before story is marked ready for development
+
+The Product Manager persona should use this checklist to validate that each story contains sufficient context for a developer to implement it successfully, while assuming the developer has reasonable capabilities to figure things out.
 
 ## 1. GOAL & CONTEXT CLARITY
 

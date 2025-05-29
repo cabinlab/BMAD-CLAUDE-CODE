@@ -1,5 +1,9 @@
 # Architect Solution Validation Checklist
 
+**Purpose**: Validate technical architecture design and completeness for the `create-architecture` task.  
+**Used By**: Architect persona during system design and Orchestrator during quality gates  
+**Frequency**: Before finalizing architecture and transitioning to implementation planning
+
 This checklist serves as a comprehensive framework for the Architect to validate the technical design and architecture before development execution. The Architect should systematically work through each item, ensuring the architecture is robust, scalable, secure, and aligned with the product requirements.
 
 ## 1. REQUIREMENTS ALIGNMENT

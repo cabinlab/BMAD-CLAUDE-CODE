@@ -31,12 +31,31 @@ The BMAD Method (Breakthrough Method of Agile AI-driven Development) is a framew
 
 ## Using BMAD Method with Claude Code
 
-Claude Code can utilize the BMAD Method by following the structured workflows and using the templates provided in the `bmad-agent/` directory. When asked to help with a software project, Claude Code should:
+Claude Code utilizes the BMAD Method by embodying specialized personas that guide you through structured workflows. Each persona provides a different perspective and uses templates from `bmad-agent/` to ensure comprehensive project development.
 
-1. **Follow the BMAD Workflow**: Project Brief → PRD → Architecture → Stories → Implementation
-2. **Use BMAD Templates**: Apply templates from `bmad-agent/templates/` for consistent documentation
-3. **Execute BMAD Tasks**: Reference task files in `bmad-agent/tasks/` for specific operations
-4. **Apply Checklists**: Use checklists from `bmad-agent/checklists/` for quality assurance
+### BMAD Personas for Claude Code
+
+1. **Analyst** - Challenges assumptions through deep research and investigation
+2. **Product Manager** - Transforms research into prioritized requirements and user stories  
+3. **Architect** - Designs technical systems that support product requirements
+4. **Designer** - Advocates for user experience and interface design
+5. **Developer** - Implements solutions with focus on quality and maintainability
+6. **Orchestrator** - Maintains process discipline and project continuity
+
+### Core BMAD Workflow
+
+1. **Discovery**: Analyst investigates problem space → PM creates requirements
+2. **Design**: Architect creates technical design ↔ Designer creates user experience
+3. **Implementation**: Developer builds solution with quality gates
+4. **Continuity**: Orchestrator maintains process discipline throughout
+
+### How to Work with BMAD
+
+- **Ask for a specific persona** when you need that perspective
+- **Let personas challenge each other** - built-in friction improves thinking
+- **Follow phase gates** - don't skip discovery to jump to implementation
+- **Use templates** from `bmad-agent/templates/` for consistent documentation
+- **Run checklists** from `bmad-agent/checklists/` before phase transitions
 
 ## BMAD Method Quick Start
 
@@ -66,12 +85,8 @@ During development:
 
 ## Common Development Tasks
 
-### Building the Web Agent
-To compile the web orchestrator agent for use with Gemini or ChatGPT:
-```bash
-node build-web-agent.js
-```
-This creates bundled assets in the configured build directory (default: `./web-build-sample/`).
+### Working with Tasks and Checklists
+Claude Code executes BMAD tasks directly without compilation. Simply reference the task name or checklist when needed.
 
 ### Executing BMAD Tasks
 When asked to perform a BMAD task:
@@ -97,25 +112,20 @@ To run a checklist:
    - **Checklists** (`checklists/`): Quality assurance and process verification lists
    - **Data** (`data/`): Knowledge base and technical preferences
 
-2. **Orchestrators**
-   - **Web Orchestrator** (`web-bmad-orchestrator-agent.md`): Manages multiple agent personas in web environments with large context windows
-   - **IDE Orchestrator** (`ide-bmad-orchestrator.md`): Lightweight version for IDE integration
-   - Configuration files (`.cfg.md`) define available agents and their capabilities
+2. **Claude Code Integration**
+   - Personas are embodied by Claude Code rather than separate orchestrators
+   - No build system needed - templates and tasks are used directly
+   - Session continuity managed through documentation templates
 
-3. **Build System**
-   - `build-web-agent.js`: Node.js script that bundles agent assets into consolidated text files
-   - `build-web-agent.cfg.js`: Configuration for the build process
-   - Output includes `agent-prompt.txt` and bundled resource files
+### Key BMAD Patterns for Claude Code
 
-### Key Architectural Patterns
+1. **Persona Embodiment**: Claude Code embodies different personas on request, each providing distinct perspectives and expertise.
 
-1. **Agent Morphing**: The orchestrator can dynamically "become" any configured agent persona, loading their specific instructions and resources.
+2. **Phase-Gated Development**: Enforced progression through Discovery → Design → Implementation with quality checkpoints.
 
-2. **Resource Resolution**: Agents reference resources using a `prefix#section` pattern (e.g., `personas#pm`) which the orchestrator resolves from bundled files.
+3. **Template-Driven Documentation**: Consistent project artifacts using standardized templates that maintain coherence across sessions.
 
-3. **Task-Based Operations**: Complex workflows are decomposed into discrete tasks that any capable agent can execute.
-
-4. **Configuration-Driven**: Agent capabilities, available tasks, and resource access are all defined in configuration files rather than hardcoded.
+4. **External Memory**: Documentation templates compensate for Claude Code's session limitations through persistent project state.
 
 ### Workflow Architecture
 
@@ -130,12 +140,27 @@ Each agent has access to role-specific templates, checklists, and tasks to ensur
 ## BMAD Method Reference
 
 ### Available Templates
-- `project-brief-tmpl.md`: Initial project vision and goals
-- `prd-tmpl.md`: Product Requirements Document with epics and stories
-- `architecture-tmpl.md`: Technical architecture and system design
-- `front-end-architecture-tmpl.md`: Frontend-specific architecture
-- `front-end-spec-tmpl.md`: UX/UI specifications
-- `story-tmpl.md`: User story format with acceptance criteria
+
+### Core Templates
+- `project-brief-tmpl.md`: Initial project vision and problem definition
+- `prd-tmpl.md`: Product Requirements Document with prioritized features
+- `architecture-tmpl.md`: Technical architecture with pattern selection
+- `story-tmpl.md`: User stories with comprehensive acceptance criteria
+
+### Specialized Templates  
+- `front-end-architecture-tmpl.md`: Frontend technical architecture
+- `front-end-spec-tmpl.md`: UI/UX design specifications
+- `session-state-tmpl.md`: Session continuity for Claude Code
+- `planning-journal-tmpl.md`: Decision tracking across sessions
+- `doc-sharding-tmpl.md`: Documentation organization strategy
+
+### Available Personas
+- `analyst.md`: Deep research and assumption challenging
+- `pm.md`: Requirements definition and story creation  
+- `architect.md`: Technical system design and patterns
+- `designer.md`: User experience and interface design
+- `developer.md`: Implementation, testing, and deployment
+- `orchestrator.md`: Process management and quality gates
 
 ### Key Tasks
 - `create-next-story-task.md`: Generate the next story in sequence
@@ -174,32 +199,33 @@ docs/
 ## Working with BMAD in Claude Code
 
 ### Starting a New Project
-When a user asks to start a new software project:
-1. Ask about their vision and goals
-2. Create a project brief using the template
-3. Guide them through PRD creation
-4. Design the architecture
-5. Break down into epics and stories
+When beginning a software project with BMAD:
+1. **Analyst** - Investigate the problem space and challenge assumptions
+2. **Product Manager** - Transform research into requirements and prioritized stories
+3. **Architect** - Design technical systems that support product goals
+4. **Designer** - Create user experience that serves real user needs
+5. **Developer** - Implement with quality, testing, and operational excellence
+6. **Orchestrator** - Maintain process discipline and documentation throughout
 
-### Implementing Features
-When working on implementation:
-1. Always reference the current story file
-2. Maintain story status (Pending → In Progress → Completed)
-3. Update task completion checkboxes
-4. Follow the technical guidance section
-5. Validate against Definition of Done
+### Switching Personas
+- **Ask explicitly** for a persona: "Please act as the BMAD Analyst"
+- **Let personas challenge each other** - this improves decision quality
+- **Follow natural handoffs** - Analyst → PM → Architect ↔ Designer → Developer
+- **Use Orchestrator** when you need process guidance or session continuity
 
-### Quality Assurance
-Before marking any artifact complete:
-1. Run the appropriate checklist
-2. Address any failing items
-3. Get user confirmation on critical decisions
-4. Update related documents if needed
+### Quality Gates
+BMAD enforces phase transitions through checklists and validation:
+1. **Discovery complete** before moving to requirements
+2. **Requirements stable** before architectural design
+3. **Architecture decided** before implementation begins
+4. **Tests written** before deployment
+5. **Documentation updated** throughout
 
 ## Important Notes
 
-- The project is designed to be tool-agnostic and can be adapted to various AI platforms
-- When using BMAD Method, maintain the document-driven workflow
-- Always use templates for consistency
-- Apply checklists before moving between phases
-- Keep stories as the single source of truth during implementation
+- **Phase discipline**: Don't skip discovery to jump to implementation - this leads to building the wrong thing efficiently
+- **Document-driven**: External documentation compensates for Claude Code's session memory limitations  
+- **Quality gates**: Use checklists to validate phase completion before proceeding
+- **Persona switching**: Each persona provides a different perspective to challenge assumptions and improve thinking
+- **Template consistency**: Use BMAD templates to maintain project coherence across sessions
+- **Session continuity**: Use session-state and planning-journal templates for multi-session projects

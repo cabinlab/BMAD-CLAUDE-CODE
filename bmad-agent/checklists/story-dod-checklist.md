@@ -1,5 +1,9 @@
 # Story Definition of Done (DoD) Checklist
 
+**Purpose**: Validate story completion and quality before marking as done during the `implement-story` task.  
+**Used By**: Developer persona during implementation completion and Orchestrator during quality gates  
+**Frequency**: Before marking story as complete and ready for deployment
+
 ## Instructions for Developer Agent:
 
 Before marking a story as 'Review', please go through each item in this checklist. Report the status of each item (e.g., [x] Done, [ ] Not Done, [N/A] Not Applicable) and provide brief comments if necessary.
