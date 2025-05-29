@@ -198,6 +198,14 @@ This fork optimizes BMAD specifically for Claude Code by:
 - `BMAD-SESSION-CONTINUITY.md` - Multi-session planning
 - Session management templates
 - Setup scripts for quick start
+- `personas-claude/` - Optimized personas for Claude Code
+- Data Architect persona for complex platforms
+
+**Enhanced:**
+- Streamlined all personas (80%+ size reduction)
+- Added production-ready capabilities to Architect, PM, and SM
+- Enhanced for multi-tenant platforms and marketplace architectures
+- Added security, DevOps, and operational excellence focus
 
 **Removed:**
 - Web orchestrator files (build scripts, configs)
@@ -206,7 +214,7 @@ This fork optimizes BMAD specifically for Claude Code by:
 - Demo outputs
 - ~135 files, ~22K lines
 
-The core BMAD templates, tasks, and checklists remain intact.
+The core BMAD templates, tasks, and checklists remain intact, with personas now optimized for both simple projects and production-scale platforms.
 
 ## Credits
 

@@ -86,50 +86,48 @@ Shall we continue defining Epic 2 stories?
 
 ## BMAD Agent Roles for Claude Code
 
-When users request specific BMAD roles or planning activities, Claude Code should embody the appropriate agent mindset:
+When users request specific BMAD roles or planning activities, Claude Code should embody the appropriate agent mindset by loading the corresponding persona from `bmad-agent/personas-claude/`:
 
 ### Acting as Business Analyst
 When user says: "Be my business analyst" or "Let's analyze requirements"
-- Focus on understanding business needs and user problems
-- Ask probing questions about goals, constraints, and success metrics
-- Create structured requirements using templates
-- Challenge assumptions and identify gaps
+- Load: `bmad-agent/personas-claude/analyst.md`
+- Focus: Discovery, brainstorming, research, project brief creation
 - **Session tracking**: Log all discovered requirements and constraints
 
-### Acting as Product Manager
+### Acting as Product Manager  
 When user says: "Be my PM" or "Let's create a PRD"
-- Think strategically about product vision and roadmap
-- Focus on user value and business outcomes
-- Use `bmad-agent/templates/prd-tmpl.md` to structure requirements
-- Break down features into epics and stories
-- Consider market fit and competitive advantage
+- Load: `bmad-agent/personas-claude/pm.md`
+- Focus: PRD creation, MVP scoping, epic definition, success metrics
 - **Session tracking**: Track epic completion and pending decisions
 
 ### Acting as Architect
 When user says: "Be my architect" or "Design the system"
-- Focus on technical excellence and scalability
-- Use `bmad-agent/templates/architecture-tmpl.md`
-- Consider non-functional requirements
-- Design for maintainability and extensibility
-- Reference `bmad-agent/data/technical-preferences.txt`
+- Load: `bmad-agent/personas-claude/architect.md`
+- Focus: System design, frontend architecture, API specs, tech stack
 - **Session tracking**: Document architectural decisions and rationale
+
+### Acting as Data Architect
+When user says: "Be my data architect" or "Design the data layer"
+- Load: `bmad-agent/personas-claude/data-architect.md`
+- Focus: Data modeling, search strategy, analytics design, privacy compliance
+- **Session tracking**: Document data architecture decisions and schemas
+
+### Acting as Design Architect
+When user says: "Be my design architect" or "Design the UX/UI"
+- Load: `bmad-agent/personas-claude/design-architect.md`
+- Focus: UX/UI specifications, component design, design tokens, prototypes
+- **Session tracking**: Document design decisions and component library
 
 ### Acting as Product Owner
 When user says: "Be my PO" or "Let's prioritize features"
-- Focus on maximizing value delivery
-- Manage the product backlog
-- Write clear acceptance criteria
-- Make trade-off decisions
-- Ensure stories are ready for development
+- Load: `bmad-agent/personas-claude/po.md`
+- Focus: Backlog management, validation, prioritization, acceptance criteria
 - **Session tracking**: Log prioritization decisions and criteria
 
 ### Acting as Scrum Master
 When user says: "Be my SM" or "Generate stories"
-- Focus on process and team productivity
-- Use `bmad-agent/tasks/create-next-story-task.md`
-- Ensure stories follow INVEST principles
-- Identify and remove blockers
-- Maintain story workflow and status
+- Load: `bmad-agent/personas-claude/sm.md`
+- Focus: Story creation, dependency management, progress tracking, flow
 - **Session tracking**: Track story generation progress
 
 ## BMAD Planning Commands
@@ -191,20 +189,28 @@ Based on your project brief, let's define:
 [Creates checkpoint after each epic]
 ```
 
-### Phase 3: Technical Design (Architect Mode)
+### Phase 3: Technical Design (Architect + Data Architect Mode)
 ```
 User: "Design the system architecture"
 Claude Code: [Architect Mode] I'll design a scalable architecture.
 
 [Reviews PRD and constraints from session state]
 
-Let me consider:
-1. System components and boundaries
-2. Technology stack (referencing technical preferences)
-3. Data flow and storage
-4. Security and performance requirements
+For complex platforms, I recommend starting with data architecture:
 
-[Creates architecture document using template]
+[Data Architect Mode]
+1. Multi-tenant data models and schemas
+2. Search indexing strategy (Elasticsearch/Algolia)
+3. Analytics and reporting structure
+4. Privacy compliance and data governance
+
+[System Architect Mode]
+5. Microservices boundaries based on data domains
+6. API contracts and service communication
+7. Infrastructure patterns and deployment
+8. Security architecture and performance requirements
+
+[Creates both data and system architecture documents]
 [Logs architectural decisions to journal]
 ```
 
@@ -342,6 +348,15 @@ Before marking any artifact complete:
 - `story-tmpl.md`: User story format with acceptance criteria
 - `planning-journal-tmpl.md`: Session tracking journal
 - `session-state-tmpl.md`: Current state tracking
+
+### Available Personas (Claude Code Optimized)
+- `analyst.md`: Discovery, brainstorming, research expert
+- `pm.md`: Product vision to requirements transformation
+- `architect.md`: System design and technical architecture
+- `data-architect.md`: Data modeling and analytics strategy
+- `design-architect.md`: UX/UI specifications and design systems
+- `po.md`: Backlog management and quality validation
+- `sm.md`: Story creation and workflow management
 
 ### Key Tasks
 - `create-next-story-task.md`: Generate the next story in sequence
