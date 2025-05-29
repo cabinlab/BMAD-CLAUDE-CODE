@@ -1,91 +1,172 @@
-# The BMAD-Method 3.1 (Breakthrough Method of Agile (ai-driven) Development)
+# BMAD-CLAUDE-CODE: The BMAD Method for Claude Code
 
-Demo of the BMad Agent entire workflow output from the web agent can be found in [Demos](./demos/readme.md) - and if you want to read a really long transcript of me talking to the multiple personality BMad Agent that produced the demo content - you can read the [full transcript](https://gemini.google.com/share/41fb640b63b0) here.
+This fork adapts the BMAD Method (Breakthrough Method of Agile AI-driven Development) specifically for use with Claude Code in VS Code, providing a structured approach to AI-driven software development.
 
-## Web Quickstart Project Setup (Recommended)
+## Quick Start
 
-Orchestrator Uber BMad Agent that does it all - already pre-compiled in the `./web-build-sample` folder. You can rebuild if you have node installed from the root of the project with the command `node ./build-web-agent.js`. The contents of agent-prompt.txt in the sample or build output folder should be copied and pasted into the Gemini Gem, or ChatPGT customGPT 'Instructions' field. The remaining files in this folder just need to be attached. Give it a name and save it, and you now have the BMad Agent available to help you brainstorm, research plan and execute on your vision.
+1. Clone this repository or download the files
+2. Copy these to your project root:
+   - `bmad-agent/` folder (templates, tasks, checklists)
+   - `CLAUDE.md` or `CLAUDE-ENHANCED.md` (rename to CLAUDE.md)
+   - `BMAD-CLAUDE-CODE-GUIDE.md` (optional quick reference)
+3. Create a `docs/` folder in your project for BMAD artifacts
+4. Start using BMAD with Claude Code!
 
-![image info](./docs/images/gem-setup.png)
+## What is BMAD-CLAUDE-CODE?
 
-If you are not sure what to do in the Web Agent - try `/help` to get a list of commands, and `/agents` to see what personas BMad can become.
+This is a specialized version of the BMAD Method that works seamlessly with Claude Code's capabilities:
 
-## IDE Project Quickstart
+- **Full Planning Support**: Claude Code can embody different agent roles (Analyst, PM, Architect, PO, SM)
+- **Session Continuity**: Multi-session planning with context preservation
+- **Template-Driven**: Consistent, high-quality artifacts using proven templates
+- **Quality Assured**: Built-in checklists ensure nothing is missed
+- **Document-Centric**: All decisions and progress tracked in markdown files
 
-After you clone the project to your local machine, you can copy the `bmad-agent` folder to your project root. This will put the templates, checklists, and other assets the local agents will need to use the agents from your IDE instead of the Web Agent. Minimally to build your project you will want the sm.ide.md and dev.ide.md so you can draft and build your project incrementally.
+## Using BMAD with Claude Code
 
-### Claude Code (VS Code) Setup
+### Starting a New Project
+```
+User: "Let's plan a new app using BMAD"
+Claude Code: I'll help you start a new BMAD project. Let me set up the planning structure...
+```
 
-If you're using Claude Code in VS Code, copy these additional files to your project root:
-1. `CLAUDE.md` - Enables Claude Code to understand and use the BMAD Method
-2. `BMAD-CLAUDE-CODE-GUIDE.md` - Quick reference for BMAD workflows (optional but recommended)
+### Continuing Work
+```
+User: "Continue BMAD planning"
+Claude Code: I see we were working on the PRD as the Product Manager...
+```
 
-This allows Claude Code to guide you through the complete BMAD workflow using the templates and checklists.
+### Key Commands
+- **"Be my [role]"** - Claude adopts specific agent mindset
+- **"Create a [document]"** - Uses appropriate template
+- **"Run [checklist]"** - Executes quality checks
+- **"Show planning status"** - Reviews progress
 
-Here are the more [Setup and Usage Instructions](./docs/instruction.md) for IDE, WEB and Task setup.
+## Project Structure
 
-Starting with the latest version of the BMad Agents for the BMad Method is very easy - all you need to do is copy `bmad-agent` folder to your project. The dedicated dev and sm that existing in previous versions are still available and are in the `bmad-agent/personas` folder with the .ide.md extension. Copy and paste the contents into your specific IDE's method of configuring a custom agent mode. The dev and sm both are configured for architecture and prd artifacts to be in (project-root)/docs and stories will be generated and developed in/from your (project-root)/docs/stories.
+```
+your-project/
+├── CLAUDE.md                  # Claude Code instructions
+├── BMAD-CLAUDE-CODE-GUIDE.md  # Quick reference
+├── bmad-agent/                # BMAD assets
+│   ├── templates/             # Document templates
+│   ├── tasks/                 # Executable tasks
+│   ├── checklists/            # Quality checklists
+│   └── data/                  # Knowledge base
+├── docs/                      # Your project artifacts
+│   ├── bmad-journal.md        # Planning history
+│   ├── .bmad-session/         # Session continuity
+│   ├── project-brief.md       # Vision document
+│   ├── prd.md                 # Requirements
+│   ├── architecture.md        # Technical design
+│   └── stories/               # User stories
+└── src/                       # Your code
+```
 
-For all other agent use (including the dev and sm) you can set up the [ide orchestrator](bmad-agent/bmad-agent.ide.md) - you can ask the orchestrator bmad to become any agent you have [configured](bmad-agent/bmad-orchestrator.ide.cfg.md).
+## The BMAD Method Philosophy
 
-[General IDE Custom Mode Setup](./docs/ide-setup.md).
+The BMAD Method is a revolutionary approach that elevates "vibe coding" to advanced project planning, ensuring AI-driven development starts with clear vision and completes with explicit guidance. It provides a structured yet flexible framework to plan, execute, and manage software projects.
 
-## Advancing AI-Driven Development
+### Key Benefits
 
-Welcome to the latest and most advanced yet easy to use version of the Web and IDE Agent Agile Workflow! This new version, called BMad Agent, represents a significant evolution that builds but vastly improves upon the foundations of [legacy V2](./legacy-archive/V2/), introducing a more refined and comprehensive suite of agents, templates, checklists, tasks - and the amazing BMad Orchestrator and Knowledge Base agent is now available - a master of every aspect of the method that can become any agent and even handle multiple tasks all within a single massive web context if so desired.
+- **Structured Planning**: Move from idea to implementation with clear phases
+- **Quality Built-In**: Checklists and templates ensure nothing is missed
+- **Context Preservation**: Never lose planning decisions across sessions
+- **Role-Based Thinking**: Claude Code adopts appropriate mindsets for each phase
+- **Document-Driven**: All artifacts are markdown files, easy to review and version
 
-## What's New?
+## BMAD Workflow Phases
 
-All IDE Agents are now optimized to be under 6K characters, so they will work with windsurf's file limit restrictions.
+### 1. Discovery & Analysis
+Claude Code acts as your Business Analyst to understand requirements:
+- Explores business needs and user problems
+- Identifies constraints and success criteria
+- Creates structured project brief
 
-The method now has an uber Orchestrator called BMAD - this agent will take your web or ide usage to the next level - this agent can morph and become the specific agent you want to work with! This makes Web usage super easy to use and set up. And in the IDE - you do not have to set up so many different agents if you do not want to!
+### 2. Product Definition
+Claude Code becomes your Product Manager to define the product:
+- Creates comprehensive PRD with epics
+- Defines success metrics and user stories
+- Prioritizes features based on value
 
-There have been drastic improvements to the generation of documents and artifacts and the agents are now programmed to really help you build the best possible plans. Advanced LLM prompting techniques have been incorporated and programmed to help you help the agents produce amazing accurate artifacts, unlike anything seen before. Additionally agents are now configurable in what they can and cannot do - so you can accept the defaults, or set which personas are able to do what tasks. If you think the PO should be the one generating PRDs and the Scrum Master should be your course corrector - its all possible now! **Define agile the BMad way - or your way!**
+### 3. Technical Architecture
+Claude Code serves as your Architect to design the system:
+- Creates scalable technical architecture
+- Defines technology stack and data models
+- Designs for maintainability and growth
 
-While this is very powerful - you can get started with the default recommended set up as is in this repo, and basically use the agents as they are envisioned and will be explained. Detailed configuration and usage is outlined in the [Instructions](./docs/instruction.md)
+### 4. Story Creation & Implementation
+Claude Code helps as Scrum Master and Developer:
+- Generates detailed user stories
+- Tracks implementation progress
+- Maintains Definition of Done
 
-## What is the BMad Method?
+## Available Resources
 
-The BMad Method is a revolutionary approach that elevates "vibe coding" to advanced project planning to ensure your developer agents can start and completed advanced projects with very explicit guidance. It provides a structured yet flexible framework to plan, execute, and manage software projects using a team of specialized AI agents.
+### Templates (`bmad-agent/templates/`)
+- `project-brief-tmpl.md` - Vision and goals
+- `prd-tmpl.md` - Product requirements
+- `architecture-tmpl.md` - System design
+- `story-tmpl.md` - User stories
+- `planning-journal-tmpl.md` - Session tracking
 
-This method and tooling is so much more than just a task runner - this is a refined tool that will help you bring out your best ideas, define what you really are to build, and execute on it! From ideation, to PRD creation, to the technical decision making - this will help you do it all with the power of advanced LLM guidance.
+### Tasks (`bmad-agent/tasks/`)
+- `create-prd.md` - PRD creation process
+- `create-architecture.md` - Architecture design
+- `create-next-story-task.md` - Story generation
+- `correct-course.md` - Problem analysis
 
-The method is designed to be tool-agnostic in principle, with agent instructions and workflows adaptable to various AI platforms and IDEs.
+### Checklists (`bmad-agent/checklists/`)
+- `pm-checklist.md` - Product quality
+- `architect-checklist.md` - Architecture review
+- `story-draft-checklist.md` - Story validation
+- `story-dod-checklist.md` - Definition of Done
 
-## Agile Agents
+## Getting Started Examples
 
-Agents are programmed either directly self contained to drop right into an agent config in the ide - or they can be configured as programmable entities the orchestrating agent can become.
+### Example 1: Starting Fresh
+```
+User: "I want to build a task management app using BMAD"
+Claude Code: I'll help you start a new BMAD project for your task management app. 
+Let me set up the planning structure and begin with discovery...
+```
 
-### Web Agents
+### Example 2: Continuing Work
+```
+User: "Continue BMAD planning"
+Claude Code: I see we were working on Epic 2 of your PRD. Last session we completed 
+the user authentication stories. Shall we continue with the task management stories?
+```
 
-Gemini 2.5 or Open AI customGPTs are created by running the node build script to generate output to a build folder. This output is the full package to create the orchestrator web agent.
+### Example 3: Running Checklists
+```
+User: "Run the architecture checklist"
+Claude Code: I'll run through the architecture checklist for your current design.
+Let's validate each aspect...
+```
 
-See the detailed [Web Orchestration Setup and Usage Instructions](./docs/instruction.md#setting-up-web-agent-orchestrator)
+## Documentation
 
-### IDE Agents
+- [CLAUDE.md](CLAUDE.md) - Main instructions for Claude Code
+- [CLAUDE-ENHANCED.md](CLAUDE-ENHANCED.md) - Enhanced version with full planning
+- [BMAD-CLAUDE-CODE-GUIDE.md](BMAD-CLAUDE-CODE-GUIDE.md) - Quick reference
+- [BMAD-SESSION-CONTINUITY.md](BMAD-SESSION-CONTINUITY.md) - Session management
+- [Instructions](./docs/instruction.md) - Detailed BMAD documentation
 
-There are dedicated self contained agents that are stand alone, and also an IDE version of an orchestrator. For there standalone, there are:
+## Contributing
 
-- [Dev IDE Agent](bmad-agent/personas/dev.ide.md)
-- [Story Generating SM Agent](bmad-agent/personas/sm.ide.md)
+This fork is specifically adapted for Claude Code. For contributions:
+1. Focus on Claude Code compatibility
+2. Maintain template and checklist quality
+3. Enhance session continuity features
+4. Improve documentation clarity
 
-If you want to use the other agents, you can use the other agents from that folder - but some will be larger than Windsurf allows - and there are many agents. So its recommended to either use 1 off tasks - OR even better - use the IDE Orchestrator Agent. See these [set up and Usage instructions for IDE Orchestrator](./docs/instruction.md#ide-agent-setup-and-usage).
+See [contributing guidelines](docs/CONTRIBUTING.md) for more details.
 
-## Tasks
+## Credits
 
-Located in `bmad-agent/tasks/`, these self-contained instruction sets allow IDE agents or the orchestrators configured agents to perform specific jobs. These also can be used as one off commands with a vanilla agent in the ide by just referencing the task and asking the agent to perform it.
+BMAD-CLAUDE-CODE is a fork of the original [BMAD-METHOD](https://github.com/bmadcode/BMAD-METHOD) by bmadcode, adapted specifically for Claude Code users.
 
-**Purpose:**
+## License
 
-- **Reduce Agent Bloat:** Avoid adding rarely used instructions to primary agents.
-- **On-Demand Functionality:** Instruct any capable IDE agent to execute a task by providing the task file content.
-- **Versatility:** Handles specific functions like running checklists, creating stories, sharding documents, indexing libraries, etc.
-
-Think of tasks as specialized mini-agents callable by your main IDE agents.
-
-## End Matter
-
-Interested in improving the BMAD Method? See the [contributing guidelines](docs/CONTRIBUTING.md).
-
-Thank you and enjoy - BMad!
-[License](./docs/LICENSE)
+[MIT License](./docs/LICENSE)

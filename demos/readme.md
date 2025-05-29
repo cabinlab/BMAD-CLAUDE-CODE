@@ -1,13 +1,18 @@
-A simple project run through the Web Gemini BMad Agent - all artifacts from a single chat session (split up into smaller files with the sharding task)
+# BMAD Method Demo Information
 
-- The [Project Brief](./v3-output-demo-files/project-brief.md) was first collaborated on and created with the Analyst
-- The first [PRD Draft](./v3-output-demo-files/prd.draft.md) was created with the PM
-- The [Architecture](./v3-output-demo-files/architecture.md) was created and then we worked on some design artifacts. The architect conversation lead to changes in the PRD reflected later.
+This directory previously contained demo outputs from the web-based BMAD orchestrator agent, showing how different agent personas collaborated to create a complete project specification.
 
-Design Artifacts with the Design Architect:
+## For Claude Code Users
 
-- [UX UI Spec](./v3-output-demo-files/ux-ui-spec.md)
-- [V0 1 Shot UI Prompt](./v3-output-demo-files/v0-prompt.md)
-- [Front End Architecture](./v3-output-demo-files/front-end-architecture.md)
+The best way to experience BMAD with Claude Code is to use it on your own project:
 
-Then the updated PRD with fixed Expic and Stories after running the PO Checklist. The PO took all changes from the architect and design architect and worked them back into the updated [PRD Final](./v3-output-demo-files/prd.md)
+1. Set up BMAD in your project following the [README](../README.md) instructions
+2. Start with: "Let's plan a new app using BMAD"
+3. Claude Code will guide you through:
+   - Project Brief creation (Analyst role)
+   - PRD development (PM role)
+   - Architecture design (Architect role)
+   - UX/UI specification (Design role)
+   - Story generation (SM/PO roles)
+
+The BMAD Method creates real, usable artifacts for your specific project rather than generic demos. Each document is tailored to your needs using the proven templates and checklists in the `bmad-agent/` folder.
