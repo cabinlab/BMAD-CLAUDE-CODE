@@ -4,6 +4,31 @@ This fork adapts the BMAD Method (Breakthrough Method of Agile AI-driven Develop
 
 ## Quick Start
 
+### Automated Setup (Recommended)
+
+Use our setup script to automatically configure BMAD in your project:
+
+**macOS/Linux:**
+```bash
+curl -O https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.sh
+chmod +x setup-bmad.sh
+./setup-bmad.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.ps1" -OutFile "setup-bmad.ps1"
+.\setup-bmad.ps1
+```
+
+The script will:
+- Copy all necessary BMAD files to your project
+- Create the proper directory structure
+- Initialize planning journal and session files
+- Let you choose between basic and enhanced Claude.md
+
+### Manual Setup
+
 1. Clone this repository or download the files
 2. Copy these to your project root:
    - `bmad-agent/` folder (templates, tasks, checklists)
@@ -162,6 +187,26 @@ This fork is specifically adapted for Claude Code. For contributions:
 4. Improve documentation clarity
 
 See [contributing guidelines](docs/CONTRIBUTING.md) for more details.
+
+## Changes from Original BMAD-METHOD
+
+This fork optimizes BMAD specifically for Claude Code by:
+
+**Added:**
+- `CLAUDE.md` & `CLAUDE-ENHANCED.md` - Claude Code instructions
+- `BMAD-CLAUDE-CODE-GUIDE.md` - Quick reference
+- `BMAD-SESSION-CONTINUITY.md` - Multi-session planning
+- Session management templates
+- Setup scripts for quick start
+
+**Removed:**
+- Web orchestrator files (build scripts, configs)
+- IDE-specific agents (.ide.md files)
+- Legacy versions (V1, V2)
+- Demo outputs
+- ~135 files, ~22K lines
+
+The core BMAD templates, tasks, and checklists remain intact.
 
 ## Credits
 
