@@ -101,54 +101,70 @@ download_file() {
 
 download_directory() {
     local dir_path="$1"
-    local api_url="https://api.github.com/repos/$GITHUB_REPO/contents/$dir_path?ref=$GITHUB_BRANCH"
     
-    # Create directory
-    mkdir -p "$dir_path"
+    # Use GitHub's git tree API to get all files recursively
+    local tree_url="https://api.github.com/repos/$GITHUB_REPO/git/trees/$GITHUB_BRANCH?recursive=1"
     
-    # Get directory contents from GitHub API
+    # Get the entire tree structure
     if command -v curl >/dev/null 2>&1; then
-        local contents=$(curl -fsSL "$api_url")
+        local tree_data=$(curl -fsSL "$tree_url")
     elif command -v wget >/dev/null 2>&1; then
-        local contents=$(wget -qO- "$api_url")
+        local tree_data=$(wget -qO- "$tree_url")
     else
         echo -e "${YELLOW}Error: Neither curl nor wget found. Cannot download directory.${NC}"
         exit 1
     fi
     
     # Check if we got valid JSON
-    if [[ "$contents" == *"\"message\":"* ]]; then
-        echo -e "${YELLOW}Warning: Could not access directory $dir_path${NC}"
+    if [[ "$tree_data" == *"\"message\":"* ]]; then
+        echo -e "${YELLOW}Warning: Could not access repository tree${NC}"
         return 1
     fi
     
-    # Simple JSON parsing - extract name, type, and download_url for each item
-    local name=""
-    local type=""
-    local download_url=""
+    # Track directories we've created to show structure
+    declare -A created_dirs
     
-    echo "$contents" | sed 's/},{/}\
-{/g' | while IFS= read -r item; do
-        if [[ "$item" == *'"name":'* ]]; then
-            name=$(echo "$item" | grep -o '"name":"[^"]*"' | sed 's/"name":"//;s/"//')
-            type=$(echo "$item" | grep -o '"type":"[^"]*"' | sed 's/"type":"//;s/"//')
-            download_url=$(echo "$item" | grep -o '"download_url":"[^"]*"' | sed 's/"download_url":"//;s/"//')
+    # Extract file paths that start with our directory path
+    echo "$tree_data" | grep -o '"path":"[^"]*"' | sed 's/"path":"//;s/"//' | while IFS= read -r file_path; do
+        if [[ "$file_path" == "$dir_path"/* ]]; then
+            # This is a file in our target directory
+            local relative_path="${file_path#$dir_path/}"
+            local target_file="$file_path"
+            local target_dir=$(dirname "$target_file")
             
-            if [[ "$type" == "file" && "$download_url" != "null" && -n "$download_url" ]]; then
-                target_file="$dir_path/$name"
-                target_dir=$(dirname "$target_file")
+            # Show directory creation
+            if [[ ! -d "$target_dir" ]]; then
                 mkdir -p "$target_dir"
-                
-                if command -v curl >/dev/null 2>&1; then
-                    curl -fsSL "$download_url" -o "$target_file"
-                else
-                    wget -q "$download_url" -O "$target_file"
+                # Show the directory structure being created
+                local display_dir="${target_dir#./}"
+                if [[ "$display_dir" != "$dir_path" ]]; then
+                    echo -e "    ${BLUE}📁${NC} Creating: $display_dir/"
                 fi
-                echo "    Downloaded: $name"
-            elif [[ "$type" == "dir" && -n "$name" ]]; then
-                echo "    Entering directory: $name"
-                download_directory "$dir_path/$name"
             fi
+            
+            # Download the file
+            local file_url="$GITHUB_RAW_URL/$file_path"
+            if command -v curl >/dev/null 2>&1; then
+                curl -fsSL "$file_url" -o "$target_file" 2>/dev/null
+            else
+                wget -q "$file_url" -O "$target_file" 2>/dev/null
+            fi
+            
+            # Show file download with proper formatting
+            local display_file="${relative_path}"
+            local file_icon="📄"
+            
+            # Use different icons for different file types
+            case "$display_file" in
+                *.md) file_icon="📝" ;;
+                *.yml|*.yaml) file_icon="⚙️" ;;
+                *.json) file_icon="🔧" ;;
+                *.sh) file_icon="🔨" ;;
+                *.py) file_icon="🐍" ;;
+                *.js|*.ts) file_icon="⚡" ;;
+            esac
+            
+            echo -e "    ${file_icon} Downloaded: ${GREEN}$display_file${NC}"
         fi
     done
 }
@@ -160,7 +176,7 @@ if [[ "$SOURCE_MODE" == "local" ]]; then
     # Copy bmad-agent folder
     if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
         cp -r "$SCRIPT_DIR/bmad-agent" .
-        echo "  ✓ bmad-agent/ folder"
+        echo -e "  📁 ${GREEN}bmad-agent/${NC} folder copied"
     else
         echo -e "${YELLOW}  ⚠️  bmad-agent/ folder not found in $SCRIPT_DIR${NC}"
     fi
@@ -169,8 +185,10 @@ else
     
     # Download bmad-agent folder
     echo "  📥 Downloading bmad-agent/ folder..."
+    echo ""
     download_directory "bmad-agent"
-    echo "  ✓ bmad-agent/ folder"
+    echo ""
+    echo "  ✅ bmad-agent/ folder complete"
 fi
 
 # Copy or download CLAUDE.md
@@ -184,21 +202,21 @@ claude_choice=${claude_choice:-1}
 if [[ "$SOURCE_MODE" == "local" ]]; then
     if [[ "$claude_choice" == "2" ]] && [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE.md" ./CLAUDE.md
-        echo "  ✓ CLAUDE.md (basic version)"
+        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (basic version)"
     elif [[ -f "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ./CLAUDE.md
-        echo "  ✓ CLAUDE.md (enhanced version)"
+        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (enhanced version)"
     elif [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE.md" ./CLAUDE.md
-        echo "  ✓ CLAUDE.md"
+        echo -e "  📝 ${GREEN}CLAUDE.md${NC}"
     fi
 else
     if [[ "$claude_choice" == "2" ]]; then
         download_file "CLAUDE.md" "./CLAUDE.md"
-        echo "  ✓ CLAUDE.md (basic version)"
+        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (basic version)"
     else
         download_file "CLAUDE-ENHANCED.md" "./CLAUDE.md"
-        echo "  ✓ CLAUDE.md (enhanced version)"
+        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (enhanced version)"
     fi
 fi
 
@@ -206,19 +224,19 @@ fi
 if [[ "$SOURCE_MODE" == "local" ]]; then
     if [[ -f "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" ]]; then
         cp "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" .
-        echo "  ✓ BMAD-CLAUDE-CODE-GUIDE.md"
+        echo -e "  📚 ${GREEN}BMAD-CLAUDE-CODE-GUIDE.md${NC}"
     fi
     
     if [[ -f "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" ]]; then
         cp "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" .
-        echo "  ✓ BMAD-SESSION-CONTINUITY.md"
+        echo -e "  🔄 ${GREEN}BMAD-SESSION-CONTINUITY.md${NC}"
     fi
 else
     download_file "BMAD-CLAUDE-CODE-GUIDE.md" "./BMAD-CLAUDE-CODE-GUIDE.md"
-    echo "  ✓ BMAD-CLAUDE-CODE-GUIDE.md"
+    echo -e "  📚 ${GREEN}BMAD-CLAUDE-CODE-GUIDE.md${NC}"
     
     download_file "BMAD-SESSION-CONTINUITY.md" "./BMAD-SESSION-CONTINUITY.md"
-    echo "  ✓ BMAD-SESSION-CONTINUITY.md"
+    echo -e "  🔄 ${GREEN}BMAD-SESSION-CONTINUITY.md${NC}"
 fi
 
 # Create docs directory structure
@@ -229,10 +247,10 @@ mkdir -p docs/.bmad-session
 mkdir -p docs/stories
 mkdir -p docs/technical
 
-echo "  ✓ docs/"
-echo "  ✓ docs/.bmad-session/"
-echo "  ✓ docs/stories/"
-echo "  ✓ docs/technical/"
+echo -e "  📁 ${GREEN}docs/${NC}"
+echo -e "  📁 ${GREEN}docs/.bmad-session/${NC}"
+echo -e "  📁 ${GREEN}docs/stories/${NC}"
+echo -e "  📁 ${GREEN}docs/technical/${NC}"
 
 # Initialize planning journal if it doesn't exist
 if [[ ! -f "docs/bmad-journal.md" ]]; then
@@ -265,7 +283,7 @@ BMAD Method initialized. Ready to begin planning!
 
 ---
 EOF
-    echo "  ✓ docs/bmad-journal.md (initialized)"
+    echo -e "  📓 ${GREEN}docs/bmad-journal.md${NC} (initialized)"
 fi
 
 # Initialize session state
@@ -298,7 +316,7 @@ Start with "Let's plan a new app using BMAD" or "I have an idea for..."
 ## Session History:
 - **[Today]**: BMAD Setup - Initialized project structure
 EOF
-    echo "  ✓ docs/.bmad-session/current-state.md (initialized)"
+    echo -e "  ⚙️ ${GREEN}docs/.bmad-session/current-state.md${NC} (initialized)"
 fi
 
 # Create .gitignore if it doesn't exist
@@ -317,7 +335,7 @@ Thumbs.db
 *.swp
 *.swo
 EOF
-    echo "  ✓ .gitignore (created)"
+    echo -e "  🚫 ${GREEN}.gitignore${NC} (created)"
 fi
 
 echo ""
