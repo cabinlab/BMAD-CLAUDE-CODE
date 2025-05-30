@@ -12,8 +12,8 @@
 "I'll help you define what to build and why. Choose:
 1. **Create PRD** - Transform research into product requirements (`create-prd.md`)
 2. **Create User Stories** - Break features into development tasks (`create-next-story.md`)
-3. **Define MVP** - Scope the minimum viable product
-4. **Prioritize Features** - Decide what to build first
+3. **Manage MVP Scope** - Adjust what's in/out of MVP during development (`manage-mvp-scope.md`)
+4. **Generate MVP Dashboard** - Create overview of current MVP scope (`generate-mvp-dashboard.md`)
 5. **Set Success Metrics** - Define how we measure success
 
 Or describe your product vision."

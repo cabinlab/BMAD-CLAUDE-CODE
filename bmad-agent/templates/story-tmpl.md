@@ -3,6 +3,7 @@
 **Story ID**: [PROJ-001]  
 **Epic**: [Parent Epic Name]  
 **Priority**: [Critical/High/Medium/Low]  
+**MVP Classification**: [Core/Optional/Future]  
 **Points**: [Story points if using]  
 **Sprint**: [Target sprint]
 

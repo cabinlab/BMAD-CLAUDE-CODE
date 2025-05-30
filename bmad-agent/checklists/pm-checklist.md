@@ -144,6 +144,9 @@ This checklist serves as a comprehensive framework to ensure the Product Require
 - [ ] Stories include appropriate acceptance criteria
 - [ ] Story dependencies and sequence documented
 - [ ] Stories aligned with epic goals
+- [ ] All stories have MVP Classification (Core/Optional/Future)
+- [ ] MVP Core stories form coherent user experience
+- [ ] No MVP Core stories depend on Optional/Future work
 
 ### 6.3 First Epic Completeness
 - [ ] First epic includes all necessary setup steps
