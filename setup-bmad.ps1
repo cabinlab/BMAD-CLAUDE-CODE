@@ -16,13 +16,19 @@ function Write-ColorOutput($ForegroundColor) {
 # Get the directory where this script is located
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
+# GitHub repository details
+$GitHubRepo = "cabinlab/BMAD-CLAUDE-CODE"
+$GitHubBranch = "main"
+$GitHubRawUrl = "https://raw.githubusercontent.com/$GitHubRepo/$GitHubBranch"
+
 Write-ColorOutput Blue "🚀 BMAD-CLAUDE-CODE Setup Script"
 Write-Output "=================================="
 Write-Output ""
 
-# Check if we're in the BMAD-CLAUDE-CODE repo or if user wants to set up in current directory
+# Check if we're in the BMAD-CLAUDE-CODE repo or downloading from GitHub
 if (Test-Path "$ScriptDir\bmad-agent") {
     Write-ColorOutput Yellow "Detected BMAD-CLAUDE-CODE repository"
+    $SourceMode = "local"
     Write-Output "Where would you like to set up BMAD?"
     Write-Output "1) Current directory: $(Get-Location)"
     Write-Output "2) Different directory"
@@ -47,7 +53,9 @@ if (Test-Path "$ScriptDir\bmad-agent") {
         }
     }
 } else {
-    Write-ColorOutput Yellow "Running from: $(Get-Location)"
+    Write-ColorOutput Yellow "Setting up BMAD in: $(Get-Location)"
+    Write-ColorOutput Blue "Files will be downloaded from GitHub repository"
+    $SourceMode = "github"
     $TargetDir = Get-Location
 }
 
@@ -76,46 +84,115 @@ if ((Test-Path "bmad-agent") -or (Test-Path "CLAUDE.md")) {
     }
 }
 
-# Copy files
-Write-ColorOutput Blue "📁 Copying BMAD files..."
-
-# Copy bmad-agent folder
-if (Test-Path "$ScriptDir\bmad-agent") {
-    Copy-Item -Path "$ScriptDir\bmad-agent" -Destination . -Recurse -Force
-    Write-Output "  ✓ bmad-agent/ folder"
-} else {
-    Write-ColorOutput Yellow "  ⚠️  bmad-agent/ folder not found in $ScriptDir"
+# Functions for downloading files from GitHub
+function Download-File {
+    param($FilePath, $TargetPath)
+    $url = "$GitHubRawUrl/$FilePath"
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $TargetPath -UseBasicParsing
+    } catch {
+        Write-ColorOutput Yellow "Error downloading $FilePath : $_"
+        throw
+    }
 }
 
-# Copy CLAUDE.md (prefer enhanced version if user wants full features)
-if (Test-Path "$ScriptDir\CLAUDE-ENHANCED.md") {
-    Write-Output ""
-    Write-Output "Which version of CLAUDE.md would you like?"
-    Write-Output "1) Enhanced (with full planning & session continuity)"
-    Write-Output "2) Basic (simpler, without session management)"
-    $claude_choice = Read-Host "Choose (1-2) [1]"
-    if (!$claude_choice) { $claude_choice = "1" }
+function Download-Directory {
+    param($DirPath)
+    $apiUrl = "https://api.github.com/repos/$GitHubRepo/contents/$DirPath?ref=$GitHubBranch"
     
+    # Create directory
+    if (!(Test-Path $DirPath)) {
+        New-Item -ItemType Directory -Path $DirPath -Force | Out-Null
+    }
+    
+    try {
+        # Get directory contents from GitHub API
+        $contents = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing
+        
+        foreach ($item in $contents) {
+            if ($item.type -eq "file") {
+                $targetFile = Join-Path $DirPath $item.name
+                $targetDir = Split-Path $targetFile -Parent
+                if (!(Test-Path $targetDir)) {
+                    New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+                }
+                Invoke-WebRequest -Uri $item.download_url -OutFile $targetFile -UseBasicParsing
+            } elseif ($item.type -eq "dir") {
+                # Recursively download subdirectories
+                Download-Directory (Join-Path $DirPath $item.name)
+            }
+        }
+    } catch {
+        Write-ColorOutput Yellow "Error downloading directory $DirPath : $_"
+        throw
+    }
+}
+
+# Copy or download files
+if ($SourceMode -eq "local") {
+    Write-ColorOutput Blue "📁 Copying BMAD files..."
+    
+    # Copy bmad-agent folder
+    if (Test-Path "$ScriptDir\bmad-agent") {
+        Copy-Item -Path "$ScriptDir\bmad-agent" -Destination . -Recurse -Force
+        Write-Output "  ✓ bmad-agent/ folder"
+    } else {
+        Write-ColorOutput Yellow "  ⚠️  bmad-agent/ folder not found in $ScriptDir"
+    }
+} else {
+    Write-ColorOutput Blue "📁 Downloading BMAD files from GitHub..."
+    
+    # Download bmad-agent folder
+    Write-Output "  📥 Downloading bmad-agent/ folder..."
+    Download-Directory "bmad-agent"
+    Write-Output "  ✓ bmad-agent/ folder"
+}
+
+# Copy or download CLAUDE.md
+Write-Output ""
+Write-Output "Which version of CLAUDE.md would you like?"
+Write-Output "1) Enhanced (with full planning & session continuity)"
+Write-Output "2) Basic (simpler, without session management)"
+$claude_choice = Read-Host "Choose (1-2) [1]"
+if (!$claude_choice) { $claude_choice = "1" }
+
+if ($SourceMode -eq "local") {
     if (($claude_choice -eq "2") -and (Test-Path "$ScriptDir\CLAUDE.md")) {
         Copy-Item -Path "$ScriptDir\CLAUDE.md" -Destination ".\CLAUDE.md" -Force
         Write-Output "  ✓ CLAUDE.md (basic version)"
-    } else {
+    } elseif (Test-Path "$ScriptDir\CLAUDE-ENHANCED.md") {
         Copy-Item -Path "$ScriptDir\CLAUDE-ENHANCED.md" -Destination ".\CLAUDE.md" -Force
         Write-Output "  ✓ CLAUDE.md (enhanced version)"
+    } elseif (Test-Path "$ScriptDir\CLAUDE.md") {
+        Copy-Item -Path "$ScriptDir\CLAUDE.md" -Destination ".\CLAUDE.md" -Force
+        Write-Output "  ✓ CLAUDE.md"
     }
-} elseif (Test-Path "$ScriptDir\CLAUDE.md") {
-    Copy-Item -Path "$ScriptDir\CLAUDE.md" -Destination . -Force
-    Write-Output "  ✓ CLAUDE.md"
+} else {
+    if ($claude_choice -eq "2") {
+        Download-File "CLAUDE.md" ".\CLAUDE.md"
+        Write-Output "  ✓ CLAUDE.md (basic version)"
+    } else {
+        Download-File "CLAUDE-ENHANCED.md" ".\CLAUDE.md"
+        Write-Output "  ✓ CLAUDE.md (enhanced version)"
+    }
 }
 
-# Copy guide files
-if (Test-Path "$ScriptDir\BMAD-CLAUDE-CODE-GUIDE.md") {
-    Copy-Item -Path "$ScriptDir\BMAD-CLAUDE-CODE-GUIDE.md" -Destination . -Force
+# Copy or download guide files
+if ($SourceMode -eq "local") {
+    if (Test-Path "$ScriptDir\BMAD-CLAUDE-CODE-GUIDE.md") {
+        Copy-Item -Path "$ScriptDir\BMAD-CLAUDE-CODE-GUIDE.md" -Destination . -Force
+        Write-Output "  ✓ BMAD-CLAUDE-CODE-GUIDE.md"
+    }
+    
+    if (Test-Path "$ScriptDir\BMAD-SESSION-CONTINUITY.md") {
+        Copy-Item -Path "$ScriptDir\BMAD-SESSION-CONTINUITY.md" -Destination . -Force
+        Write-Output "  ✓ BMAD-SESSION-CONTINUITY.md"
+    }
+} else {
+    Download-File "BMAD-CLAUDE-CODE-GUIDE.md" ".\BMAD-CLAUDE-CODE-GUIDE.md"
     Write-Output "  ✓ BMAD-CLAUDE-CODE-GUIDE.md"
-}
-
-if (Test-Path "$ScriptDir\BMAD-SESSION-CONTINUITY.md") {
-    Copy-Item -Path "$ScriptDir\BMAD-SESSION-CONTINUITY.md" -Destination . -Force
+    
+    Download-File "BMAD-SESSION-CONTINUITY.md" ".\BMAD-SESSION-CONTINUITY.md"
     Write-Output "  ✓ BMAD-SESSION-CONTINUITY.md"
 }
 

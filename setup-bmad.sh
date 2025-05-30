@@ -14,13 +14,19 @@ NC='\033[0m' # No Color
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# GitHub repository details
+GITHUB_REPO="cabinlab/BMAD-CLAUDE-CODE"
+GITHUB_BRANCH="main"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH"
+
 echo -e "${BLUE}🚀 BMAD-CLAUDE-CODE Setup Script${NC}"
 echo "=================================="
 echo ""
 
-# Check if we're in the BMAD-CLAUDE-CODE repo or if user wants to set up in current directory
+# Check if we're in the BMAD-CLAUDE-CODE repo or downloading from GitHub
 if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
     echo -e "${YELLOW}Detected BMAD-CLAUDE-CODE repository${NC}"
+    SOURCE_MODE="local"
     echo "Where would you like to set up BMAD?"
     echo "1) Current directory: $(pwd)"
     echo "2) Different directory"
@@ -45,7 +51,9 @@ if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
             ;;
     esac
 else
-    echo -e "${YELLOW}Running from: $(pwd)${NC}"
+    echo -e "${YELLOW}Setting up BMAD in: $(pwd)${NC}"
+    echo -e "${BLUE}Files will be downloaded from GitHub repository${NC}"
+    SOURCE_MODE="github"
     TARGET_DIR="$(pwd)"
 fi
 
@@ -75,46 +83,126 @@ if [[ -d "bmad-agent" ]] || [[ -f "CLAUDE.md" ]]; then
     fi
 fi
 
-# Copy files
-echo -e "${BLUE}📁 Copying BMAD files...${NC}"
+# Functions for downloading files from GitHub
+download_file() {
+    local file_path="$1"
+    local target_path="$2"
+    local url="$GITHUB_RAW_URL/$file_path"
+    
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$url" -o "$target_path"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q "$url" -O "$target_path"
+    else
+        echo -e "${YELLOW}Error: Neither curl nor wget found. Cannot download files.${NC}"
+        exit 1
+    fi
+}
 
-# Copy bmad-agent folder
-if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
-    cp -r "$SCRIPT_DIR/bmad-agent" .
-    echo "  ✓ bmad-agent/ folder"
+download_directory() {
+    local dir_path="$1"
+    local api_url="https://api.github.com/repos/$GITHUB_REPO/contents/$dir_path?ref=$GITHUB_BRANCH"
+    
+    # Create directory
+    mkdir -p "$dir_path"
+    
+    # Get directory contents from GitHub API
+    if command -v curl >/dev/null 2>&1; then
+        local contents=$(curl -fsSL "$api_url")
+    elif command -v wget >/dev/null 2>&1; then
+        local contents=$(wget -qO- "$api_url")
+    else
+        echo -e "${YELLOW}Error: Neither curl nor wget found. Cannot download directory.${NC}"
+        exit 1
+    fi
+    
+    # Parse JSON and download files
+    echo "$contents" | grep -o '"download_url":"[^"]*"' | sed 's/"download_url":"//;s/"//' | while read url; do
+        if [[ "$url" != "null" ]]; then
+            filename=$(basename "$url")
+            subdir=$(echo "$url" | sed "s|.*/$GITHUB_REPO/$GITHUB_BRANCH/$dir_path/||" | sed "s|/$filename||")
+            
+            if [[ -n "$subdir" ]]; then
+                mkdir -p "$dir_path/$subdir"
+                target_file="$dir_path/$subdir/$filename"
+            else
+                target_file="$dir_path/$filename"
+            fi
+            
+            if command -v curl >/dev/null 2>&1; then
+                curl -fsSL "$url" -o "$target_file"
+            else
+                wget -q "$url" -O "$target_file"
+            fi
+        fi
+    done
+}
+
+# Copy or download files
+if [[ "$SOURCE_MODE" == "local" ]]; then
+    echo -e "${BLUE}📁 Copying BMAD files...${NC}"
+    
+    # Copy bmad-agent folder
+    if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
+        cp -r "$SCRIPT_DIR/bmad-agent" .
+        echo "  ✓ bmad-agent/ folder"
+    else
+        echo -e "${YELLOW}  ⚠️  bmad-agent/ folder not found in $SCRIPT_DIR${NC}"
+    fi
 else
-    echo -e "${YELLOW}  ⚠️  bmad-agent/ folder not found in $SCRIPT_DIR${NC}"
+    echo -e "${BLUE}📁 Downloading BMAD files from GitHub...${NC}"
+    
+    # Download bmad-agent folder
+    echo "  📥 Downloading bmad-agent/ folder..."
+    download_directory "bmad-agent"
+    echo "  ✓ bmad-agent/ folder"
 fi
 
-# Copy CLAUDE.md (prefer enhanced version if user wants full features)
-if [[ -f "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ]]; then
-    echo ""
-    echo "Which version of CLAUDE.md would you like?"
-    echo "1) Enhanced (with full planning & session continuity)"
-    echo "2) Basic (simpler, without session management)"
-    read -p "Choose (1-2) [1]: " claude_choice
-    claude_choice=${claude_choice:-1}
-    
+# Copy or download CLAUDE.md
+echo ""
+echo "Which version of CLAUDE.md would you like?"
+echo "1) Enhanced (with full planning & session continuity)"
+echo "2) Basic (simpler, without session management)"
+read -p "Choose (1-2) [1]: " claude_choice
+claude_choice=${claude_choice:-1}
+
+if [[ "$SOURCE_MODE" == "local" ]]; then
     if [[ "$claude_choice" == "2" ]] && [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE.md" ./CLAUDE.md
         echo "  ✓ CLAUDE.md (basic version)"
-    else
+    elif [[ -f "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ./CLAUDE.md
         echo "  ✓ CLAUDE.md (enhanced version)"
+    elif [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
+        cp "$SCRIPT_DIR/CLAUDE.md" ./CLAUDE.md
+        echo "  ✓ CLAUDE.md"
     fi
-elif [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
-    cp "$SCRIPT_DIR/CLAUDE.md" .
-    echo "  ✓ CLAUDE.md"
+else
+    if [[ "$claude_choice" == "2" ]]; then
+        download_file "CLAUDE.md" "./CLAUDE.md"
+        echo "  ✓ CLAUDE.md (basic version)"
+    else
+        download_file "CLAUDE-ENHANCED.md" "./CLAUDE.md"
+        echo "  ✓ CLAUDE.md (enhanced version)"
+    fi
 fi
 
-# Copy guide files
-if [[ -f "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" ]]; then
-    cp "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" .
+# Copy or download guide files
+if [[ "$SOURCE_MODE" == "local" ]]; then
+    if [[ -f "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" ]]; then
+        cp "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" .
+        echo "  ✓ BMAD-CLAUDE-CODE-GUIDE.md"
+    fi
+    
+    if [[ -f "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" ]]; then
+        cp "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" .
+        echo "  ✓ BMAD-SESSION-CONTINUITY.md"
+    fi
+else
+    download_file "BMAD-CLAUDE-CODE-GUIDE.md" "./BMAD-CLAUDE-CODE-GUIDE.md"
     echo "  ✓ BMAD-CLAUDE-CODE-GUIDE.md"
-fi
-
-if [[ -f "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" ]]; then
-    cp "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" .
+    
+    download_file "BMAD-SESSION-CONTINUITY.md" "./BMAD-SESSION-CONTINUITY.md"
     echo "  ✓ BMAD-SESSION-CONTINUITY.md"
 fi
 
