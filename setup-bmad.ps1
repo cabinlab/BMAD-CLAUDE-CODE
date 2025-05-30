@@ -3,7 +3,7 @@
 
 $ErrorActionPreference = "Stop"
 
-# Colors for output
+# Enhanced Color Palette
 function Write-ColorOutput($ForegroundColor) {
     $fc = $host.UI.RawUI.ForegroundColor
     $host.UI.RawUI.ForegroundColor = $ForegroundColor
@@ -13,6 +13,14 @@ function Write-ColorOutput($ForegroundColor) {
     $host.UI.RawUI.ForegroundColor = $fc
 }
 
+# Color definitions
+$Cyan = "Cyan"
+$Purple = "Magenta" 
+$Green = "Green"
+$Red = "Red"
+$White = "White"
+$Gray = "DarkGray"
+
 # Get the directory where this script is located
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
@@ -21,13 +29,40 @@ $GitHubRepo = "cabinlab/BMAD-CLAUDE-CODE"
 $GitHubBranch = "main"
 $GitHubRawUrl = "https://raw.githubusercontent.com/$GitHubRepo/$GitHubBranch"
 
-Write-ColorOutput Blue "🚀 BMAD-CLAUDE-CODE Setup Script"
-Write-Output "=================================="
+# Clear screen for better presentation
+Clear-Host
+
+# Display CLAUDE CODE style ASCII art header
+Write-Output ""
+Write-ColorOutput $Purple "╔══════════════════════════════════════════════════════════════╕"
+Write-Host -NoNewline -ForegroundColor $Purple "║ "
+Write-Host -NoNewline -ForegroundColor $Cyan "***"
+Write-Host -NoNewline " "
+Write-Host -NoNewline -ForegroundColor $Green "Breakthrough Method of Agile AI-Driven Development"
+Write-Host -NoNewline "  "
+Write-Host -NoNewline -ForegroundColor $Cyan "***"
+Write-Host -ForegroundColor $Purple " ║"
+Write-ColorOutput $Purple "╚══════════════════════════════════════════════════════════════╝"
+Write-Output ""
+Write-ColorOutput $Green "     ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗"
+Write-ColorOutput $Green "    ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝"
+Write-ColorOutput $Green "    ██║     ██║     ███████║██║   ██║██║  ██║█████╗  "
+Write-ColorOutput $Green "    ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  "
+Write-ColorOutput $Green "    ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗"
+Write-ColorOutput $Green "     ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝"
+Write-Output ""
+Write-ColorOutput $Purple "    ██████╗ ███╗   ███╗ █████╗ ██████╗ "
+Write-ColorOutput $Purple "    ██╔══██╗████╗ ████║██╔══██╗██╔══██╗"
+Write-ColorOutput $Purple "    ██████╔╝██╔████╔██║███████║██║  ██║"
+Write-ColorOutput $Purple "    ██╔══██╗██║╚██╔╝██║██╔══██║██║  ██║"
+Write-ColorOutput $Purple "    ██████╔╝██║ ╚═╝ ██║██║  ██║██████╔╝"
+Write-ColorOutput $Purple "    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝ "
 Write-Output ""
 
 # Check if we're in the BMAD-CLAUDE-CODE repo or downloading from GitHub
 if (Test-Path "$ScriptDir\bmad-agent") {
-    Write-ColorOutput Yellow "Detected BMAD-CLAUDE-CODE repository"
+    Write-Host -NoNewline -ForegroundColor $Cyan "◆"
+    Write-Host " Detected BMAD-CLAUDE-CODE repository"
     $SourceMode = "local"
     Write-Output "Where would you like to set up BMAD?"
     Write-Output "1) Current directory: $(Get-Location)"
@@ -53,28 +88,35 @@ if (Test-Path "$ScriptDir\bmad-agent") {
         }
     }
 } else {
-    Write-ColorOutput Yellow "Setting up BMAD in: $(Get-Location)"
-    Write-ColorOutput Blue "Files will be downloaded from GitHub repository"
+    Write-Host -NoNewline -ForegroundColor $Cyan "◆"
+    Write-Host " Setting up BMAD in: " -NoNewline
+    Write-ColorOutput Cyan "$(Get-Location)"
+    Write-Host -NoNewline -ForegroundColor $Purple "▶"
+    Write-Host " Files will be downloaded from GitHub repository"
     $SourceMode = "github"
     $TargetDir = Get-Location
 }
 
 # Create target directory if it doesn't exist
 if (!(Test-Path $TargetDir)) {
-    Write-ColorOutput Blue "Creating directory: $TargetDir"
+    Write-Host -NoNewline -ForegroundColor $Purple "▶"
+    Write-Host " Creating directory: " -NoNewline
+    Write-ColorOutput Cyan "$TargetDir"
     New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
 }
 
 Set-Location $TargetDir
 
 Write-Output ""
-Write-ColorOutput Blue "Setting up BMAD in: $TargetDir"
+Write-Host -NoNewline -ForegroundColor $Cyan "◆"
+Write-Host " Setting up BMAD in: " -NoNewline
+Write-ColorOutput Cyan "$TargetDir"
 Write-Output ""
 
 # Check if files already exist
 $Overwrite = $false
 if ((Test-Path "bmad-agent") -or (Test-Path "CLAUDE.md")) {
-    Write-ColorOutput Yellow "⚠️  BMAD files already exist in this directory"
+    Write-ColorOutput $Red "⚠️  BMAD files already exist in this directory"
     $reply = Read-Host "Overwrite existing files? (y/N)"
     if ($reply -match "^[Yy]$") {
         $Overwrite = $true
@@ -91,8 +133,28 @@ function Download-File {
     try {
         Invoke-WebRequest -Uri $url -OutFile $TargetPath -UseBasicParsing
     } catch {
-        Write-ColorOutput Yellow "Error downloading $FilePath : $_"
+        Write-ColorOutput $Red "Error downloading $FilePath : $_"
         throw
+    }
+}
+
+function Download-File-Silent {
+    param($FilePath)
+    
+    $targetFile = $FilePath
+    $targetDir = Split-Path $targetFile -Parent
+    
+    # Create directory if needed
+    if (!(Test-Path $targetDir)) {
+        New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+    }
+    
+    # Download the file silently
+    $fileUrl = "$GitHubRawUrl/$FilePath"
+    try {
+        Invoke-WebRequest -Uri $fileUrl -OutFile $targetFile -UseBasicParsing -TimeoutSec 10
+    } catch {
+        # Silently fail
     }
 }
 
@@ -104,27 +166,68 @@ function Download-Directory {
     $apiSuccess = $false
     $treeData = $null
     
+    # Show spinner while fetching file list
+    Write-Host -NoNewline "  "
+    Write-Host -NoNewline -ForegroundColor $Purple "◐"
+    Write-Host " Fetching file list from GitHub..."
+    
     try {
         # Attempt to get tree data from GitHub API with timeout
         $treeData = Invoke-RestMethod -Uri $treeUrl -UseBasicParsing -TimeoutSec 10
         if ($treeData -and $treeData.tree) {
             $apiSuccess = $true
+            Write-Host -NoNewline "`r  "
+            Write-Host -NoNewline -ForegroundColor $Green "✔"
+            Write-Host " File list retrieved successfully    "
         }
     } catch {
         # API failed, will use fallback
         $apiSuccess = $false
+        Write-Host -NoNewline "`r  "
+        Write-Host -NoNewline -ForegroundColor $Red "✗"
+        Write-Host " GitHub API unavailable              "
     }
     
     if ($apiSuccess) {
-        # Use API data
+        # Use API data with color rotation
+        $files = @()
         foreach ($item in $treeData.tree) {
             if ($item.path -like "$DirPath/*" -and $item.type -eq "blob") {
-                Download-And-Show-File $item.path $DirPath
+                $files += $item.path
             }
+        }
+        
+        # Group files by directory
+        $dirGroups = $files | Group-Object { Split-Path $_ -Parent }
+        $colorIndex = 0
+        $colors = @($Cyan, $Purple, $Green)
+        
+        foreach ($group in $dirGroups) {
+            $dirName = $group.Name
+            $dirFiles = $group.Group
+            
+            Write-Host -NoNewline "    "
+            Write-Host -NoNewline -ForegroundColor $Cyan "📦"
+            Write-Host " Creating: " -NoNewline
+            Write-ColorOutput $Gray "$dirName/"
+            
+            # Download files with progress bar
+            $fileCount = 0
+            $totalFiles = $dirFiles.Count
+            $barColor = $colors[$colorIndex]
+            
+            foreach ($filePath in $dirFiles) {
+                Download-File-Silent $filePath
+                $fileCount++
+                Show-ProgressBar -Current $fileCount -Total $totalFiles -Prefix "      " -BarColor $barColor
+            }
+            
+            # Move to next color
+            $colorIndex = ($colorIndex + 1) % $colors.Length
         }
     } else {
         # Fallback: Use hardcoded file list
-        Write-ColorOutput Yellow "    ⚠️  GitHub API unavailable, using fallback file list"
+        Write-ColorOutput $Red "    ⚠️  GitHub API unavailable, using fallback file list"
         Download-Bmad-Fallback
     }
 }
@@ -141,7 +244,10 @@ function Download-And-Show-File {
         New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
         $displayDir = $targetDir.Replace(".\", "")
         if ($displayDir -ne $DirPath) {
-            Write-ColorOutput Blue "    📁 Creating: $displayDir/"
+            Write-Host -NoNewline "    "
+            Write-Host -NoNewline -ForegroundColor $Cyan "📦"
+            Write-Host " Creating: " -NoNewline
+            Write-ColorOutput $Gray "$displayDir/"
         }
     }
     
@@ -150,7 +256,7 @@ function Download-And-Show-File {
     try {
         Invoke-WebRequest -Uri $fileUrl -OutFile $targetFile -UseBasicParsing -TimeoutSec 10
     } catch {
-        Write-ColorOutput Yellow "    ⚠️  Failed to download: $relativePath"
+        Write-ColorOutput $Red "    ⚠️  Failed to download: $relativePath"
         return
     }
     
@@ -229,31 +335,64 @@ function Download-Bmad-Fallback {
         "bmad-agent/templates/test-strategy-tmpl.md"
     )
     
-    foreach ($filePath in $files) {
-        Download-And-Show-File $filePath "bmad-agent"
+    # Group files by directory for progress bars
+    $dirGroups = $files | Group-Object { Split-Path $_ -Parent }
+    $colorIndex = 0
+    $colors = @($Cyan, $Purple, $Green)
+    
+    foreach ($group in $dirGroups) {
+        $dirName = $group.Name
+        $dirFiles = $group.Group
+        
+        Write-Host -NoNewline "    "
+        Write-Host -NoNewline -ForegroundColor $Cyan "📦"
+        Write-Host " Creating: " -NoNewline
+        Write-ColorOutput $Gray "$dirName/"
+        
+        # Download files with progress bar
+        $fileCount = 0
+        $totalFiles = $dirFiles.Count
+        $barColor = $colors[$colorIndex]
+        
+        foreach ($filePath in $dirFiles) {
+            Download-File-Silent $filePath
+            $fileCount++
+            Show-ProgressBar -Current $fileCount -Total $totalFiles -Prefix "      " -BarColor $barColor
+        }
+        
+        # Move to next color
+        $colorIndex = ($colorIndex + 1) % $colors.Length
     }
 }
 
 # Copy or download files
 if ($SourceMode -eq "local") {
-    Write-ColorOutput Blue "📁 Copying BMAD files..."
+    Write-Output ""
+    Write-Host -NoNewline -ForegroundColor $Cyan "▶"
+    Write-Host " Copying BMAD files..."
     
     # Copy bmad-agent folder
     if (Test-Path "$ScriptDir\bmad-agent") {
         Copy-Item -Path "$ScriptDir\bmad-agent" -Destination . -Recurse -Force
-        Write-ColorOutput Green "  📁 bmad-agent/ folder copied"
+        Write-Host -NoNewline "  "
+        Write-Host -NoNewline -ForegroundColor $Green "✔"
+        Write-Host " bmad-agent/ folder copied"
     } else {
-        Write-ColorOutput Yellow "  ⚠️  bmad-agent/ folder not found in $ScriptDir"
+        Write-ColorOutput $Purple "  ⚠️  bmad-agent/ folder not found in $ScriptDir"
     }
 } else {
-    Write-ColorOutput Blue "📁 Downloading BMAD files from GitHub..."
+    Write-Output ""
+    Write-Host -NoNewline -ForegroundColor $Cyan "▶"
+    Write-Host " Downloading BMAD files from GitHub..."
     
     # Download bmad-agent folder
     Write-Output "  📥 Downloading bmad-agent/ folder..."
     Write-Output ""
     Download-Directory "bmad-agent"
     Write-Output ""
-    Write-ColorOutput Green "  ✅ bmad-agent/ folder complete"
+    Write-Host -NoNewline "  "
+    Write-Host -NoNewline -ForegroundColor $Green "✔"
+    Write-Host " bmad-agent/ folder complete"
 }
 
 # Copy or download CLAUDE.md
@@ -306,7 +445,8 @@ if ($SourceMode -eq "local") {
 
 # Create docs directory structure
 Write-Output ""
-Write-ColorOutput Blue "📂 Creating project structure..."
+Write-Host -NoNewline -ForegroundColor $Cyan "▶"
+Write-Host " Creating project structure..."
 
 $directories = @("docs", "docs\.bmad-session", "docs\stories", "docs\technical")
 foreach ($dir in $directories) {
@@ -403,16 +543,20 @@ Thumbs.db
 }
 
 Write-Output ""
-Write-ColorOutput Green "✅ BMAD setup complete!"
+Write-Host -NoNewline -ForegroundColor $Green "✨"
+Write-Host -ForegroundColor $Green " BMAD setup complete!"
 Write-Output ""
-Write-ColorOutput Blue "📚 Next Steps:"
+Write-Host -NoNewline -ForegroundColor $Cyan "◆"
+Write-Host " Next Steps:"
 Write-Output "1. Open this folder in VS Code with Claude Code enabled"
 Write-Output "2. Start with: `"Let's plan a new app using BMAD`""
 Write-Output "3. Or continue planning with: `"Continue BMAD planning`""
 Write-Output ""
-Write-ColorOutput Blue "📖 Documentation:"
+Write-Host -NoNewline -ForegroundColor $Cyan "◆"
+Write-Host " Documentation:"
 Write-Output "- CLAUDE.md - Main instructions for Claude Code"
 Write-Output "- BMAD-CLAUDE-CODE-GUIDE.md - Quick reference"
 Write-Output "- BMAD-SESSION-CONTINUITY.md - Session management details"
 Write-Output ""
-Write-ColorOutput Green "Happy planning with BMAD! 🚀"
+Write-Host -NoNewline -ForegroundColor $Cyan "Happy planning with BMAD! "
+Write-Host -ForegroundColor $Green "✨"
