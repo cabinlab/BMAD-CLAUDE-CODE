@@ -1,7 +1,7 @@
 # Task: Create Deployment Pipeline
 
-**Persona**: Developer  
-**Phase**: Implementation/Infrastructure  
+**Persona**: DevOps Engineer  
+**Phase**: Infrastructure/Deployment  
 **Prerequisites**: Code repository, target deployment environment, quality gates defined
 
 ## Objective

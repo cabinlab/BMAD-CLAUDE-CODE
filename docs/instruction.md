@@ -163,7 +163,7 @@ BMAD includes pre-built tasks for common operations:
 - `create-frontend-architecture.md` - UI architecture
 
 ### Story Management
-- `create-next-story-task.md` - Generate next logical story
+- `create-next-story.md` - Generate next logical story
 - `correct-course.md` - Analyze and fix project issues
 
 ### Quality Assurance
@@ -191,7 +191,7 @@ your-project/
 ├── CLAUDE.md                    # Claude Code instructions
 ├── BMAD-CLAUDE-CODE-GUIDE.md    # Quick reference
 ├── bmad-agent/                  # BMAD assets
-│   ├── personas-claude/         # Optimized personas
+│   ├── personas/                # Optimized personas
 │   ├── templates/               # Document templates
 │   ├── tasks/                   # Executable tasks
 │   ├── checklists/             # Quality gates

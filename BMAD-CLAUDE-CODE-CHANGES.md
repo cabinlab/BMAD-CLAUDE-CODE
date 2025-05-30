@@ -16,7 +16,7 @@ The original BMAD-METHOD was designed for web orchestrator agents that could dyn
 - **BMAD-CLAUDE-CODE-GUIDE.md** - Quick reference guide for BMAD with Claude Code
 - **setup-bmad.sh** / **setup-bmad.ps1** - Automated setup scripts for copying BMAD to new projects
 
-### 2. Optimized Personas (New Directory: `bmad-agent/personas-claude/`)
+### 2. Optimized Personas (Directory: `bmad-agent/personas/`)
 **Streamlined from 25-125 lines to ~22 lines each (80% reduction)**
 - `analyst.md` - Discovery and research expert
 - `architect.md` - Enhanced with production capabilities (security, DevOps, platform features)
@@ -27,7 +27,7 @@ The original BMAD-METHOD was designed for web orchestrator agents that could dyn
 - `po.md` - Product ownership and story management
 - `sm.ide.md` - Scrum Master for agile facilitation
 
-### 3. Enhanced Templates (New Directory: `bmad-agent/templates-claude/`)
+### 3. Enhanced Templates (Directory: `bmad-agent/templates/`)
 **All templates redesigned for Claude Code with modern platform considerations**
 
 #### Core Enhanced Templates:

@@ -211,7 +211,7 @@ Understanding the distinct roles and responsibilities of each agent is key to ef
 
   - **Function:** Designs system architecture, handles technical design, and ensures technical feasibility.
   - **Web Persona:** `Architect (Fred)` with persona `personas#architect`. Uses `checklists#architect-checklist` and `templates#architecture-tmpl`. Tasks include `tasks#create-architecture` and `tasks#create-deep-research-prompt`.
-  - **IDE Persona:** `Architect (Mo)` with persona `architect.md`. Customized to be "Cold, Calculating, Brains behind the agent crew." Generates architecture (`create-architecture.md` task), helps plan stories (`create-next-story-task.md`), and can update PO-level epics/stories (`doc-sharding-task.md`).
+  - **IDE Persona:** `Architect (Mo)` with persona `architect.md`. Customized to be "Cold, Calculating, Brains behind the agent crew." Generates architecture (`create-architecture.md` task), helps plan stories (`create-next-story.md`), and can update PO-level epics/stories (`doc-sharding-task.md`).
   - **Output:** `Architecture Document`.
 
 - **Design Architect:**
@@ -225,7 +225,7 @@ Understanding the distinct roles and responsibilities of each agent is key to ef
 
   - **Function:** Agile Product Owner responsible for validating documents, ensuring development sequencing, managing the product backlog, running master checklists, handling mid-sprint re-planning, and drafting user stories.
   - **Web Persona:** `PO (Sarah)` with persona `personas#po`. Uses `checklists#po-master-checklist`, `checklists#story-draft-checklist`, `checklists#change-checklist`, and `templates#story-tmpl`. Tasks include `tasks#story-draft-task`, `tasks#doc-sharding-task` (extracts epics and shards architecture), and `tasks#correct-course`.
-  - **IDE Persona:** `Product Owner AKA PO (Curly)` with persona `po.md`. Described as a "Jack of many trades." Tasks include `create-prd.md`, `create-next-story-task.md`, `doc-sharding-task.md`, and `correct-course.md`.
+  - **IDE Persona:** `Product Owner AKA PO (Curly)` with persona `po.md`. Described as a "Jack of many trades." Tasks include `create-prd.md`, `create-next-story.md`, `doc-sharding-task.md`, and `correct-course.md`.
   - **Output:** User Stories, managed PRD/Backlog.
 
 - **Scrum Master (SM):**
@@ -341,7 +341,7 @@ Understanding key files helps in navigating and customizing the BMAD process:
 Here are some examples of functionalities provided by tasks found in `bmad-agent/tasks/`:
 
 - **`create-prd.md`:** Guides the generation of a Product Requirements Document.
-- **`create-next-story-task.md`:** Helps in defining and creating the next user story for development.
+- **`create-next-story.md`:** Helps in defining and creating the next user story for development.
 - **`create-architecture.md`:** Assists in outlining the technical architecture for a project.
 - **`create-frontend-architecture.md`:** Focuses specifically on designing the front-end architecture.
 - **`create-uxui-spec.md`:** Facilitates the creation of a UX/UI Specification document.

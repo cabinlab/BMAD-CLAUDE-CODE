@@ -18,9 +18,9 @@ your-project/
 ├── CLAUDE.md               # This file (required for Claude Code)
 ├── BMAD-CLAUDE-CODE-GUIDE.md  # Quick reference (optional)
 ├── bmad-agent/             # BMAD Method assets
-│   ├── templates-claude/   # Enhanced templates for Claude Code
-│   ├── templates/          # Original templates (legacy)
-│   ├── personas-claude/    # Streamlined personas for Claude Code
+│   ├── templates/          # Enhanced templates for Claude Code
+│   ├── templates-original/ # Original templates (backup)
+│   ├── personas/           # Streamlined personas for Claude Code
 │   ├── tasks/
 │   ├── checklists/
 │   └── data/
@@ -92,43 +92,43 @@ When users request specific BMAD roles or planning activities, Claude Code shoul
 
 ### Acting as Business Analyst
 When user says: "Be my business analyst" or "Let's analyze requirements"
-- Load: `bmad-agent/personas-claude/analyst.md`
+- Load: `bmad-agent/personas/analyst.md`
 - Focus: Discovery, brainstorming, research, project brief creation
 - **Session tracking**: Log all discovered requirements and constraints
 
 ### Acting as Product Manager  
 When user says: "Be my PM" or "Let's create a PRD"
-- Load: `bmad-agent/personas-claude/pm.md`
+- Load: `bmad-agent/personas/pm.md`
 - Focus: PRD creation, MVP scoping, epic definition, success metrics
 - **Session tracking**: Track epic completion and pending decisions
 
 ### Acting as Architect
 When user says: "Be my architect" or "Design the system"
-- Load: `bmad-agent/personas-claude/architect.md`
+- Load: `bmad-agent/personas/architect.md`
 - Focus: System design, frontend architecture, API specs, tech stack
 - **Session tracking**: Document architectural decisions and rationale
 
 ### Acting as Data Architect
 When user says: "Be my data architect" or "Design the data layer"
-- Load: `bmad-agent/personas-claude/data-architect.md`
+- Load: `bmad-agent/personas/designer.md` (handles UX/data architecture)
 - Focus: Data modeling, search strategy, analytics design, privacy compliance
 - **Session tracking**: Document data architecture decisions and schemas
 
 ### Acting as Design Architect
 When user says: "Be my design architect" or "Design the UX/UI"
-- Load: `bmad-agent/personas-claude/design-architect.md`
+- Load: `bmad-agent/personas/designer.md`
 - Focus: UX/UI specifications, component design, design tokens, prototypes
 - **Session tracking**: Document design decisions and component library
 
 ### Acting as Product Owner
 When user says: "Be my PO" or "Let's prioritize features"
-- Load: `bmad-agent/personas-claude/po.md`
+- Load: `bmad-agent/personas/pm.md` (handles PO responsibilities)
 - Focus: Backlog management, validation, prioritization, acceptance criteria
 - **Session tracking**: Log prioritization decisions and criteria
 
 ### Acting as Scrum Master
 When user says: "Be my SM" or "Generate stories"
-- Load: `bmad-agent/personas-claude/sm.md`
+- Load: `bmad-agent/personas/orchestrator.md` (handles SM responsibilities)
 - Focus: Story creation, dependency management, progress tracking, flow
 - **Session tracking**: Track story generation progress
 
@@ -342,29 +342,26 @@ Before marking any artifact complete:
 ## BMAD Method Reference
 
 ### Available Templates (Enhanced for Claude Code)
-- `templates-claude/project-brief-tmpl.md`: Initial project vision and goals with platform considerations
-- `templates-claude/prd-tmpl.md`: Product Requirements Document with epics, platform economics, and multi-tenant features
-- `templates-claude/architecture-tmpl.md`: Technical architecture and system design (streamlined for Claude Code)
-- `templates-claude/platform-architecture-tmpl.md`: Specialized template for marketplace and multi-tenant platforms
-- `templates-claude/data-architecture-tmpl.md`: Data architecture for complex platforms (Data Architect persona)
-- `templates-claude/front-end-architecture-tmpl.md`: Frontend-specific architecture with modern frameworks
-- `templates-claude/front-end-spec-tmpl.md`: Comprehensive UX/UI specifications with accessibility
-- `templates-claude/story-tmpl.md`: Enhanced user story template with technical guidance
-- `templates-claude/doc-sharding-tmpl.md`: Document organization and sharding plan
-- `templates-claude/planning-journal-tmpl.md`: Session tracking journal
-- `templates-claude/session-state-tmpl.md`: Current state tracking
+- `templates/project-brief-tmpl.md`: Initial project vision and goals with platform considerations
+- `templates/prd-tmpl.md`: Product Requirements Document with epics, platform economics, and multi-tenant features
+- `templates/architecture-tmpl.md`: Technical architecture and system design (streamlined for Claude Code)
+- `templates/front-end-architecture-tmpl.md`: Frontend-specific architecture with modern frameworks
+- `templates/front-end-spec-tmpl.md`: Comprehensive UX/UI specifications with accessibility
+- `templates/story-tmpl.md`: Enhanced user story template with technical guidance
+- `templates/doc-sharding-tmpl.md`: Document organization and sharding plan
+- `templates/planning-journal-tmpl.md`: Session tracking journal
+- `templates/session-state-tmpl.md`: Current state tracking
 
 ### Available Personas (Claude Code Optimized)
 - `analyst.md`: Discovery, brainstorming, research expert
 - `pm.md`: Product vision to requirements transformation
 - `architect.md`: System design and technical architecture
-- `data-architect.md`: Data modeling and analytics strategy
-- `design-architect.md`: UX/UI specifications and design systems
-- `po.md`: Backlog management and quality validation
-- `sm.md`: Story creation and workflow management
+- `designer.md`: UX/UI specifications and design systems
+- `developer.md`: Implementation, testing, and deployment
+- `orchestrator.md`: Process management and quality gates
 
 ### Key Tasks
-- `create-next-story-task.md`: Generate the next story in sequence
+- `create-next-story.md`: Generate the next story in sequence
 - `create-prd.md`: Create a comprehensive PRD
 - `create-architecture.md`: Design system architecture
 - `correct-course.md`: Analyze and fix project issues

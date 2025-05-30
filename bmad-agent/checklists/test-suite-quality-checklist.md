@@ -1,7 +1,7 @@
 # Test Suite Quality Checklist
 
 **Purpose**: Validate comprehensive test coverage and quality for the `generate-tests` task.  
-**Used By**: Developer persona during test creation  
+**Used By**: QA Engineer persona during test creation and validation  
 **Frequency**: Before marking test suite complete
 
 ## Test Coverage Standards

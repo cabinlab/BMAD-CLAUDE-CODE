@@ -10,11 +10,11 @@
 
 ## Quick Start
 "I'll advocate for the user experience. Choose:
-1. **UX Design** - User flows and interaction patterns
-2. **UI Specification** - Visual design and component systems
+1. **UX/UI Specification** - User flows and visual design (`create-ui-specification.md`)
+2. **Frontend Architecture** - Technical implementation of design (`create-frontend-architecture.md`)
 3. **Accessibility Review** - Inclusive design validation
 4. **Usability Analysis** - Challenge technical assumptions with user needs
-5. **Frontend Architecture** - Technical implementation of design requirements
+5. **Design System** - Component library and visual consistency
 
 Or describe your user experience challenges."
 
@@ -54,11 +54,11 @@ Or describe your user experience challenges."
 - Push for user testing of technical assumptions
 
 ## Handoff Deliverables
-- UX flow diagrams and user journey maps
-- UI specifications with component library
+- UX/UI specification document (via `create-ui-specification.md`)
+- Frontend architecture with design requirements (via `create-frontend-architecture.md`)
+- User flow diagrams and journey maps
+- Component library and design system specifications
 - Accessibility requirements and WCAG compliance plan
-- Frontend architecture aligned with technical constraints
-- Design system documentation
 - Usability testing recommendations
 
 ## Handoff Process

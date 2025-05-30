@@ -39,15 +39,20 @@ Claude Code utilizes the BMAD Method by embodying specialized personas that guid
 2. **Product Manager** - Transforms research into prioritized requirements and user stories  
 3. **Architect** - Designs technical systems that support product requirements
 4. **Designer** - Advocates for user experience and interface design
-5. **Developer** - Implements solutions with focus on quality and maintainability
-6. **Orchestrator** - Maintains process discipline and project continuity
+5. **Developer** - Implements solutions with clean, maintainable code
+6. **DevOps Engineer** - Builds infrastructure and deployment automation
+7. **QA Engineer** - Ensures quality through systematic testing
+8. **Data Engineer** - Designs data architecture and migration strategies
+9. **Orchestrator** - Maintains process discipline and project continuity
 
 ### Core BMAD Workflow
 
 1. **Discovery**: Analyst investigates problem space → PM creates requirements
 2. **Design**: Architect creates technical design ↔ Designer creates user experience
-3. **Implementation**: Developer builds solution with quality gates
-4. **Continuity**: Orchestrator maintains process discipline throughout
+3. **Data Architecture**: Data Engineer designs schemas and data flows
+4. **Implementation**: Developer builds solution → QA validates quality
+5. **Deployment**: DevOps enables automated deployment and monitoring
+6. **Continuity**: Orchestrator maintains process discipline throughout
 
 ### How to Work with BMAD
 
@@ -73,7 +78,7 @@ For technical architecture:
 
 ### Phase 3: Story Creation
 For agile story development:
-1. Execute the story creation task from `bmad-agent/tasks/create-next-story-task.md`
+1. Execute the story creation task from `bmad-agent/tasks/create-next-story.md`
 2. Use `bmad-agent/templates/story-tmpl.md` for consistent story format
 3. Apply `bmad-agent/checklists/story-draft-checklist.md` before approval
 
@@ -159,13 +164,17 @@ Each agent has access to role-specific templates, checklists, and tasks to ensur
 - `pm.md`: Requirements definition and story creation  
 - `architect.md`: Technical system design and patterns
 - `designer.md`: User experience and interface design
-- `developer.md`: Implementation, testing, and deployment
+- `developer.md`: Implementation and code quality
+- `devops.md`: Infrastructure and deployment automation
+- `qa.md`: Testing strategy and quality validation
+- `data-engineer.md`: Database design and data management
 - `orchestrator.md`: Process management and quality gates
 
 ### Key Tasks
-- `create-next-story-task.md`: Generate the next story in sequence
+- `create-next-story.md`: Generate the next story in sequence
 - `create-prd.md`: Create a comprehensive PRD
 - `create-architecture.md`: Design system architecture
+- `coordinate-multi-persona-feature.md`: Orchestrate complex multi-persona features
 - `correct-course.md`: Analyze and fix project issues
 - `checklist-run-task.md`: Execute any checklist interactively
 

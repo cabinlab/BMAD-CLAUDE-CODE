@@ -57,10 +57,26 @@ Input: PRD and technical requirements
 Creates: docs/architecture.md
 ```
 
+### "Create UI/UX Specifications"
+```
+Read: bmad-agent/templates/front-end-spec-tmpl.md
+Read: bmad-agent/tasks/create-ui-specification.md
+Input: PRD and user requirements
+Creates: docs/ux-ui-spec.md
+```
+
+### "Design Frontend Architecture"
+```
+Read: bmad-agent/templates/front-end-architecture-tmpl.md
+Read: bmad-agent/tasks/create-frontend-architecture.md
+Input: PRD, system architecture, UI/UX spec
+Creates: docs/front-end-architecture.md
+```
+
 ### "Create User Stories"
 ```
 Read: bmad-agent/templates/story-tmpl.md
-Read: bmad-agent/tasks/create-next-story-task.md
+Read: bmad-agent/tasks/create-next-story.md
 Process: Identify next story → Apply template → Run draft checklist
 Creates: docs/stories/story-X-Y.md
 ```

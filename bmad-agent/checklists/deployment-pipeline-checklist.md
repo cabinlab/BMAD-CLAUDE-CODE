@@ -1,7 +1,7 @@
 # Deployment Pipeline Quality Checklist
 
 **Purpose**: Validate CI/CD pipeline setup and deployment automation for the `create-deployment-pipeline` task.  
-**Used By**: Developer persona during infrastructure setup  
+**Used By**: DevOps Engineer persona during infrastructure and deployment setup  
 **Frequency**: Before pipeline goes live and after major changes
 
 ## Pipeline Architecture and Strategy

@@ -1,7 +1,7 @@
 # Task: Generate Comprehensive Test Suite
 
-**Persona**: Developer  
-**Phase**: Implementation/Quality Assurance  
+**Persona**: QA Engineer  
+**Phase**: Quality Assurance/Testing  
 **Prerequisites**: Clear requirements, implementation code or specifications
 
 ## Objective

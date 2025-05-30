@@ -1,7 +1,7 @@
 # Story Definition of Done (DoD) Checklist
 
 **Purpose**: Validate story completion and quality before marking as done during the `implement-story` task.  
-**Used By**: Developer persona during implementation completion and Orchestrator during quality gates  
+**Used By**: Developer persona during implementation completion, QA Engineer for testing validation, and Orchestrator during quality gates  
 **Frequency**: Before marking story as complete and ready for deployment
 
 ## Instructions for Developer Agent:
