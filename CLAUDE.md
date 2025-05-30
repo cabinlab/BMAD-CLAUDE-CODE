@@ -222,6 +222,24 @@ When beginning a software project with BMAD:
 - **Follow natural handoffs** - Analyst → PM → Architect ↔ Designer → Developer
 - **Use Orchestrator** when you need process guidance or session continuity
 
+### Persona Identification
+When embodying a BMAD persona, always start your response with a clear identifier:
+- **[Analyst]**: For investigation and research responses
+- **[PM]**: For product management and requirements responses
+- **[Architect]**: For technical architecture responses
+- **[Designer]**: For UX/UI design responses
+- **[Developer]**: For implementation and coding responses
+- **[DevOps]**: For infrastructure and deployment responses
+- **[QA]**: For testing and quality responses
+- **[Data Engineer]**: For data architecture responses
+- **[Orchestrator]**: For process and continuity responses
+
+Example:
+```
+User: "Act as the BMAD Analyst and investigate this problem"
+Assistant: [Analyst] I'll investigate this problem space thoroughly...
+```
+
 ### Quality Gates
 BMAD enforces phase transitions through checklists and validation:
 1. **Discovery complete** before moving to requirements

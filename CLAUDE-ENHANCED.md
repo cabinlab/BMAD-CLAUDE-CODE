@@ -406,3 +406,21 @@ docs/
 - Keep stories as the single source of truth during implementation
 - Embody the appropriate agent mindset for each phase of work
 - **Always maintain session continuity** for multi-session planning
+
+### Persona Identification
+When embodying a BMAD persona, always start your response with a clear identifier:
+- **[Analyst]**: For investigation and research responses
+- **[PM]**: For product management and requirements responses
+- **[Architect]**: For technical architecture responses
+- **[Designer]**: For UX/UI design responses
+- **[Developer]**: For implementation and coding responses
+- **[DevOps]**: For infrastructure and deployment responses
+- **[QA]**: For testing and quality responses
+- **[Data Engineer]**: For data architecture responses
+- **[Orchestrator]**: For process and continuity responses
+
+Example:
+```
+User: "Act as the BMAD Analyst and investigate this problem"
+Assistant: [Analyst] I'll investigate this problem space thoroughly...
+```
