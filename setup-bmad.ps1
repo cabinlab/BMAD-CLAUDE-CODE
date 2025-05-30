@@ -98,33 +98,139 @@ function Download-File {
 
 function Download-Directory {
     param($DirPath)
-    $apiUrl = "https://api.github.com/repos/$GitHubRepo/contents/$DirPath?ref=$GitHubBranch"
     
-    # Create directory
-    if (!(Test-Path $DirPath)) {
-        New-Item -ItemType Directory -Path $DirPath -Force | Out-Null
-    }
+    # Try GitHub tree API first, with fallback to hardcoded list
+    $treeUrl = "https://api.github.com/repos/$GitHubRepo/git/trees/$GitHubBranch" + "?recursive=1"
+    $apiSuccess = $false
+    $treeData = $null
     
     try {
-        # Get directory contents from GitHub API
-        $contents = Invoke-RestMethod -Uri $apiUrl -UseBasicParsing
-        
-        foreach ($item in $contents) {
-            if ($item.type -eq "file") {
-                $targetFile = Join-Path $DirPath $item.name
-                $targetDir = Split-Path $targetFile -Parent
-                if (!(Test-Path $targetDir)) {
-                    New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
-                }
-                Invoke-WebRequest -Uri $item.download_url -OutFile $targetFile -UseBasicParsing
-            } elseif ($item.type -eq "dir") {
-                # Recursively download subdirectories
-                Download-Directory (Join-Path $DirPath $item.name)
-            }
+        # Attempt to get tree data from GitHub API with timeout
+        $treeData = Invoke-RestMethod -Uri $treeUrl -UseBasicParsing -TimeoutSec 10
+        if ($treeData -and $treeData.tree) {
+            $apiSuccess = $true
         }
     } catch {
-        Write-ColorOutput Yellow "Error downloading directory $DirPath : $_"
-        throw
+        # API failed, will use fallback
+        $apiSuccess = $false
+    }
+    
+    if ($apiSuccess) {
+        # Use API data
+        foreach ($item in $treeData.tree) {
+            if ($item.path -like "$DirPath/*" -and $item.type -eq "blob") {
+                Download-And-Show-File $item.path $DirPath
+            }
+        }
+    } else {
+        # Fallback: Use hardcoded file list
+        Write-ColorOutput Yellow "    ⚠️  GitHub API unavailable, using fallback file list"
+        Download-Bmad-Fallback
+    }
+}
+
+function Download-And-Show-File {
+    param($FilePath, $DirPath)
+    
+    $relativePath = $FilePath.Substring($DirPath.Length + 1)
+    $targetFile = $FilePath
+    $targetDir = Split-Path $targetFile -Parent
+    
+    # Show directory creation
+    if (!(Test-Path $targetDir)) {
+        New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+        $displayDir = $targetDir.Replace(".\", "")
+        if ($displayDir -ne $DirPath) {
+            Write-ColorOutput Blue "    📁 Creating: $displayDir/"
+        }
+    }
+    
+    # Download the file
+    $fileUrl = "$GitHubRawUrl/$FilePath"
+    try {
+        Invoke-WebRequest -Uri $fileUrl -OutFile $targetFile -UseBasicParsing -TimeoutSec 10
+    } catch {
+        Write-ColorOutput Yellow "    ⚠️  Failed to download: $relativePath"
+        return
+    }
+    
+    # Show file download with proper formatting
+    $fileIcon = "📄"
+    switch -Regex ($relativePath) {
+        "\.md$" { $fileIcon = "📝" }
+        "\.(yml|yaml)$" { $fileIcon = "⚙️" }
+        "\.json$" { $fileIcon = "🔧" }
+        "\.sh$" { $fileIcon = "🔨" }
+        "\.py$" { $fileIcon = "🐍" }
+        "\.(js|ts)$" { $fileIcon = "⚡" }
+        "\.txt$" { $fileIcon = "📄" }
+    }
+    
+    Write-ColorOutput Green "    $fileIcon Downloaded: $relativePath"
+}
+
+function Download-Bmad-Fallback {
+    # Hardcoded list of known bmad-agent files (matches bash script)
+    $files = @(
+        "bmad-agent/checklists/api-design-checklist.md",
+        "bmad-agent/checklists/architect-checklist.md",
+        "bmad-agent/checklists/change-checklist.md",
+        "bmad-agent/checklists/debug-process-checklist.md",
+        "bmad-agent/checklists/deployment-pipeline-checklist.md",
+        "bmad-agent/checklists/frontend-architecture-checklist.md",
+        "bmad-agent/checklists/implementation-quality-checklist.md",
+        "bmad-agent/checklists/pm-checklist.md",
+        "bmad-agent/checklists/po-master-checklist.md",
+        "bmad-agent/checklists/security-threat-model-checklist.md",
+        "bmad-agent/checklists/story-dod-checklist.md",
+        "bmad-agent/checklists/story-draft-checklist.md",
+        "bmad-agent/checklists/test-suite-quality-checklist.md",
+        "bmad-agent/data/bmad-kb.md",
+        "bmad-agent/data/technical-preferences.txt",
+        "bmad-agent/personas/analyst.md",
+        "bmad-agent/personas/architect.md",
+        "bmad-agent/personas/data-engineer.md",
+        "bmad-agent/personas/designer.md",
+        "bmad-agent/personas/developer.md",
+        "bmad-agent/personas/devops.md",
+        "bmad-agent/personas/orchestrator.md",
+        "bmad-agent/personas/pm.md",
+        "bmad-agent/personas/qa.md",
+        "bmad-agent/tasks/checklist-run-task.md",
+        "bmad-agent/tasks/coordinate-multi-persona-feature.md",
+        "bmad-agent/tasks/core-dump.md",
+        "bmad-agent/tasks/correct-course.md",
+        "bmad-agent/tasks/create-api-specification.md",
+        "bmad-agent/tasks/create-architecture.md",
+        "bmad-agent/tasks/create-data-migration-strategy.md",
+        "bmad-agent/tasks/create-database-design.md",
+        "bmad-agent/tasks/create-deep-research.md",
+        "bmad-agent/tasks/create-deployment-pipeline.md",
+        "bmad-agent/tasks/create-frontend-architecture.md",
+        "bmad-agent/tasks/create-next-story.md",
+        "bmad-agent/tasks/create-prd.md",
+        "bmad-agent/tasks/create-test-strategy.md",
+        "bmad-agent/tasks/create-ui-specification.md",
+        "bmad-agent/tasks/debug-issue.md",
+        "bmad-agent/tasks/generate-mvp-dashboard.md",
+        "bmad-agent/tasks/generate-tests.md",
+        "bmad-agent/tasks/implement-story.md",
+        "bmad-agent/tasks/manage-mvp-scope.md",
+        "bmad-agent/tasks/security-threat-model.md",
+        "bmad-agent/templates/architecture-tmpl.md",
+        "bmad-agent/templates/doc-sharding-tmpl.md",
+        "bmad-agent/templates/front-end-architecture-tmpl.md",
+        "bmad-agent/templates/front-end-spec-tmpl.md",
+        "bmad-agent/templates/planning-journal-tmpl.md",
+        "bmad-agent/templates/prd-tmpl.md",
+        "bmad-agent/templates/project-brief-tmpl.md",
+        "bmad-agent/templates/session-state-tmpl.md",
+        "bmad-agent/templates/story-tmpl.md",
+        "bmad-agent/templates/test-strategy-tmpl.md"
+    )
+    
+    foreach ($filePath in $files) {
+        Download-And-Show-File $filePath "bmad-agent"
     }
 }
 
@@ -135,7 +241,7 @@ if ($SourceMode -eq "local") {
     # Copy bmad-agent folder
     if (Test-Path "$ScriptDir\bmad-agent") {
         Copy-Item -Path "$ScriptDir\bmad-agent" -Destination . -Recurse -Force
-        Write-Output "  ✓ bmad-agent/ folder"
+        Write-ColorOutput Green "  📁 bmad-agent/ folder copied"
     } else {
         Write-ColorOutput Yellow "  ⚠️  bmad-agent/ folder not found in $ScriptDir"
     }
@@ -144,8 +250,10 @@ if ($SourceMode -eq "local") {
     
     # Download bmad-agent folder
     Write-Output "  📥 Downloading bmad-agent/ folder..."
+    Write-Output ""
     Download-Directory "bmad-agent"
-    Write-Output "  ✓ bmad-agent/ folder"
+    Write-Output ""
+    Write-ColorOutput Green "  ✅ bmad-agent/ folder complete"
 }
 
 # Copy or download CLAUDE.md

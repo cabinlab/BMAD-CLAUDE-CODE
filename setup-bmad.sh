@@ -102,75 +102,263 @@ download_file() {
 download_directory() {
     local dir_path="$1"
     
-    # Use GitHub's git tree API to get all files recursively
+    # Try GitHub API first, with fallback to hardcoded list
     local tree_url="https://api.github.com/repos/$GITHUB_REPO/git/trees/$GITHUB_BRANCH?recursive=1"
+    local tree_data=""
+    local api_success=false
     
-    # Get the entire tree structure
+    # Attempt to get tree data from GitHub API with timeout
     if command -v curl >/dev/null 2>&1; then
-        local tree_data=$(curl -fsSL "$tree_url")
-    elif command -v wget >/dev/null 2>&1; then
-        local tree_data=$(wget -qO- "$tree_url")
-    else
-        echo -e "${YELLOW}Error: Neither curl nor wget found. Cannot download directory.${NC}"
-        exit 1
-    fi
-    
-    # Check if we got valid JSON
-    if [[ "$tree_data" == *"\"message\":"* ]]; then
-        echo -e "${YELLOW}Warning: Could not access repository tree${NC}"
-        return 1
-    fi
-    
-    # Extract file paths that start with our directory path and save to temp file
-    local temp_file=$(mktemp)
-    echo "$tree_data" | grep -o '"path":"[^"]*"' | sed 's/"path":"//;s/"//' > "$temp_file"
-    
-    # Process each file path
-    while IFS= read -r file_path; do
-        if [[ "$file_path" == "$dir_path"/* ]]; then
-            # This is a file in our target directory
-            local relative_path="${file_path#$dir_path/}"
-            local target_file="$file_path"
-            local target_dir=$(dirname "$target_file")
-            
-            # Show directory creation
-            if [[ ! -d "$target_dir" ]]; then
-                mkdir -p "$target_dir"
-                # Show the directory structure being created
-                local display_dir="${target_dir#./}"
-                if [[ "$display_dir" != "$dir_path" ]]; then
-                    echo -e "    ${BLUE}📁${NC} Creating: $display_dir/"
-                fi
-            fi
-            
-            # Download the file
-            local file_url="$GITHUB_RAW_URL/$file_path"
-            if command -v curl >/dev/null 2>&1; then
-                curl -fsSL "$file_url" -o "$target_file" 2>/dev/null
-            else
-                wget -q "$file_url" -O "$target_file" 2>/dev/null
-            fi
-            
-            # Show file download with proper formatting
-            local display_file="${relative_path}"
-            local file_icon="📄"
-            
-            # Use different icons for different file types
-            case "$display_file" in
-                *.md) file_icon="📝" ;;
-                *.yml|*.yaml) file_icon="⚙️" ;;
-                *.json) file_icon="🔧" ;;
-                *.sh) file_icon="🔨" ;;
-                *.py) file_icon="🐍" ;;
-                *.js|*.ts) file_icon="⚡" ;;
-            esac
-            
-            echo -e "    ${file_icon} Downloaded: ${GREEN}$display_file${NC}"
+        tree_data=$(curl -fsSL --max-time 10 "$tree_url" 2>/dev/null)
+        if [[ $? -eq 0 && "$tree_data" != *"\"message\":"* && -n "$tree_data" ]]; then
+            api_success=true
         fi
-    done < "$temp_file"
+    elif command -v wget >/dev/null 2>&1; then
+        tree_data=$(wget -qO- --timeout=10 "$tree_url" 2>/dev/null)
+        if [[ $? -eq 0 && "$tree_data" != *"\"message\":"* && -n "$tree_data" ]]; then
+            api_success=true
+        fi
+    fi
     
-    # Clean up temp file
-    rm -f "$temp_file"
+    
+    if [[ "$api_success" == true ]]; then
+        # Use API data - avoid subshell by using temp file
+        local temp_file=$(mktemp)
+        echo "$tree_data" | grep -o '"path": *"[^"]*"' | sed 's/"path": *"//;s/"//' > "$temp_file"
+        
+        # Count total files and group by directory
+        local total_files=0
+        local current_files=0
+        declare -A dir_files
+        
+        while IFS= read -r file_path; do
+            if [[ "$file_path" == "$dir_path"/* && "$file_path" == *.* ]]; then
+                total_files=$((total_files + 1))
+                local file_dir=$(dirname "$file_path")
+                dir_files["$file_dir"]=$((${dir_files["$file_dir"]:-0} + 1))
+            fi
+        done < "$temp_file"
+        
+        # Now download files with progress
+        local current_dir=""
+        local dir_file_count=0
+        local dir_current=0
+        
+        while IFS= read -r file_path; do
+            if [[ "$file_path" == "$dir_path"/* && "$file_path" == *.* ]]; then
+                local file_dir=$(dirname "$file_path")
+                
+                # Check if we're entering a new directory
+                if [[ "$file_dir" != "$current_dir" ]]; then
+                    current_dir="$file_dir"
+                    dir_current=0
+                    dir_file_count=${dir_files["$file_dir"]}
+                    echo -e "    ${BLUE}📁${NC} Creating: ${file_dir#./}/"
+                fi
+                
+                # Download file silently
+                download_file_silent "$file_path"
+                
+                # Update progress
+                dir_current=$((dir_current + 1))
+                current_files=$((current_files + 1))
+                
+                # Show progress bar for current directory
+                show_progress_bar "$dir_current" "$dir_file_count" "      "
+            fi
+        done < "$temp_file"
+        
+        rm -f "$temp_file"
+    else
+        # Fallback: Use hardcoded file list
+        echo -e "    ${YELLOW}⚠️  GitHub API unavailable, using fallback file list${NC}"
+        download_bmad_fallback
+    fi
+}
+
+download_file_silent() {
+    local file_path="$1"
+    local target_file="$file_path"
+    local target_dir=$(dirname "$target_file")
+    
+    # Create directory if needed
+    if [[ ! -d "$target_dir" ]]; then
+        mkdir -p "$target_dir"
+    fi
+    
+    # Download the file silently
+    local file_url="$GITHUB_RAW_URL/$file_path"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$file_url" -o "$target_file" 2>/dev/null
+    else
+        wget -q "$file_url" -O "$target_file" 2>/dev/null
+    fi
+}
+
+show_progress_bar() {
+    local current="$1"
+    local total="$2"
+    local prefix="$3"
+    local width=40
+    
+    # Calculate percentage
+    local percent=$((current * 100 / total))
+    local filled=$((current * width / total))
+    
+    # Build progress bar
+    local bar=""
+    for ((i=0; i<filled; i++)); do
+        bar+="█"
+    done
+    for ((i=filled; i<width; i++)); do
+        bar+="░"
+    done
+    
+    # Print progress bar with carriage return (overwrites same line)
+    printf "\r${prefix}${GREEN}$bar${NC} $current/$total files (${percent}%%)"
+    
+    # Add newline when complete
+    if [[ "$current" -eq "$total" ]]; then
+        echo ""
+    fi
+}
+
+download_and_show_file() {
+    local file_path="$1"
+    local dir_path="$2"
+    local relative_path="${file_path#$dir_path/}"
+    local target_file="$file_path"
+    local target_dir=$(dirname "$target_file")
+    
+    # Show directory creation
+    if [[ ! -d "$target_dir" ]]; then
+        mkdir -p "$target_dir"
+        local display_dir="${target_dir#./}"
+        if [[ "$display_dir" != "$dir_path" ]]; then
+            echo -e "    ${BLUE}📁${NC} Creating: $display_dir/"
+        fi
+    fi
+    
+    # Download the file
+    local file_url="$GITHUB_RAW_URL/$file_path"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$file_url" -o "$target_file" 2>/dev/null
+    else
+        wget -q "$file_url" -O "$target_file" 2>/dev/null
+    fi
+    
+    # Show file download with proper formatting
+    local display_file="${relative_path}"
+    local file_icon="📄"
+    
+    # Use different icons for different file types
+    case "$display_file" in
+        *.md) file_icon="📝" ;;
+        *.yml|*.yaml) file_icon="⚙️" ;;
+        *.json) file_icon="🔧" ;;
+        *.sh) file_icon="🔨" ;;
+        *.py) file_icon="🐍" ;;
+        *.js|*.ts) file_icon="⚡" ;;
+        *.txt) file_icon="📄" ;;
+    esac
+    
+    echo -e "    ${file_icon} Downloaded: ${GREEN}$display_file${NC}"
+}
+
+download_bmad_fallback() {
+    # Hardcoded list of known bmad-agent files (current as of latest commit)
+    local files=(
+        "bmad-agent/checklists/api-design-checklist.md"
+        "bmad-agent/checklists/architect-checklist.md"
+        "bmad-agent/checklists/change-checklist.md"
+        "bmad-agent/checklists/debug-process-checklist.md"
+        "bmad-agent/checklists/deployment-pipeline-checklist.md"
+        "bmad-agent/checklists/frontend-architecture-checklist.md"
+        "bmad-agent/checklists/implementation-quality-checklist.md"
+        "bmad-agent/checklists/pm-checklist.md"
+        "bmad-agent/checklists/po-master-checklist.md"
+        "bmad-agent/checklists/security-threat-model-checklist.md"
+        "bmad-agent/checklists/story-dod-checklist.md"
+        "bmad-agent/checklists/story-draft-checklist.md"
+        "bmad-agent/checklists/test-suite-quality-checklist.md"
+        "bmad-agent/data/bmad-kb.md"
+        "bmad-agent/data/technical-preferences.txt"
+        "bmad-agent/personas/analyst.md"
+        "bmad-agent/personas/architect.md"
+        "bmad-agent/personas/data-engineer.md"
+        "bmad-agent/personas/designer.md"
+        "bmad-agent/personas/developer.md"
+        "bmad-agent/personas/devops.md"
+        "bmad-agent/personas/orchestrator.md"
+        "bmad-agent/personas/pm.md"
+        "bmad-agent/personas/qa.md"
+        "bmad-agent/tasks/checklist-run-task.md"
+        "bmad-agent/tasks/coordinate-multi-persona-feature.md"
+        "bmad-agent/tasks/core-dump.md"
+        "bmad-agent/tasks/correct-course.md"
+        "bmad-agent/tasks/create-api-specification.md"
+        "bmad-agent/tasks/create-architecture.md"
+        "bmad-agent/tasks/create-data-migration-strategy.md"
+        "bmad-agent/tasks/create-database-design.md"
+        "bmad-agent/tasks/create-deep-research.md"
+        "bmad-agent/tasks/create-deployment-pipeline.md"
+        "bmad-agent/tasks/create-frontend-architecture.md"
+        "bmad-agent/tasks/create-next-story.md"
+        "bmad-agent/tasks/create-prd.md"
+        "bmad-agent/tasks/create-test-strategy.md"
+        "bmad-agent/tasks/create-ui-specification.md"
+        "bmad-agent/tasks/debug-issue.md"
+        "bmad-agent/tasks/generate-mvp-dashboard.md"
+        "bmad-agent/tasks/generate-tests.md"
+        "bmad-agent/tasks/implement-story.md"
+        "bmad-agent/tasks/manage-mvp-scope.md"
+        "bmad-agent/tasks/security-threat-model.md"
+        "bmad-agent/templates/architecture-tmpl.md"
+        "bmad-agent/templates/doc-sharding-tmpl.md"
+        "bmad-agent/templates/front-end-architecture-tmpl.md"
+        "bmad-agent/templates/front-end-spec-tmpl.md"
+        "bmad-agent/templates/planning-journal-tmpl.md"
+        "bmad-agent/templates/prd-tmpl.md"
+        "bmad-agent/templates/project-brief-tmpl.md"
+        "bmad-agent/templates/session-state-tmpl.md"
+        "bmad-agent/templates/story-tmpl.md"
+        "bmad-agent/templates/test-strategy-tmpl.md"
+    )
+    
+    # Group files by directory for progress bars
+    declare -A fallback_dir_files
+    local total_fallback_files=${#files[@]}
+    
+    for file_path in "${files[@]}"; do
+        local file_dir=$(dirname "$file_path")
+        fallback_dir_files["$file_dir"]=$((${fallback_dir_files["$file_dir"]:-0} + 1))
+    done
+    
+    # Download with progress bars
+    local current_dir=""
+    local dir_file_count=0
+    local dir_current=0
+    
+    for file_path in "${files[@]}"; do
+        local file_dir=$(dirname "$file_path")
+        
+        # Check if we're entering a new directory
+        if [[ "$file_dir" != "$current_dir" ]]; then
+            current_dir="$file_dir"
+            dir_current=0
+            dir_file_count=${fallback_dir_files["$file_dir"]}
+            echo -e "    ${BLUE}📁${NC} Creating: ${file_dir#./}/"
+        fi
+        
+        # Download file silently
+        download_file_silent "$file_path"
+        
+        # Update progress
+        dir_current=$((dir_current + 1))
+        
+        # Show progress bar for current directory
+        show_progress_bar "$dir_current" "$dir_file_count" "      "
+    done
 }
 
 # Copy or download files
