@@ -9,9 +9,22 @@ This optimized version of the BMAD Method (Breakthrough Method of Agile AI-drive
 Use our setup script to automatically configure BMAD in your project:
 
 **macOS/Linux:**
+
+Option 1: Single command (copy and paste entire block):
+```bash
+curl -O https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.sh && \
+chmod +x setup-bmad.sh && \
+./setup-bmad.sh
+```
+
+Option 2: Step by step (copy and paste each line separately):
 ```bash
 curl -O https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.sh
+```
+```bash
 chmod +x setup-bmad.sh
+```
+```bash
 ./setup-bmad.sh
 ```
 
