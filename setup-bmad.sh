@@ -121,11 +121,12 @@ download_directory() {
         return 1
     fi
     
-    # Track directories we've created to show structure
-    declare -A created_dirs
+    # Extract file paths that start with our directory path and save to temp file
+    local temp_file=$(mktemp)
+    echo "$tree_data" | grep -o '"path":"[^"]*"' | sed 's/"path":"//;s/"//' > "$temp_file"
     
-    # Extract file paths that start with our directory path
-    echo "$tree_data" | grep -o '"path":"[^"]*"' | sed 's/"path":"//;s/"//' | while IFS= read -r file_path; do
+    # Process each file path
+    while IFS= read -r file_path; do
         if [[ "$file_path" == "$dir_path"/* ]]; then
             # This is a file in our target directory
             local relative_path="${file_path#$dir_path/}"
@@ -166,7 +167,10 @@ download_directory() {
             
             echo -e "    ${file_icon} Downloaded: ${GREEN}$display_file${NC}"
         fi
-    done
+    done < "$temp_file"
+    
+    # Clean up temp file
+    rm -f "$temp_file"
 }
 
 # Copy or download files
