@@ -10,21 +10,10 @@ Use our setup script to automatically configure BMAD in your project:
 
 **macOS/Linux:**
 
-Option 1: Single command (copy and paste entire block):
+Single command (copy and paste entire block):
 ```bash
 curl -O https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.sh && \
 chmod +x setup-bmad.sh && \
-./setup-bmad.sh
-```
-
-Option 2: Step by step (copy and paste each line separately):
-```bash
-curl -O https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.sh
-```
-```bash
-chmod +x setup-bmad.sh
-```
-```bash
 ./setup-bmad.sh
 ```
 
@@ -44,7 +33,7 @@ The script will:
 
 1. Clone this repository or download the files
 2. Copy these to your project root:
-   - `bmad-agent/` folder (templates, tasks, checklists)
+   - `bmad-agent/` folder (personas, templates, tasks, checklists, data)
    - `CLAUDE.md` or `CLAUDE-ENHANCED.md` (rename to CLAUDE.md)
    - `BMAD-CLAUDE-CODE-GUIDE.md` (optional quick reference)
 3. Create a `docs/` folder in your project for BMAD artifacts
