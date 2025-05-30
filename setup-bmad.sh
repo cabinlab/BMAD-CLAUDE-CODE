@@ -116,23 +116,38 @@ download_directory() {
         exit 1
     fi
     
-    # Parse JSON and download files
-    echo "$contents" | grep -o '"download_url":"[^"]*"' | sed 's/"download_url":"//;s/"//' | while read url; do
-        if [[ "$url" != "null" ]]; then
-            filename=$(basename "$url")
-            subdir=$(echo "$url" | sed "s|.*/$GITHUB_REPO/$GITHUB_BRANCH/$dir_path/||" | sed "s|/$filename||")
+    # Check if we got valid JSON
+    if [[ "$contents" == *"\"message\":"* ]]; then
+        echo -e "${YELLOW}Warning: Could not access directory $dir_path${NC}"
+        return 1
+    fi
+    
+    # Simple JSON parsing - extract name, type, and download_url for each item
+    local name=""
+    local type=""
+    local download_url=""
+    
+    echo "$contents" | sed 's/},{/}\
+{/g' | while IFS= read -r item; do
+        if [[ "$item" == *'"name":'* ]]; then
+            name=$(echo "$item" | grep -o '"name":"[^"]*"' | sed 's/"name":"//;s/"//')
+            type=$(echo "$item" | grep -o '"type":"[^"]*"' | sed 's/"type":"//;s/"//')
+            download_url=$(echo "$item" | grep -o '"download_url":"[^"]*"' | sed 's/"download_url":"//;s/"//')
             
-            if [[ -n "$subdir" ]]; then
-                mkdir -p "$dir_path/$subdir"
-                target_file="$dir_path/$subdir/$filename"
-            else
-                target_file="$dir_path/$filename"
-            fi
-            
-            if command -v curl >/dev/null 2>&1; then
-                curl -fsSL "$url" -o "$target_file"
-            else
-                wget -q "$url" -O "$target_file"
+            if [[ "$type" == "file" && "$download_url" != "null" && -n "$download_url" ]]; then
+                target_file="$dir_path/$name"
+                target_dir=$(dirname "$target_file")
+                mkdir -p "$target_dir"
+                
+                if command -v curl >/dev/null 2>&1; then
+                    curl -fsSL "$download_url" -o "$target_file"
+                else
+                    wget -q "$download_url" -O "$target_file"
+                fi
+                echo "    Downloaded: $name"
+            elif [[ "$type" == "dir" && -n "$name" ]]; then
+                echo "    Entering directory: $name"
+                download_directory "$dir_path/$name"
             fi
         fi
     done
