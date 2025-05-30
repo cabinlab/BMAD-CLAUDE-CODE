@@ -5,11 +5,21 @@
 
 set -e  # Exit on error
 
-# Colors for output
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
+# Enhanced Color Palette
+CYAN='\033[0;36m'          # Regular cyan (not bright)
+BRIGHT_CYAN='\033[1;36m'   # Bright cyan
+PURPLE='\033[0;35m'        # Regular purple/magenta
+DARK_PURPLE='\033[0;95m'   # Bright purple/magenta
+GREEN='\033[0;32m'         # Regular green
+BRIGHT_GREEN='\033[1;32m'
+RED='\033[0;31m'           # Red for alerts
+WHITE='\033[1;37m'
+GRAY='\033[0;90m'
 NC='\033[0m' # No Color
+
+# Legacy color mappings for compatibility
+BLUE=$CYAN
+YELLOW=$RED
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -19,13 +29,37 @@ GITHUB_REPO="cabinlab/BMAD-CLAUDE-CODE"
 GITHUB_BRANCH="main"
 GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH"
 
-echo -e "${BLUE}🚀 BMAD-CLAUDE-CODE Setup Script${NC}"
-echo "=================================="
-echo ""
+# Clear screen for better presentation
+clear
+
+# Display CLAUDE CODE style ASCII art header
+echo -e "\n${PURPLE}╔═════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${PURPLE}║${NC} ${CYAN}***${NC} ${GREEN}Breakthrough Method of Agile AI-Driven Development${NC}  ${CYAN}*** ${PURPLE}║${NC}"
+echo -e "${PURPLE}╚═════════════════════════════════════════════════════════════╝${NC}"
+echo -e ""
+echo -e "${GREEN}     ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗${NC}"
+echo -e "${GREEN}    ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝${NC}"
+echo -e "${GREEN}    ██║     ██║     ███████║██║   ██║██║  ██║█████╗  ${NC}"
+echo -e "${GREEN}    ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  ${NC}"
+echo -e "${GREEN}    ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗${NC}"
+echo -e "${GREEN}     ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝${NC}"
+echo -e ""
+echo -e "${PURPLE}    ██████╗ ███╗   ███╗ █████╗ ██████╗ ${NC}"
+echo -e "${PURPLE}    ██╔══██╗████╗ ████║██╔══██╗██╔══██╗${NC}"
+echo -e "${PURPLE}    ██████╔╝██╔████╔██║███████║██║  ██║${NC}"
+echo -e "${PURPLE}    ██╔══██╗██║╚██╔╝██║██╔══██║██║  ██║${NC}"
+echo -e "${PURPLE}    ██████╔╝██║ ╚═╝ ██║██║  ██║██████╔╝${NC}"
+echo -e "${PURPLE}    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝ ${NC}"
+echo -e ""
+
+
+
+
+
 
 # Check if we're in the BMAD-CLAUDE-CODE repo or downloading from GitHub
 if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
-    echo -e "${YELLOW}Detected BMAD-CLAUDE-CODE repository${NC}"
+    echo -e "${CYAN}◆${NC} Detected BMAD-CLAUDE-CODE repository"
     SOURCE_MODE="local"
     echo "Where would you like to set up BMAD?"
     echo "1) Current directory: $(pwd)"
@@ -51,28 +85,28 @@ if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
             ;;
     esac
 else
-    echo -e "${YELLOW}Setting up BMAD in: $(pwd)${NC}"
-    echo -e "${BLUE}Files will be downloaded from GitHub repository${NC}"
+    echo -e "${CYAN}◆${NC} Setting up BMAD in: ${BRIGHT_CYAN}$(pwd)${NC}"
+    echo -e "${PURPLE}▶${NC} Files will be downloaded from GitHub repository"
     SOURCE_MODE="github"
     TARGET_DIR="$(pwd)"
 fi
 
 # Create target directory if it doesn't exist
 if [[ ! -d "$TARGET_DIR" ]]; then
-    echo -e "${BLUE}Creating directory: $TARGET_DIR${NC}"
+    echo -e "${PURPLE}▶${NC} Creating directory: ${BRIGHT_CYAN}$TARGET_DIR${NC}"
     mkdir -p "$TARGET_DIR"
 fi
 
 cd "$TARGET_DIR"
 
 echo ""
-echo -e "${BLUE}Setting up BMAD in: $TARGET_DIR${NC}"
+echo -e "${CYAN}◆${NC} Setting up BMAD in: ${BRIGHT_CYAN}$TARGET_DIR${NC}"
 echo ""
 
 # Check if files already exist
 OVERWRITE=false
 if [[ -d "bmad-agent" ]] || [[ -f "CLAUDE.md" ]]; then
-    echo -e "${YELLOW}⚠️  BMAD files already exist in this directory${NC}"
+    echo -e "${RED}⚠️  BMAD files already exist in this directory${NC}"
     read -p "Overwrite existing files? (y/N): " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -94,7 +128,7 @@ download_file() {
     elif command -v wget >/dev/null 2>&1; then
         wget -q "$url" -O "$target_path"
     else
-        echo -e "${YELLOW}Error: Neither curl nor wget found. Cannot download files.${NC}"
+        echo -e "${RED}Error: Neither curl nor wget found. Cannot download files.${NC}"
         exit 1
     fi
 }
@@ -107,11 +141,37 @@ download_directory() {
     local tree_data=""
     local api_success=false
     
+    # Show spinner while fetching file list
+    echo -ne "  ${PURPLE}◐${NC} Fetching file list from GitHub..."
+    
     # Attempt to get tree data from GitHub API with timeout
     if command -v curl >/dev/null 2>&1; then
-        tree_data=$(curl -fsSL --max-time 10 "$tree_url" 2>/dev/null)
-        if [[ $? -eq 0 && "$tree_data" != *"\"message\":"* && -n "$tree_data" ]]; then
+        (
+            tree_data=$(curl -fsSL --max-time 10 "$tree_url" 2>/dev/null)
+            echo "$tree_data" > /tmp/bmad_tree_data.tmp
+            echo $? > /tmp/bmad_curl_status.tmp
+        ) &
+        local fetch_pid=$!
+        
+        # Show spinner while fetching
+        local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+        while kill -0 $fetch_pid 2>/dev/null; do
+            local temp=${spinstr#?}
+            printf "\r  [${CYAN}%c${NC}] Fetching file list from GitHub..." "$spinstr"
+            local spinstr=$temp${spinstr%"$temp"}
+            sleep 0.1
+        done
+        
+        wait $fetch_pid
+        local curl_status=$(cat /tmp/bmad_curl_status.tmp 2>/dev/null || echo 1)
+        tree_data=$(cat /tmp/bmad_tree_data.tmp 2>/dev/null || echo "")
+        rm -f /tmp/bmad_tree_data.tmp /tmp/bmad_curl_status.tmp
+        
+        if [[ $curl_status -eq 0 && "$tree_data" != *"\"message\":"* && -n "$tree_data" ]]; then
             api_success=true
+            printf "\r  ${GREEN}✔${NC} File list retrieved successfully    \n"
+        else
+            printf "\r  ${RED}✗${NC} GitHub API unavailable              \n"
         fi
     elif command -v wget >/dev/null 2>&1; then
         tree_data=$(wget -qO- --timeout=10 "$tree_url" 2>/dev/null)
@@ -143,6 +203,8 @@ download_directory() {
         local current_dir=""
         local dir_file_count=0
         local dir_current=0
+        local color_index=0
+        local colors=($CYAN $PURPLE $GREEN)
         
         while IFS= read -r file_path; do
             if [[ "$file_path" == "$dir_path"/* && "$file_path" == *.* ]]; then
@@ -153,7 +215,9 @@ download_directory() {
                     current_dir="$file_dir"
                     dir_current=0
                     dir_file_count=${dir_files["$file_dir"]}
-                    echo -e "    ${BLUE}📁${NC} Creating: ${file_dir#./}/"
+                    echo -e "    ${CYAN}📦${NC} Creating: ${GRAY}${file_dir#./}/${NC}"
+                    # Move to next color in rotation
+                    color_index=$(( (color_index + 1) % ${#colors[@]} ))
                 fi
                 
                 # Download file silently
@@ -163,15 +227,16 @@ download_directory() {
                 dir_current=$((dir_current + 1))
                 current_files=$((current_files + 1))
                 
-                # Show progress bar for current directory
-                show_progress_bar "$dir_current" "$dir_file_count" "      "
+                # Show progress bar for current directory with rotating colors
+                local bar_color=${colors[$color_index]}
+                show_progress_bar "$dir_current" "$dir_file_count" "      " "$bar_color"
             fi
         done < "$temp_file"
         
         rm -f "$temp_file"
     else
         # Fallback: Use hardcoded file list
-        echo -e "    ${YELLOW}⚠️  GitHub API unavailable, using fallback file list${NC}"
+        echo -e "    ${RED}⚠️  GitHub API unavailable, using fallback file list${NC}"
         download_bmad_fallback
     fi
 }
@@ -199,7 +264,13 @@ show_progress_bar() {
     local current="$1"
     local total="$2"
     local prefix="$3"
+    local bar_color="$4"
     local width=40
+    
+    # Default color if not specified
+    if [[ -z "$bar_color" ]]; then
+        bar_color=$GREEN
+    fi
     
     # Calculate percentage
     local percent=$((current * 100 / total))
@@ -215,7 +286,7 @@ show_progress_bar() {
     done
     
     # Print progress bar with carriage return (overwrites same line)
-    printf "\r${prefix}${GREEN}$bar${NC} $current/$total files (${percent}%%)"
+    printf "\r${prefix}${bar_color}$bar${NC} $current/$total files (${percent}%%)"
     
     # Add newline when complete
     if [[ "$current" -eq "$total" ]]; then
@@ -338,6 +409,8 @@ download_bmad_fallback() {
     local current_dir=""
     local dir_file_count=0
     local dir_current=0
+    local color_index=0
+    local colors=($CYAN $PURPLE $GREEN)
     
     for file_path in "${files[@]}"; do
         local file_dir=$(dirname "$file_path")
@@ -347,7 +420,9 @@ download_bmad_fallback() {
             current_dir="$file_dir"
             dir_current=0
             dir_file_count=${fallback_dir_files["$file_dir"]}
-            echo -e "    ${BLUE}📁${NC} Creating: ${file_dir#./}/"
+            echo -e "    ${CYAN}📦${NC} Creating: ${GRAY}${file_dir#./}/${NC}"
+            # Move to next color in rotation
+            color_index=$(( (color_index + 1) % ${#colors[@]} ))
         fi
         
         # Download file silently
@@ -356,31 +431,32 @@ download_bmad_fallback() {
         # Update progress
         dir_current=$((dir_current + 1))
         
-        # Show progress bar for current directory
-        show_progress_bar "$dir_current" "$dir_file_count" "      "
+        # Show progress bar for current directory with rotating colors
+        local bar_color=${colors[$color_index]}
+        show_progress_bar "$dir_current" "$dir_file_count" "      " "$bar_color"
     done
 }
 
 # Copy or download files
 if [[ "$SOURCE_MODE" == "local" ]]; then
-    echo -e "${BLUE}📁 Copying BMAD files...${NC}"
+    echo -e "\n${CYAN}▶${NC} Copying BMAD files..."
     
     # Copy bmad-agent folder
     if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
         cp -r "$SCRIPT_DIR/bmad-agent" .
-        echo -e "  📁 ${GREEN}bmad-agent/${NC} folder copied"
+        echo -e "  ${GREEN}✔${NC} bmad-agent/ folder copied"
     else
-        echo -e "${YELLOW}  ⚠️  bmad-agent/ folder not found in $SCRIPT_DIR${NC}"
+        echo -e "${PURPLE}  ⚠️  bmad-agent/ folder not found in $SCRIPT_DIR${NC}"
     fi
 else
-    echo -e "${BLUE}📁 Downloading BMAD files from GitHub...${NC}"
+    echo -e "\n${CYAN}▶${NC} Downloading BMAD files from GitHub..."
     
     # Download bmad-agent folder
-    echo "  📥 Downloading bmad-agent/ folder..."
+    echo -e "  ${PURPLE}◐${NC} Downloading bmad-agent/ folder..."
     echo ""
     download_directory "bmad-agent"
     echo ""
-    echo "  ✅ bmad-agent/ folder complete"
+    echo -e "  ${GREEN}✔${NC} bmad-agent/ folder complete"
 fi
 
 # Copy or download CLAUDE.md
@@ -433,7 +509,7 @@ fi
 
 # Create docs directory structure
 echo ""
-echo -e "${BLUE}📂 Creating project structure...${NC}"
+echo -e "${CYAN}▶${NC} Creating project structure..."
 
 mkdir -p docs/.bmad-session
 mkdir -p docs/stories
@@ -475,7 +551,7 @@ BMAD Method initialized. Ready to begin planning!
 
 ---
 EOF
-    echo -e "  📓 ${GREEN}docs/bmad-journal.md${NC} (initialized)"
+    echo -e "  ${GRAY}📓${NC} ${GREEN}docs/bmad-journal.md${NC} (initialized)"
 fi
 
 # Initialize session state
@@ -531,16 +607,16 @@ EOF
 fi
 
 echo ""
-echo -e "${GREEN}✅ BMAD setup complete!${NC}"
+echo -e "${BRIGHT_GREEN}✨ BMAD setup complete!${NC}"
 echo ""
-echo -e "${BLUE}📚 Next Steps:${NC}"
+echo -e "${CYAN}◆ Next Steps:${NC}"
 echo "1. Open this folder in VS Code with Claude Code enabled"
 echo "2. Start with: \"Let's plan a new app using BMAD\""
 echo "3. Or continue planning with: \"Continue BMAD planning\""
 echo ""
-echo -e "${BLUE}📖 Documentation:${NC}"
+echo -e "${CYAN}◆ Documentation:${NC}"
 echo "- CLAUDE.md - Main instructions for Claude Code"
 echo "- BMAD-CLAUDE-CODE-GUIDE.md - Quick reference"
 echo "- BMAD-SESSION-CONTINUITY.md - Session management details"
 echo ""
-echo -e "${GREEN}Happy planning with BMAD! 🚀${NC}"
+echo -e "${BRIGHT_CYAN}Happy planning with BMAD!${NC} ${BRIGHT_GREEN}✨${NC}"
