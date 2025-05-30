@@ -33,7 +33,7 @@ The script will:
 
 1. Clone this repository or download the files
 2. Copy these to your project root:
-   - `bmad-agent/` folder (templates, tasks, checklists)
+   - `bmad-agent/` folder (personas, templates, tasks, checklists, data)
    - `CLAUDE.md` or `CLAUDE-ENHANCED.md` (rename to CLAUDE.md)
    - `BMAD-CLAUDE-CODE-GUIDE.md` (optional quick reference)
 3. Create a `docs/` folder in your project for BMAD artifacts
