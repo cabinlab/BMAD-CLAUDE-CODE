@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
+import { getCachedProject, saveProjectToCache } from '@/lib/bmad-cache';
 
 export interface Idea {
   name: string;
@@ -58,25 +59,46 @@ function parseProjectInfo(bmadRoot: string): DashboardData {
       const brief = fs.readFileSync(projectBriefPath, 'utf-8');
       const projectName = extractProjectName(brief);
       if (projectName) {
-        // Create an entry based on what documents exist
-        const completeness = calculateCompleteness(bmadRoot);
-        const viability = calculateViability(bmadRoot, completeness);
+        // Try to get cached data first
+        const cached = getCachedProject(bmadRoot, projectName);
         
-        const idea: Idea = {
-          name: projectName,
-          viability: viability,
-          completeness: completeness,
-          business: calculateBusinessScore(bmadRoot),
-          technical: calculateTechnicalScore(bmadRoot),
-          missing: identifyMissingComponents(bmadRoot),
-          notes: extractProjectNotes(brief),
-          estimatedStories: countStories(bmadRoot)
-        };
+        let idea: Idea;
+        if (cached) {
+          // Use cached data
+          idea = {
+            name: cached.name,
+            viability: cached.viability,
+            completeness: cached.completeness,
+            business: cached.business,
+            technical: cached.technical,
+            missing: cached.missing,
+            notes: cached.notes,
+            estimatedStories: cached.estimatedStories
+          };
+        } else {
+          // Calculate fresh data
+          const completeness = calculateCompleteness(bmadRoot);
+          const viability = calculateViability(bmadRoot, completeness);
+          
+          idea = {
+            name: projectName,
+            viability: viability,
+            completeness: completeness,
+            business: calculateBusinessScore(bmadRoot),
+            technical: calculateTechnicalScore(bmadRoot),
+            missing: identifyMissingComponents(bmadRoot),
+            notes: extractProjectNotes(brief),
+            estimatedStories: countStories(bmadRoot)
+          };
+          
+          // Save to cache
+          saveProjectToCache(bmadRoot, projectName, idea);
+        }
         
         // Categorize based on completeness and viability
-        if (viability >= 80 && completeness >= 60) {
+        if (idea.viability >= 80 && idea.completeness >= 60) {
           data.mvp.push(idea);
-        } else if (viability >= 70 && completeness >= 80) {
+        } else if (idea.viability >= 70 && idea.completeness >= 80) {
           data.opportunities.push(idea);
         } else {
           data.explorations.push(idea);

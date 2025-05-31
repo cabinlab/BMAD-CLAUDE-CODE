@@ -95,26 +95,52 @@ function LoadingCard() {
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const fetchData = async () => {
+    try {
+      const bmadData = await getBmadData()
+      setData(bmadData)
+    } catch (error) {
+      console.error('Failed to fetch BMAD data:', error)
+    }
+  }
+
+  const refreshData = async () => {
+    setRefreshing(true)
+    try {
+      // Clear cache first
+      await fetch('/api/bmad-data/refresh', { method: 'POST' })
+      // Then fetch fresh data
+      await fetchData()
+    } catch (error) {
+      console.error('Failed to refresh data:', error)
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const bmadData = await getBmadData()
-        setData(bmadData)
-      } catch (error) {
-        console.error('Failed to fetch BMAD data:', error)
-      } finally {
-        setLoading(false)
-      }
+    async function initialLoad() {
+      await fetchData()
+      setLoading(false)
     }
-
-    fetchData()
+    initialLoad()
   }, [])
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6">
-        <ThemeToggle />
+        <div className="fixed top-6 right-6 flex gap-2 z-10">
+          <button
+            onClick={refreshData}
+            disabled={refreshing}
+            className="px-3 py-2 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-md text-sm font-medium text-accent-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {refreshing ? '↻ Refreshing...' : '↻ Refresh'}
+          </button>
+          <ThemeToggle />
+        </div>
         <div className="max-w-6xl mx-auto space-y-8">
           <header className="text-center mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">
@@ -137,14 +163,23 @@ export default function Dashboard() {
   if (!data) {
     return (
       <div className="min-h-screen bg-background p-6">
-        <ThemeToggle />
+        <div className="fixed top-6 right-6 flex gap-2 z-10">
+          <button
+            onClick={refreshData}
+            disabled={refreshing}
+            className="px-3 py-2 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-md text-sm font-medium text-accent-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {refreshing ? '↻ Refreshing...' : '↻ Refresh'}
+          </button>
+          <ThemeToggle />
+        </div>
         <div className="max-w-6xl mx-auto space-y-8">
           <header className="text-center mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">
               BMAD Dashboard
             </h1>
             <p className="text-muted-foreground text-base">
-              Unable to load project data
+              Unable to load project data • Try refreshing
             </p>
           </header>
         </div>
@@ -156,7 +191,16 @@ export default function Dashboard() {
   
   return (
     <div className="min-h-screen bg-background p-6">
-      <ThemeToggle />
+      <div className="fixed top-6 right-6 flex gap-2 z-10">
+        <button
+          onClick={refreshData}
+          disabled={refreshing}
+          className="px-3 py-2 bg-accent/10 hover:bg-accent/20 border border-accent/20 rounded-md text-sm font-medium text-accent-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {refreshing ? '↻ Refreshing...' : '↻ Refresh'}
+        </button>
+        <ThemeToggle />
+      </div>
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">

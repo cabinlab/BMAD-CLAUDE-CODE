@@ -24,3 +24,9 @@ bmad-dashboard/node_modules/
 bmad-dashboard/.next/
 bmad-dashboard/out/
 bmad-dashboard/*.tsbuildinfo
+
+# BMAD Dashboard cache files
+docs/.bmad-session/dashboard-cache.json
+
+# Internal discussions and temporary work products
+.internal-discussions/
