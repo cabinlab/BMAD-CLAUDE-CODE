@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    /* Anthropic Light Mode Colors */
+    --background: 60 33% 99%; /* #FDFDF7 */
+    --foreground: 0 0% 5%; /* #0E0E0E */
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 0 0% 5%;
+    --primary: 0 0% 5%; /* #0E0E0E */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 60 20% 95%; /* light gray */
+    --secondary-foreground: 0 0% 5%;
+    --muted: 60 10% 92%;
+    --muted-foreground: 0 0% 40%;
+    --border: 0 0% 90%;
+    --accent: 24 47% 66%; /* #D4A27F - coral */
+    --accent-foreground: 0 0% 0%;
+    --radius: 0.375rem;
+    
+    /* Custom colors for progress bars - Anthropic palette */
+    --business: 20 65% 58%; /* bold coral/orange */
+    --technical: 205 70% 50%; /* bold blue */
+    --completeness: 185 55% 50%; /* bold teal */
+  }
+ 
+  .dark {
+    /* Anthropic Dark Mode Colors */
+    --background: 240 10% 4%; /* #09090B */
+    --foreground: 0 0% 95%;
+    --card: 240 6% 10%;
+    --card-foreground: 0 0% 95%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 240 10% 4%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 240 4% 20%;
+    --muted-foreground: 0 0% 65%;
+    --border: 240 4% 20%;
+    --accent: 24 47% 66%; /* #D4A27F - coral */
+    --accent-foreground: 0 0% 0%;
+    
+    /* Custom colors for progress bars - adjusted for dark mode */
+    --business: 20 60% 65%; /* vibrant coral for dark mode */
+    --technical: 205 65% 60%; /* vibrant blue for dark mode */
+    --completeness: 185 50% 58%; /* vibrant teal for dark mode */
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+  
+  code, pre {
+    font-family: var(--font-jetbrains), 'JetBrains Mono', monospace;
+  }
+}

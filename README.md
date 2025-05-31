@@ -2,13 +2,26 @@
 
 This optimized version of the BMAD Method (Breakthrough Method of Agile AI-driven Development) is specifically designed for Claude Code, providing a comprehensive framework for professional software development with AI assistance.
 
+## What's New 🎉
+
+### Efficiency Enhancements
+- **Intelligent Persona Routing**: Claude automatically selects the right persona based on your request
+- **Quick Task Navigation**: Jump directly to specific tasks without browsing file structure
+- **Adaptive Formality**: Adjust process rigor based on project complexity and confidence
+
+### Visual Dashboard (Optional)
+- **BMAD Dashboard**: Next.js application for visualizing project progress
+- **Track Ideas**: From exploration through MVP candidates to opportunities
+- **Viability Metrics**: Business/technical balance with completeness tracking
+- **Anthropic Branding**: Consistent with Claude Code design system
+
 ## Quick Start
 
 ### Automated Setup (Recommended)
 
 Use our setup script to automatically configure BMAD in your project:
 
-**macOS/Linux:**
+**macOS/Linux/WSL:**
 
 Single command (copy and paste entire block):
 ```bash
@@ -17,17 +30,14 @@ chmod +x setup-bmad.sh && \
 ./setup-bmad.sh
 ```
 
-**Windows (PowerShell):**
-```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/cabinlab/BMAD-CLAUDE-CODE/main/setup-bmad.ps1" -OutFile "setup-bmad.ps1"
-.\setup-bmad.ps1
-```
+**Windows Users:** Since Claude Code requires WSL, run the above bash command in your WSL terminal, not PowerShell.
 
 The script will:
 - Copy all necessary BMAD files to your project
 - Create the proper directory structure
 - Initialize planning journal and session files
 - Let you choose between basic and enhanced Claude.md
+- **Optional**: Install the BMAD Dashboard for visual progress tracking
 
 ### Manual Setup
 
@@ -70,6 +80,16 @@ Claude Code: I see we were working on the PRD as the Product Manager...
 - **"Run [checklist]"** - Executes quality validation
 - **"Show planning status"** - Reviews progress and next steps
 
+### Efficiency Tips (New!)
+- **Direct Requests**: Just say what you need - Claude will route to the right persona
+  - "Build authentication" → [Developer] starts implementation
+  - "Create user stories" → [PM] drafts stories
+  - "Design the database" → [Data Engineer] creates schema
+- **Skip Formality**: For simple tasks, Claude adapts the process
+  - Quick fixes don't need full BMAD ceremony
+  - Complex features get appropriate rigor
+- **Stay in Flow**: Claude maintains persona context for related tasks
+
 ## Project Structure
 
 ```
@@ -88,7 +108,30 @@ your-project/
 │   ├── prd.md                 # Requirements
 │   ├── architecture.md        # Technical design
 │   └── stories/               # User stories
+├── bmad-dashboard/            # Optional visual dashboard
+│   ├── app/                   # Next.js application
+│   └── components/            # UI components
 └── src/                       # Your code
+```
+
+## BMAD Dashboard (Optional)
+
+The BMAD Dashboard provides visual tracking of your project ideas:
+
+### Features
+- **Exploration Tracking**: Low-commitment idea validation
+- **MVP Ranking**: Prioritized candidates by viability
+- **Opportunity Banking**: Validated ideas for future consideration
+- **Dual Progress Bars**: Business vs Technical viability visualization
+- **Dark Mode**: Automatic theme switching
+
+### Dashboard Setup
+If you chose to install the dashboard during setup:
+```bash
+cd bmad-dashboard
+npm install
+npm run dev
+# Open http://localhost:3001
 ```
 
 ## The BMAD Method Philosophy
@@ -256,6 +299,7 @@ Use for complex, multi-session planning:
 - Enable planning journal (`docs/bmad-journal.md`) for decision history
 - Best for full application development with extended planning phases
 - Supports resuming work across multiple Claude Code sessions
+- **NEW**: Includes efficiency enhancements for faster workflows
 
 ## Documentation
 
@@ -275,6 +319,7 @@ This fork is very experimental, and probably not at a point contributions make s
 - 9 specialized personas designed for single-agent embodiment
 - Templates and tasks optimized for Claude Code workflows
 - Session continuity support for multi-session planning
+- **NEW**: Intelligent routing and adaptive formality
 
 **🏗️ Architecture-Agnostic Design:**
 - Templates support any architecture pattern (monolith, microservices, serverless, edge)
@@ -285,11 +330,18 @@ This fork is very experimental, and probably not at a point contributions make s
 - Comprehensive tasks covering full development lifecycle
 - Quality checklists ensuring professional standards
 - Test-driven development and deployment automation support
+- **NEW**: Direct task navigation without file browsing
 
 **📋 Professional Quality Gates:**
 - Consistent checklist format with clear validation criteria
 - Complete coverage from discovery through deployment
 - Phase discipline ensuring thorough planning before implementation
+
+**📊 Visual Progress Tracking (NEW):**
+- Optional Next.js dashboard for project visualization
+- Track ideas from exploration to production
+- Business/technical viability metrics
+- Anthropic-branded design consistent with Claude Code
 
 ## Claude Code Adaptations
 

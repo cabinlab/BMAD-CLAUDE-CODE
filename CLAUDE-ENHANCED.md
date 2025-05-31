@@ -2,6 +2,41 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Smart API-First Strategy
+
+### Quick Decision Heuristic (5-second rule):
+Skip API search if ALL are true:
+- Task takes <10 lines of code
+- It's a one-time operation  
+- No external service interaction
+- Standard library handles it well
+
+### API Check Triggers:
+ALWAYS check for APIs when:
+- Interacting with external services (GitHub, Cloudflare, Supabase, APIs, DBs)
+- Task involves >20 lines of implementation
+- Dealing with: parsing, scraping, protocols, auth, encryption
+- Building something that feels "standard" or "common"
+
+### Efficient Practices:
+- State decision upfront: "Using GitHub API for this"
+- Batch related checks: "All GitHub operations will use API"
+- Skip justification for obvious cases
+- Reference previous decisions: "Like before, using X API"
+
+### Common API Patterns:
+- Git operations → GitHub/GitLab API or `gh`/`glab` CLI
+- File downloads → Check for official API before curl/wget
+- Data parsing → Check for official SDKs before regex
+- Config management → Check for CLI tools before parsing
+
+### Error Resolution Strategy:
+1. Read the actual error message carefully
+2. Check official docs (not StackOverflow first)
+3. Verify versions/auth/rate limits
+4. Test with minimal example (curl, etc.)
+5. Only then add debug code
+
 ## Setup Instructions for Using BMAD with Claude Code
 
 To use the BMAD Method in your project with Claude Code:
@@ -62,6 +97,16 @@ Maintain continuity by:
 - **"What did we decide about X?"**: Search planning journal
 - **"Create planning checkpoint"**: Save current state
 - **"Start fresh session as [role]"**: Begin new phase
+
+### Using Journal for Efficiency
+
+The planning journal helps avoid redundant work:
+- Check journal first to understand current state
+- Skip re-reading completed artifacts (PRD, architecture)
+- Focus on what's changed or blocked
+- Use journal's decision log to avoid re-debating
+
+Quick status check: "What needs attention?" → Claude scans journal for blockers/gaps
 
 ### Example Session Patterns
 
@@ -131,6 +176,28 @@ When user says: "Be my SM" or "Generate stories"
 - Load: `bmad-agent/personas/orchestrator.md` (handles SM responsibilities)
 - Focus: Story creation, dependency management, progress tracking, flow
 - **Session tracking**: Track story generation progress
+
+### Efficient Persona Usage
+
+**Direct Routing for Clear Requests:**
+- "Build/implement X" → [Developer]
+- "Create stories for Y" → [PM]  
+- "Design the architecture" → [Architect]
+- "Set up deployment" → [DevOps]
+- "Write tests" → [QA]
+- "Design the UI" → [Designer]
+
+**Stay in Persona for Related Tasks:**
+- [PM]: Multiple stories, scope changes, requirement updates
+- [Developer]: Implementation, debugging, refactoring
+- [QA]: Test creation, test execution, test strategy updates
+
+**Use [Orchestrator] When:**
+- Starting a new session (check journal/state)
+- Request involves multiple personas
+- Managing complex features
+- Uncertainty about next steps
+- Phase transitions needed
 
 ## BMAD Planning Commands
 
@@ -312,6 +379,50 @@ When a user asks to start a new software project:
 4. Guide them through PRD creation
 5. Design the architecture
 6. Break down into epics and stories
+
+### Quick Task Navigation
+
+**Based on your request:**
+- Starting fresh → project-brief → research → PRD → architecture
+- Have requirements → create-next-story → implement-story
+- Fixing issues → debug-issue (includes root cause process)
+- Going to production → deployment-pipeline + security-model + test-strategy
+
+**Based on planning journal state:**
+- No PRD yet → Start with create-prd
+- No architecture → Go to create-architecture  
+- Stories exist → Continue implementation
+- Tests failing → Focus on debug-issue
+
+### Adaptive Formality
+
+Claude Code may adapt BMAD's rigor based on detected context and intent. 
+
+**Automatic Adaptation:**
+When Claude Code detects exploration/prototyping context with high confidence (≥80%), it will automatically adapt to lighter-weight processes and notify you:
+
+> 🔬 **Switching to exploration mode** - Using lighter documentation and deferred checklists for rapid prototyping. To return to full BMAD rigor, just say "let's build this properly" or "production mode."
+
+**Confirmation Request:**
+When context is ambiguous (below 80% confidence), Claude Code will ask:
+
+> 🤔 **This seems exploratory** - Should I use lighter-weight processes for faster iteration? (Reply "yes" for exploration mode, "no" for full BMAD rigor)
+
+**Exploration Mode Means:**
+- Templates become guides, not requirements
+- Findings documented in planning journal  
+- Checklists deferred until approach validated
+- Focus on learning over compliance
+
+**Production Mode Means:**
+- Full BMAD process applies
+- All templates completed thoroughly
+- All checklists must pass
+- Complete documentation required
+
+**Quick Mode Switches:**
+- To exploration: "let's try", "experiment", "prototype this"
+- To production: "build properly", "production ready", "full rigor"
 
 ### Planning-Specific Instructions
 When in planning phases:

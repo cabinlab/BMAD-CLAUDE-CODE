@@ -606,6 +606,42 @@ EOF
     echo -e "  🚫 ${GREEN}.gitignore${NC} (created)"
 fi
 
+# Optional: Install BMAD Dashboard
+echo ""
+echo -e "${CYAN}◆ Optional: BMAD Dashboard${NC}"
+echo "Would you like to install the BMAD Dashboard?"
+echo "This creates a Next.js app for visualizing your project progress"
+read -p "Install dashboard? (y/N): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "${CYAN}▶${NC} Setting up BMAD Dashboard..."
+    
+    # Copy dashboard if local, otherwise download
+    if [[ "$SOURCE_MODE" == "local" ]]; then
+        if [[ -d "$SCRIPT_DIR/bmad-dashboard" ]]; then
+            cp -r "$SCRIPT_DIR/bmad-dashboard" .
+            echo -e "  ${GREEN}✔${NC} Dashboard copied"
+        else
+            echo -e "  ${YELLOW}⚠️${NC} Dashboard not found in repository"
+        fi
+    else
+        # Download dashboard files from GitHub
+        echo -e "  ${PURPLE}◐${NC} Downloading dashboard from GitHub..."
+        download_directory "bmad-dashboard"
+        echo -e "  ${GREEN}✔${NC} Dashboard downloaded"
+    fi
+    
+    echo ""
+    echo -e "${CYAN}◆ Dashboard Setup:${NC}"
+    echo "To start the dashboard:"
+    echo "1. cd bmad-dashboard"
+    echo "2. npm install"
+    echo "3. npm run dev"
+    echo "4. Open http://localhost:3001"
+else
+    echo -e "  ${GRAY}↳${NC} Skipping dashboard installation"
+fi
+
 echo ""
 echo -e "${BRIGHT_GREEN}✨ BMAD setup complete!${NC}"
 echo ""
