@@ -43,46 +43,6 @@ The script will:
 - Let you choose between basic and enhanced Claude.md
 - **Optional**: Install the BMAD Dashboard for visual progress tracking
 
-<details>
-<summary><strong>📋 Setup Instructions</strong></summary>
-
-### Manual Setup
-
-1. Clone this repository or download the files
-2. Copy these to your project root:
-   - `bmad-agent/` folder (personas, templates, tasks, checklists, data)
-   - `CLAUDE.md` or `CLAUDE-ENHANCED.md` (rename to CLAUDE.md)
-   - `BMAD-CLAUDE-CODE-GUIDE.md` (optional quick reference)
-3. Create a `docs/` folder in your project for BMAD artifacts
-4. Start using BMAD with Claude Code!
-
-### Using BMAD with Claude Code
-
-**Starting a New Project:**
-```
-User: "Let's plan a new app using BMAD"
-Claude Code: I'll help you start a new BMAD project. Let me set up the planning structure...
-```
-
-**Continuing Work:**
-```
-User: "Continue BMAD planning"
-Claude Code: I see we were working on the PRD as the Product Manager...
-```
-
-**Key Commands:**
-- **"Act as the BMAD [Persona]"** - Claude adopts specific persona mindset
-- **"Create a [document]"** - Uses appropriate BMAD template
-- **"Run [checklist]"** - Executes quality validation
-- **"Show planning status"** - Reviews progress and next steps
-
-**Usage Examples:**
-- **Direct Requests**: "Build authentication" → [Developer] starts implementation
-- **Create Documents**: "Create user stories" → [PM] drafts stories  
-- **Design Systems**: "Design the database" → [Data Engineer] creates schema
-- **Quality Gates**: "Run architecture checklist" → Validates design decisions
-
-</details>
 
 ## Project Structure
 
@@ -128,14 +88,82 @@ npm run dev
 # Open http://localhost:3001
 ```
 
+
+
+## Documentation
+
+- [CLAUDE.md](CLAUDE.md) - Main instructions for Claude Code
+- [CLAUDE-ENHANCED.md](CLAUDE-ENHANCED.md) - Enhanced version with full planning
+- [BMAD-CLAUDE-CODE-GUIDE.md](BMAD-CLAUDE-CODE-GUIDE.md) - Quick reference
+- [BMAD-SESSION-CONTINUITY.md](BMAD-SESSION-CONTINUITY.md) - Session management
+
+<details>
+<summary><strong>📋 Setup Instructions</strong></summary>
+
+### Manual Setup
+
+1. Clone this repository or download the files
+2. Copy these to your project root:
+   - `bmad-agent/` folder (personas, templates, tasks, checklists, data)
+   - `CLAUDE.md` or `CLAUDE-ENHANCED.md` (rename to CLAUDE.md)
+   - `BMAD-CLAUDE-CODE-GUIDE.md` (optional quick reference)
+3. Create a `docs/` folder in your project for BMAD artifacts
+4. Start using BMAD with Claude Code!
+
+### Using BMAD with Claude Code
+
+**Starting a New Project:**
+```
+User: "Let's plan a new app using BMAD"
+Claude Code: I'll help you start a new BMAD project. Let me set up the planning structure...
+```
+
+**Continuing Work:**
+```
+User: "Continue BMAD planning"
+Claude Code: I see we were working on the PRD as the Product Manager...
+```
+
+**Key Commands:**
+- **"Act as the BMAD [Persona]"** - Claude adopts specific persona mindset
+- **"Create a [document]"** - Uses appropriate BMAD template
+- **"Run [checklist]"** - Executes quality validation
+- **"Show planning status"** - Reviews progress and next steps
+
+**Usage Examples:**
+- **Direct Requests**: "Build authentication" → [Developer] starts implementation
+- **Create Documents**: "Create user stories" → [PM] drafts stories  
+- **Design Systems**: "Design the database" → [Data Engineer] creates schema
+- **Quality Gates**: "Run architecture checklist" → Validates design decisions
+
+</details>
+
+<details>
+<summary><strong>⚙️ Session Management Options</strong></summary>
+
+### Basic Setup (CLAUDE.md)
+Use for simple, single-session projects:
+- Copy `CLAUDE.md` as-is to your project root
+- No session tracking needed  
+- Best for small features or quick prototypes
+- All planning happens in one session
+
+### Enhanced Setup (CLAUDE-ENHANCED.md)  
+For complex, multi-session planning:
+- Copy `CLAUDE-ENHANCED.md` to your project root and rename to `CLAUDE.md`
+- Includes efficiency enhancements, session continuity, and planning journal support
+- Best for full application development with extended planning phases
+
+</details>
+
 <details>
 <summary><strong>📚 BMAD Method Details</strong></summary>
 
-## The BMAD Method Philosophy
+### The BMAD Method Philosophy
 
 The BMAD Method is a revolutionary approach that elevates "vibe coding" to advanced project planning, ensuring AI-driven development starts with clear vision and completes with explicit guidance. It provides a structured yet flexible framework to plan, execute, and manage software projects.
 
-### Key Benefits
+#### Key Benefits
 
 - **Structured Planning**: Move from idea to implementation with clear phases
 - **Quality Built-In**: Checklists and templates ensure nothing is missed
@@ -143,27 +171,27 @@ The BMAD Method is a revolutionary approach that elevates "vibe coding" to advan
 - **Role-Based Thinking**: Claude Code adopts appropriate mindsets for each phase
 - **Document-Driven**: All artifacts are markdown files, easy to review and version
 
-## BMAD Workflow Phases
+### BMAD Workflow Phases
 
-### 1. Discovery & Analysis
+#### 1. Discovery & Analysis
 **Analyst** persona investigates and challenges assumptions:
 - Deep research into problem space and constraints
 - Competitive analysis and market validation
 - Edge case identification and risk assessment
 
-### 2. Product Definition
+#### 2. Product Definition
 **Product Manager** persona transforms research into requirements:
 - Creates comprehensive PRD with prioritized features
 - Defines user stories with clear acceptance criteria
 - Establishes success metrics and MVP scope
 
-### 3. Technical & UX Design
+#### 3. Technical & UX Design
 **Architect** and **Designer** personas create system design:
 - Architecture patterns for scalability and maintainability
 - API specifications and security modeling
 - User experience flows and interface design
 
-### 4. Implementation & Quality
+#### 4. Implementation & Quality
 **Developer** persona builds the solution:
 - Clean code implementation following best practices
 - Debugging and refactoring for maintainability
@@ -174,19 +202,19 @@ The BMAD Method is a revolutionary approach that elevates "vibe coding" to advan
 - Performance and security testing
 - Independent quality validation
 
-### 5. Data Management
+#### 5. Data Management
 **Data Engineer** persona architects information flow:
 - Database schema design and optimization
 - Data migration and ETL pipeline creation
 - Privacy compliance and data governance
 
-### 6. Infrastructure & Operations
+#### 6. Infrastructure & Operations
 **DevOps Engineer** persona enables deployment:
 - CI/CD pipeline setup and automation
 - Infrastructure design and monitoring
 - Security hardening and cost optimization
 
-### 7. Process & Continuity
+#### 7. Process & Continuity
 **Orchestrator** persona maintains project discipline:
 - Quality gates and validation checkpoints
 - Change management and course correction
@@ -282,31 +310,6 @@ User: "Run the architecture checklist"
 Claude Code: I'll run through the architecture checklist for your current design.
 Let's validate each aspect...
 ```
-
-</details>
-
-## Documentation
-
-- [CLAUDE.md](CLAUDE.md) - Main instructions for Claude Code
-- [CLAUDE-ENHANCED.md](CLAUDE-ENHANCED.md) - Enhanced version with full planning
-- [BMAD-CLAUDE-CODE-GUIDE.md](BMAD-CLAUDE-CODE-GUIDE.md) - Quick reference
-- [BMAD-SESSION-CONTINUITY.md](BMAD-SESSION-CONTINUITY.md) - Session management
-
-<details>
-<summary><strong>⚙️ Session Management Options</strong></summary>
-
-### Basic Setup (CLAUDE.md)
-Use for simple, single-session projects:
-- Copy `CLAUDE.md` as-is to your project root
-- No session tracking needed  
-- Best for small features or quick prototypes
-- All planning happens in one session
-
-### Enhanced Setup (CLAUDE-ENHANCED.md)  
-For complex, multi-session planning:
-- Copy `CLAUDE-ENHANCED.md` to your project root and rename to `CLAUDE.md`
-- Includes efficiency enhancements, session continuity, and planning journal support
-- Best for full application development with extended planning phases
 
 </details>
 
