@@ -18,3 +18,9 @@ build/
 
 # VSCode settings
 .vscode/
+
+# BMAD Dashboard build artifacts and dependencies
+bmad-dashboard/node_modules/
+bmad-dashboard/.next/
+bmad-dashboard/out/
+bmad-dashboard/*.tsbuildinfo
