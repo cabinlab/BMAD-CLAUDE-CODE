@@ -1,10 +1,11 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DualProgress } from "@/components/ui/dual-progress"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import { getBmadData, type Idea } from "@/lib/bmad-data"
+import { getBmadData, type Idea, type DashboardData } from "@/lib/bmad-data"
 
 function IdeaCard({ idea, showEstimate = false }: { idea: Idea; showEstimate?: boolean }) {
   return (
@@ -73,8 +74,85 @@ function IdeaCard({ idea, showEstimate = false }: { idea: Idea; showEstimate?: b
   )
 }
 
+function LoadingCard() {
+  return (
+    <Card className="mb-4 animate-pulse">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="h-5 bg-muted rounded w-32"></div>
+          <div className="h-6 bg-muted rounded w-20"></div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="h-2 bg-muted rounded w-full"></div>
+        <div className="h-2 bg-muted rounded w-full"></div>
+        <div className="h-8 bg-muted rounded w-full"></div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function Dashboard() {
-  const { explorations, mvp, opportunities } = getBmadData()
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const bmadData = await getBmadData()
+        setData(bmadData)
+      } catch (error) {
+        console.error('Failed to fetch BMAD data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <ThemeToggle />
+        <div className="max-w-6xl mx-auto space-y-8">
+          <header className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">
+              BMAD Dashboard
+            </h1>
+            <p className="text-muted-foreground text-base">
+              Track ideas from exploration to production • Powered by Claude Code
+            </p>
+          </header>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <LoadingCard />
+            <LoadingCard />
+            <LoadingCard />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <ThemeToggle />
+        <div className="max-w-6xl mx-auto space-y-8">
+          <header className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-foreground mb-3 tracking-tight">
+              BMAD Dashboard
+            </h1>
+            <p className="text-muted-foreground text-base">
+              Unable to load project data
+            </p>
+          </header>
+        </div>
+      </div>
+    )
+  }
+
+  const { explorations, mvp, opportunities } = data
   
   return (
     <div className="min-h-screen bg-background p-6">
