@@ -43,6 +43,9 @@ The script will:
 - Let you choose between basic and enhanced Claude.md
 - **Optional**: Install the BMAD Dashboard for visual progress tracking
 
+<details>
+<summary><strong>📋 Setup Instructions</strong></summary>
+
 ### Manual Setup
 
 1. Clone this repository or download the files
@@ -53,32 +56,33 @@ The script will:
 3. Create a `docs/` folder in your project for BMAD artifacts
 4. Start using BMAD with Claude Code!
 
+### Using BMAD with Claude Code
 
-## Using BMAD with Claude Code
-
-### Starting a New Project
+**Starting a New Project:**
 ```
 User: "Let's plan a new app using BMAD"
 Claude Code: I'll help you start a new BMAD project. Let me set up the planning structure...
 ```
 
-### Continuing Work
+**Continuing Work:**
 ```
 User: "Continue BMAD planning"
 Claude Code: I see we were working on the PRD as the Product Manager...
 ```
 
-### Key Commands
+**Key Commands:**
 - **"Act as the BMAD [Persona]"** - Claude adopts specific persona mindset
 - **"Create a [document]"** - Uses appropriate BMAD template
 - **"Run [checklist]"** - Executes quality validation
 - **"Show planning status"** - Reviews progress and next steps
 
-### Usage Examples
+**Usage Examples:**
 - **Direct Requests**: "Build authentication" → [Developer] starts implementation
 - **Create Documents**: "Create user stories" → [PM] drafts stories  
 - **Design Systems**: "Design the database" → [Data Engineer] creates schema
 - **Quality Gates**: "Run architecture checklist" → Validates design decisions
+
+</details>
 
 ## Project Structure
 
@@ -123,6 +127,9 @@ npm install
 npm run dev
 # Open http://localhost:3001
 ```
+
+<details>
+<summary><strong>📚 BMAD Method Details</strong></summary>
 
 ## The BMAD Method Philosophy
 
@@ -185,7 +192,10 @@ The BMAD Method is a revolutionary approach that elevates "vibe coding" to advan
 - Change management and course correction
 - Session continuity and knowledge preservation
 
-## Available Resources
+</details>
+
+<details>
+<summary><strong>🛠️ Available Resources</strong></summary>
 
 ### Templates (`bmad-agent/templates/`) - 10 Total
 **Core Templates:**
@@ -250,30 +260,40 @@ The BMAD Method is a revolutionary approach that elevates "vibe coding" to advan
 - `debug-process-checklist.md` - Issue resolution validation
 - `change-checklist.md` - Change management validation
 
-## Getting Started Examples
+### Getting Started Examples
 
-### Example 1: Starting Fresh
+**Example 1: Starting Fresh**
 ```
 User: "I want to build a task management app using BMAD"
 Claude Code: I'll help you start a new BMAD project for your task management app. 
 Let me set up the planning structure and begin with discovery...
 ```
 
-### Example 2: Continuing Work
+**Example 2: Continuing Work**
 ```
 User: "Continue BMAD planning"
 Claude Code: I see we were working on Epic 2 of your PRD. Last session we completed 
 the user authentication stories. Shall we continue with the task management stories?
 ```
 
-### Example 3: Running Checklists
+**Example 3: Running Checklists**
 ```
 User: "Run the architecture checklist"
 Claude Code: I'll run through the architecture checklist for your current design.
 Let's validate each aspect...
 ```
 
-## Session Management Options
+</details>
+
+## Documentation
+
+- [CLAUDE.md](CLAUDE.md) - Main instructions for Claude Code
+- [CLAUDE-ENHANCED.md](CLAUDE-ENHANCED.md) - Enhanced version with full planning
+- [BMAD-CLAUDE-CODE-GUIDE.md](BMAD-CLAUDE-CODE-GUIDE.md) - Quick reference
+- [BMAD-SESSION-CONTINUITY.md](BMAD-SESSION-CONTINUITY.md) - Session management
+
+<details>
+<summary><strong>⚙️ Session Management Options</strong></summary>
 
 ### Basic Setup (CLAUDE.md)
 Use for simple, single-session projects:
@@ -288,13 +308,7 @@ For complex, multi-session planning:
 - Includes efficiency enhancements, session continuity, and planning journal support
 - Best for full application development with extended planning phases
 
-## Documentation
-
-- [CLAUDE.md](CLAUDE.md) - Main instructions for Claude Code
-- [CLAUDE-ENHANCED.md](CLAUDE-ENHANCED.md) - Enhanced version with full planning
-- [BMAD-CLAUDE-CODE-GUIDE.md](BMAD-CLAUDE-CODE-GUIDE.md) - Quick reference
-- [BMAD-SESSION-CONTINUITY.md](BMAD-SESSION-CONTINUITY.md) - Session management
-- [Instructions](./docs/instruction.md) - Detailed BMAD documentation
+</details>
 
 ## Contributing
 
