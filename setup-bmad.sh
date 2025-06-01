@@ -5,21 +5,23 @@
 
 set -e  # Exit on error
 
-# Enhanced Color Palette
-CYAN='\033[0;36m'          # Regular cyan (not bright)
-BRIGHT_CYAN='\033[1;36m'   # Bright cyan
-PURPLE='\033[0;35m'        # Regular purple/magenta
-DARK_PURPLE='\033[0;95m'   # Bright purple/magenta
-GREEN='\033[0;32m'         # Regular green
-BRIGHT_GREEN='\033[1;32m'
-RED='\033[0;31m'           # Red for alerts
-WHITE='\033[1;37m'
-GRAY='\033[0;90m'
+# Claude Code Theme Color Palette
+ORANGE='\033[38;2;244;132;95m'       # Claude orange #F4845F
+BRIGHT_ORANGE='\033[1;38;2;244;132;95m'  # Bright Claude orange
+CYAN='\033[38;2;79;195;193m'         # Complementary cyan #4FC3C1  
+BRIGHT_CYAN='\033[1;38;2;79;195;193m'    # Bright cyan
+DARK_ORANGE='\033[38;2;232;114;58m'  # Darker orange #E8723A
+GREEN='\033[0;32m'                   # Success green (for checkmarks)
+BRIGHT_GREEN='\033[1;32m'            # Bright green
+RED='\033[0;31m'                     # Error red
+WHITE='\033[1;37m'                   # White
+GRAY='\033[0;90m'                    # Muted gray
 NC='\033[0m' # No Color
 
 # Legacy color mappings for compatibility
 BLUE=$CYAN
-YELLOW=$RED
+YELLOW=$ORANGE
+PURPLE=$DARK_ORANGE
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -33,23 +35,19 @@ GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH"
 clear
 
 # Display CLAUDE CODE style ASCII art header
-echo -e "\n${PURPLE}╔═════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${PURPLE}║${NC} ${CYAN}***${NC} ${GREEN}Breakthrough Method of Agile AI-Driven Development${NC}  ${CYAN}*** ${PURPLE}║${NC}"
-echo -e "${PURPLE}╚═════════════════════════════════════════════════════════════╝${NC}"
+echo -e "\n${ORANGE}     ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗${NC}"
+echo -e "${ORANGE}    ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝${NC}"
+echo -e "${ORANGE}    ██║     ██║     ███████║██║   ██║██║  ██║█████╗  ${NC}"
+echo -e "${ORANGE}    ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  ${NC}"
+echo -e "${ORANGE}    ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗${NC}"
+echo -e "${ORANGE}     ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝${NC}"
 echo -e ""
-echo -e "${GREEN}     ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗${NC}"
-echo -e "${GREEN}    ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝${NC}"
-echo -e "${GREEN}    ██║     ██║     ███████║██║   ██║██║  ██║█████╗  ${NC}"
-echo -e "${GREEN}    ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝  ${NC}"
-echo -e "${GREEN}    ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗${NC}"
-echo -e "${GREEN}     ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝${NC}"
-echo -e ""
-echo -e "${PURPLE}    ██████╗ ███╗   ███╗ █████╗ ██████╗ ${NC}"
-echo -e "${PURPLE}    ██╔══██╗████╗ ████║██╔══██╗██╔══██╗${NC}"
-echo -e "${PURPLE}    ██████╔╝██╔████╔██║███████║██║  ██║${NC}"
-echo -e "${PURPLE}    ██╔══██╗██║╚██╔╝██║██╔══██║██║  ██║${NC}"
-echo -e "${PURPLE}    ██████╔╝██║ ╚═╝ ██║██║  ██║██████╔╝${NC}"
-echo -e "${PURPLE}    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝ ${NC}"
+echo -e "${ORANGE}    ██████╗ ███╗   ███╗ █████╗ ██████╗ ${NC}"
+echo -e "${ORANGE}    ██╔══██╗████╗ ████║██╔══██╗██╔══██╗${NC}"
+echo -e "${ORANGE}    ██████╔╝██╔████╔██║███████║██║  ██║${NC}"
+echo -e "${ORANGE}    ██╔══██╗██║╚██╔╝██║██╔══██║██║  ██║${NC}"
+echo -e "${ORANGE}    ██████╔╝██║ ╚═╝ ██║██║  ██║██████╔╝${NC}"
+echo -e "${ORANGE}    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝ ${NC}"
 echo -e ""
 
 
@@ -59,7 +57,7 @@ echo -e ""
 
 # Check if we're in the BMAD-CLAUDE-CODE repo or downloading from GitHub
 if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
-    echo -e "${CYAN}◆${NC} Detected BMAD-CLAUDE-CODE repository"
+    echo -e "${CYAN}◆${NC} ${DARK_ORANGE}Detected BMAD-CLAUDE-CODE repository${NC}"
     SOURCE_MODE="local"
     echo "Where would you like to set up BMAD?"
     echo "1) Current directory: $(pwd)"
@@ -100,7 +98,7 @@ fi
 cd "$TARGET_DIR"
 
 echo ""
-echo -e "${CYAN}◆${NC} Setting up BMAD in: ${BRIGHT_CYAN}$TARGET_DIR${NC}"
+echo -e "${CYAN}◆${NC} ${BRIGHT_ORANGE}Setting up BMAD in:${NC} ${BRIGHT_CYAN}$TARGET_DIR${NC}"
 echo ""
 
 # Check if files already exist
@@ -169,7 +167,7 @@ download_directory() {
         
         if [[ $curl_status -eq 0 && "$tree_data" != *"\"message\":"* && -n "$tree_data" ]]; then
             api_success=true
-            printf "\r  ${GREEN}✔${NC} File list retrieved successfully    \n"
+            printf "\r  ${CYAN}✔${NC} File list retrieved successfully    \n"
         else
             printf "\r  ${RED}✗${NC} GitHub API unavailable              \n"
         fi
@@ -184,7 +182,11 @@ download_directory() {
     if [[ "$api_success" == true ]]; then
         # Use API data - avoid subshell by using temp file
         local temp_file=$(mktemp)
-        echo "$tree_data" | grep -o '"path": *"[^"]*"' | sed 's/"path": *"//;s/"//' > "$temp_file"
+        # Extract only files (blobs) paths from JSON, not directories (trees)
+        # The GitHub API returns objects like: {"path": "file.txt", "mode": "100644", "type": "blob", ...}
+        # We need to extract path only when type is blob
+        echo "$tree_data" | jq -r '.tree[] | select(.type == "blob") | .path' 2>/dev/null > "$temp_file" || \
+        echo "$tree_data" | grep -B2 '"type": *"blob"' | grep '"path":' | sed 's/.*"path": *"\([^"]*\)".*/\1/' > "$temp_file"
         
         # Count total files and group by directory
         local total_files=0
@@ -192,7 +194,9 @@ download_directory() {
         declare -A dir_files
         
         while IFS= read -r file_path; do
-            if [[ "$file_path" == "$dir_path"/* && "$file_path" == *.* ]]; then
+            # We already filtered for blobs only, so just check if it's under our directory
+            # Skip node_modules and other build artifacts
+            if [[ "$file_path" == "$dir_path"/* ]] && [[ "$file_path" != */node_modules/* ]] && [[ "$file_path" != */.next/* ]]; then
                 total_files=$((total_files + 1))
                 local file_dir=$(dirname "$file_path")
                 dir_files["$file_dir"]=$((${dir_files["$file_dir"]:-0} + 1))
@@ -203,17 +207,30 @@ download_directory() {
         local current_dir=""
         local dir_file_count=0
         local dir_current=0
+        local dir_failed=0
         local color_index=0
-        local colors=($CYAN $PURPLE $GREEN)
+        local colors=($DARK_ORANGE $CYAN)
+        declare -A failed_files
         
         while IFS= read -r file_path; do
-            if [[ "$file_path" == "$dir_path"/* && "$file_path" == *.* ]]; then
+            # We already filtered for blobs only, so just check if it's under our directory
+            # Skip node_modules and other build artifacts
+            if [[ "$file_path" == "$dir_path"/* ]] && [[ "$file_path" != */node_modules/* ]] && [[ "$file_path" != */.next/* ]]; then
                 local file_dir=$(dirname "$file_path")
                 
                 # Check if we're entering a new directory
                 if [[ "$file_dir" != "$current_dir" ]]; then
+                    # Add newline if not the first directory
+                    if [[ -n "$current_dir" ]]; then
+                        echo ""  # Ensure previous progress bar line is complete
+                        # Show failed files if any
+                        if [[ $dir_failed -gt 0 ]]; then
+                            echo -e "      ${RED}⚠ Failed to download $dir_failed file(s)${NC}"
+                        fi
+                    fi
                     current_dir="$file_dir"
                     dir_current=0
+                    dir_failed=0
                     dir_file_count=${dir_files["$file_dir"]}
                     echo -e "    ${CYAN}📦${NC} Creating: ${GRAY}${file_dir#./}/${NC}"
                     # Move to next color in rotation
@@ -221,17 +238,38 @@ download_directory() {
                 fi
                 
                 # Download file silently
-                download_file_silent "$file_path"
-                
-                # Update progress
-                dir_current=$((dir_current + 1))
-                current_files=$((current_files + 1))
+                if download_file_silent "$file_path"; then
+                    # Update progress only if download succeeded
+                    dir_current=$((dir_current + 1))
+                    current_files=$((current_files + 1))
+                else
+                    # Track failed downloads
+                    dir_failed=$((dir_failed + 1))
+                    failed_files["$file_path"]=1
+                    # Debug: log which file failed
+                    echo -e "\n      ${RED}DEBUG: Failed to download: $file_path${NC}" >&2
+                fi
                 
                 # Show progress bar for current directory with rotating colors
                 local bar_color=${colors[$color_index]}
                 show_progress_bar "$dir_current" "$dir_file_count" "      " "$bar_color"
             fi
         done < "$temp_file"
+        
+        # Ensure final progress bar has a newline and show final failed count
+        if [[ -n "$current_dir" ]]; then
+            echo ""
+            if [[ $dir_failed -gt 0 ]]; then
+                echo -e "      ${RED}⚠ Failed to download $dir_failed file(s)${NC}"
+            fi
+        fi
+        
+        # Show total summary if there were any failures
+        local total_failed=${#failed_files[@]}
+        if [[ $total_failed -gt 0 ]]; then
+            echo ""
+            echo -e "    ${RED}⚠ Total files failed: $total_failed${NC}"
+        fi
         
         rm -f "$temp_file"
     else
@@ -251,13 +289,35 @@ download_file_silent() {
         mkdir -p "$target_dir"
     fi
     
-    # Download the file silently
-    local file_url="$GITHUB_RAW_URL/$file_path"
+    # Download the file silently and return status
+    # URL encode the file path to handle special characters
+    local encoded_path=$(echo "$file_path" | sed 's/ /%20/g; s/#/%23/g')
+    local file_url="$GITHUB_RAW_URL/$encoded_path"
+    local status=0
+    
     if command -v curl >/dev/null 2>&1; then
-        curl -fsSL "$file_url" -o "$target_file" 2>/dev/null
+        # Try downloading with curl, capture error for debugging
+        local error_output=$(mktemp)
+        if ! curl -fsSL "$file_url" -o "$target_file" 2>"$error_output"; then
+            status=$?
+            # Debug: show actual error
+            if [[ -s "$error_output" ]]; then
+                echo -e "\n        ${RED}Curl error for $file_path: $(cat "$error_output")${NC}" >&2
+            fi
+            # If download failed, remove any partial file
+            rm -f "$target_file" 2>/dev/null
+        fi
+        rm -f "$error_output"
     else
-        wget -q "$file_url" -O "$target_file" 2>/dev/null
+        # Try with wget
+        if ! wget -q "$file_url" -O "$target_file" 2>/dev/null; then
+            status=$?
+            # If download failed, remove any partial file
+            rm -f "$target_file" 2>/dev/null
+        fi
     fi
+    
+    return $status
 }
 
 show_progress_bar() {
@@ -269,7 +329,7 @@ show_progress_bar() {
     
     # Default color if not specified
     if [[ -z "$bar_color" ]]; then
-        bar_color=$GREEN
+        bar_color=$ORANGE
     fi
     
     # Calculate percentage
@@ -333,7 +393,7 @@ download_and_show_file() {
         *.txt) file_icon="📄" ;;
     esac
     
-    echo -e "    ${file_icon} Downloaded: ${GREEN}$display_file${NC}"
+    echo -e "    ${file_icon} Downloaded: ${CYAN}$display_file${NC}"
 }
 
 download_bmad_fallback() {
@@ -409,16 +469,26 @@ download_bmad_fallback() {
     local current_dir=""
     local dir_file_count=0
     local dir_current=0
+    local dir_failed=0
     local color_index=0
-    local colors=($CYAN $PURPLE $GREEN)
+    local colors=($DARK_ORANGE $CYAN)
     
     for file_path in "${files[@]}"; do
         local file_dir=$(dirname "$file_path")
         
         # Check if we're entering a new directory
         if [[ "$file_dir" != "$current_dir" ]]; then
+            # Add newline if not the first directory
+            if [[ -n "$current_dir" ]]; then
+                echo ""  # Ensure previous progress bar line is complete
+                # Show failed files if any
+                if [[ $dir_failed -gt 0 ]]; then
+                    echo -e "      ${RED}⚠ Failed to download $dir_failed file(s)${NC}"
+                fi
+            fi
             current_dir="$file_dir"
             dir_current=0
+            dir_failed=0
             dir_file_count=${fallback_dir_files["$file_dir"]}
             echo -e "    ${CYAN}📦${NC} Creating: ${GRAY}${file_dir#./}/${NC}"
             # Move to next color in rotation
@@ -426,37 +496,48 @@ download_bmad_fallback() {
         fi
         
         # Download file silently
-        download_file_silent "$file_path"
-        
-        # Update progress
-        dir_current=$((dir_current + 1))
+        if download_file_silent "$file_path"; then
+            # Update progress only if download succeeded
+            dir_current=$((dir_current + 1))
+        else
+            # Track failed downloads
+            dir_failed=$((dir_failed + 1))
+        fi
         
         # Show progress bar for current directory with rotating colors
         local bar_color=${colors[$color_index]}
         show_progress_bar "$dir_current" "$dir_file_count" "      " "$bar_color"
     done
+    
+    # Ensure final progress bar has a newline and show final failed count
+    if [[ -n "$current_dir" ]]; then
+        echo ""
+        if [[ $dir_failed -gt 0 ]]; then
+            echo -e "      ${RED}⚠ Failed to download $dir_failed file(s)${NC}"
+        fi
+    fi
 }
 
 # Copy or download files
 if [[ "$SOURCE_MODE" == "local" ]]; then
-    echo -e "\n${CYAN}▶${NC} Copying BMAD files..."
+    echo -e "\n${CYAN}▶${NC} ${BRIGHT_ORANGE}Copying BMAD files...${NC}"
     
     # Copy bmad-agent folder
     if [[ -d "$SCRIPT_DIR/bmad-agent" ]]; then
         cp -r "$SCRIPT_DIR/bmad-agent" .
-        echo -e "  ${GREEN}✔${NC} bmad-agent/ folder copied"
+        echo -e "  ${CYAN}✔${NC} bmad-agent/ folder copied"
     else
         echo -e "${PURPLE}  ⚠️  bmad-agent/ folder not found in $SCRIPT_DIR${NC}"
     fi
 else
-    echo -e "\n${CYAN}▶${NC} Downloading BMAD files from GitHub..."
+    echo -e "\n${CYAN}▶${NC} ${BRIGHT_ORANGE}Downloading BMAD files from GitHub...${NC}"
     
     # Download bmad-agent folder
-    echo -e "  ${PURPLE}◐${NC} Downloading bmad-agent/ folder..."
+    echo -e "  ${CYAN}◐${NC} Downloading bmad-agent/ folder..."
     echo ""
     download_directory "bmad-agent"
     echo ""
-    echo -e "  ${GREEN}✔${NC} bmad-agent/ folder complete"
+    echo -e "  ${CYAN}✔${NC} bmad-agent/ folder complete"
 fi
 
 # Copy or download CLAUDE.md
@@ -470,21 +551,21 @@ claude_choice=${claude_choice:-1}
 if [[ "$SOURCE_MODE" == "local" ]]; then
     if [[ "$claude_choice" == "2" ]] && [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE.md" ./CLAUDE.md
-        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (basic version)"
+        echo -e "  📝 ${CYAN}CLAUDE.md${NC} (basic version)"
     elif [[ -f "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE-ENHANCED.md" ./CLAUDE.md
-        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (enhanced version)"
+        echo -e "  📝 ${CYAN}CLAUDE.md${NC} (enhanced version)"
     elif [[ -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
         cp "$SCRIPT_DIR/CLAUDE.md" ./CLAUDE.md
-        echo -e "  📝 ${GREEN}CLAUDE.md${NC}"
+        echo -e "  📝 ${CYAN}CLAUDE.md${NC}"
     fi
 else
     if [[ "$claude_choice" == "2" ]]; then
         download_file "CLAUDE.md" "./CLAUDE.md"
-        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (basic version)"
+        echo -e "  📝 ${CYAN}CLAUDE.md${NC} (basic version)"
     else
         download_file "CLAUDE-ENHANCED.md" "./CLAUDE.md"
-        echo -e "  📝 ${GREEN}CLAUDE.md${NC} (enhanced version)"
+        echo -e "  📝 ${CYAN}CLAUDE.md${NC} (enhanced version)"
     fi
 fi
 
@@ -492,33 +573,33 @@ fi
 if [[ "$SOURCE_MODE" == "local" ]]; then
     if [[ -f "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" ]]; then
         cp "$SCRIPT_DIR/BMAD-CLAUDE-CODE-GUIDE.md" .
-        echo -e "  📚 ${GREEN}BMAD-CLAUDE-CODE-GUIDE.md${NC}"
+        echo -e "  📚 ${CYAN}BMAD-CLAUDE-CODE-GUIDE.md${NC}"
     fi
     
     if [[ -f "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" ]]; then
         cp "$SCRIPT_DIR/BMAD-SESSION-CONTINUITY.md" .
-        echo -e "  🔄 ${GREEN}BMAD-SESSION-CONTINUITY.md${NC}"
+        echo -e "  🔄 ${CYAN}BMAD-SESSION-CONTINUITY.md${NC}"
     fi
 else
     download_file "BMAD-CLAUDE-CODE-GUIDE.md" "./BMAD-CLAUDE-CODE-GUIDE.md"
-    echo -e "  📚 ${GREEN}BMAD-CLAUDE-CODE-GUIDE.md${NC}"
+    echo -e "  📚 ${CYAN}BMAD-CLAUDE-CODE-GUIDE.md${NC}"
     
     download_file "BMAD-SESSION-CONTINUITY.md" "./BMAD-SESSION-CONTINUITY.md"
-    echo -e "  🔄 ${GREEN}BMAD-SESSION-CONTINUITY.md${NC}"
+    echo -e "  🔄 ${CYAN}BMAD-SESSION-CONTINUITY.md${NC}"
 fi
 
 # Create docs directory structure
 echo ""
-echo -e "${CYAN}▶${NC} Creating project structure..."
+echo -e "${CYAN}▶${NC} ${BRIGHT_ORANGE}Creating project structure...${NC}"
 
 mkdir -p docs/.bmad-session
 mkdir -p docs/stories
 mkdir -p docs/technical
 
-echo -e "  📁 ${GREEN}docs/${NC}"
-echo -e "  📁 ${GREEN}docs/.bmad-session/${NC}"
-echo -e "  📁 ${GREEN}docs/stories/${NC}"
-echo -e "  📁 ${GREEN}docs/technical/${NC}"
+echo -e "  📁 ${CYAN}docs/${NC}"
+echo -e "  📁 ${CYAN}docs/.bmad-session/${NC}"
+echo -e "  📁 ${CYAN}docs/stories/${NC}"
+echo -e "  📁 ${CYAN}docs/technical/${NC}"
 
 # Initialize planning journal if it doesn't exist
 if [[ ! -f "docs/bmad-journal.md" ]]; then
@@ -551,7 +632,7 @@ BMAD Method initialized. Ready to begin planning!
 
 ---
 EOF
-    echo -e "  ${GRAY}📓${NC} ${GREEN}docs/bmad-journal.md${NC} (initialized)"
+    echo -e "  ${GRAY}📓${NC} ${CYAN}docs/bmad-journal.md${NC} (initialized)"
 fi
 
 # Initialize session state
@@ -584,7 +665,7 @@ Start with "Let's plan a new app using BMAD" or "I have an idea for..."
 ## Session History:
 - **[Today]**: BMAD Setup - Initialized project structure
 EOF
-    echo -e "  ⚙️ ${GREEN}docs/.bmad-session/current-state.md${NC} (initialized)"
+    echo -e "  ⚙️ ${CYAN}docs/.bmad-session/current-state.md${NC} (initialized)"
 fi
 
 # Create .gitignore if it doesn't exist
@@ -603,36 +684,37 @@ Thumbs.db
 *.swp
 *.swo
 EOF
-    echo -e "  🚫 ${GREEN}.gitignore${NC} (created)"
+    echo -e "  🚫 ${CYAN}.gitignore${NC} (created)"
 fi
 
 # Optional: Install BMAD Dashboard
 echo ""
-echo -e "${CYAN}◆ Optional: BMAD Dashboard${NC}"
+echo -e "${CYAN}◆${NC} ${BRIGHT_ORANGE}Optional: BMAD Dashboard${NC}"
 echo "Would you like to install the BMAD Dashboard?"
 echo "This creates a Next.js app for visualizing your project progress"
 read -p "Install dashboard? (y/N): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${CYAN}▶${NC} Setting up BMAD Dashboard..."
+    echo -e "${CYAN}▶${NC} ${BRIGHT_ORANGE}Setting up BMAD Dashboard...${NC}"
     
     # Copy dashboard if local, otherwise download
     if [[ "$SOURCE_MODE" == "local" ]]; then
         if [[ -d "$SCRIPT_DIR/bmad-dashboard" ]]; then
             cp -r "$SCRIPT_DIR/bmad-dashboard" .
-            echo -e "  ${GREEN}✔${NC} Dashboard copied"
+            echo -e "  ${CYAN}✔${NC} Dashboard copied"
         else
             echo -e "  ${YELLOW}⚠️${NC} Dashboard not found in repository"
         fi
     else
         # Download dashboard files from GitHub
-        echo -e "  ${PURPLE}◐${NC} Downloading dashboard from GitHub..."
+        echo -e "  ${ORANGE}◐${NC} Downloading dashboard from GitHub..."
+        echo ""  # Add spacing before download progress
         download_directory "bmad-dashboard"
-        echo -e "  ${GREEN}✔${NC} Dashboard downloaded"
+        echo -e "  ${CYAN}✔${NC} Dashboard downloaded"
     fi
     
     echo ""
-    echo -e "${CYAN}◆ Dashboard Setup:${NC}"
+    echo -e "${CYAN}◆${NC} ${BRIGHT_ORANGE}Dashboard Setup:${NC}"
     echo "To start the dashboard:"
     echo "1. cd bmad-dashboard"
     echo "2. npm install"
@@ -643,16 +725,16 @@ else
 fi
 
 echo ""
-echo -e "${BRIGHT_GREEN}✨ BMAD setup complete!${NC}"
+echo -e "${BRIGHT_ORANGE}✨ BMAD setup complete!${NC}"
 echo ""
-echo -e "${CYAN}◆ Next Steps:${NC}"
+echo -e "${CYAN}◆${NC} ${BRIGHT_ORANGE}Next Steps:${NC}"
 echo "1. Open this folder in VS Code with Claude Code enabled"
 echo "2. Start with: \"Let's plan a new app using BMAD\""
 echo "3. Or continue planning with: \"Continue BMAD planning\""
 echo ""
-echo -e "${CYAN}◆ Documentation:${NC}"
+echo -e "${CYAN}◆${NC} ${BRIGHT_ORANGE}Documentation:${NC}"
 echo "- CLAUDE.md - Main instructions for Claude Code"
 echo "- BMAD-CLAUDE-CODE-GUIDE.md - Quick reference"
 echo "- BMAD-SESSION-CONTINUITY.md - Session management details"
 echo ""
-echo -e "${BRIGHT_CYAN}Happy planning with BMAD!${NC} ${BRIGHT_GREEN}✨${NC}"
+echo -e "${BRIGHT_CYAN}Happy planning with BMAD!${NC} ${BRIGHT_ORANGE}✨${NC}"

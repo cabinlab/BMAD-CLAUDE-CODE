@@ -1,12 +1,12 @@
 # Product Requirements Document: [Project Name]
 
-## Executive Summary
+## Executive Summary [discovery-helpful: summary-clarity]
 [Brief overview of the product, its purpose, and key outcomes]
 
 ## Product Vision
 [Link to Project Brief vision. Expand on how this product realizes that vision]
 
-## User Personas
+## User Personas [discovery-critical: user-clarity]
 
 ### Primary Persona: [Name]
 - **Context**: [When/where/why they use the product]
@@ -63,12 +63,12 @@
 ## Technical Constraints
 [Existing systems to integrate with, technology limitations, deployment constraints]
 
-## Dependencies
+## Dependencies [development-required: integration-planning]
 - **External Services**: [Third-party APIs, data sources]
 - **Internal Systems**: [Other teams or systems to coordinate with]
 - **Data Sources**: [Where data comes from, update frequency]
 
-## MVP Scope
+## MVP Scope [discovery-critical: scope-definition]
 **Goal**: [What minimum functionality delivers core value]
 
 **Included**:
@@ -79,7 +79,7 @@
 - [Deferred feature 1]
 - [Deferred feature 2]
 
-## Success Metrics
+## Success Metrics [discovery-critical: success-measurement]
 - **User Metrics**: [Adoption, engagement, satisfaction]
 - **Business Metrics**: [Revenue, cost savings, efficiency]
 - **Technical Metrics**: [Performance, reliability, quality]

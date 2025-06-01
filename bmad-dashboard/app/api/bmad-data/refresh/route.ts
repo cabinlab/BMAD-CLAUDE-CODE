@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clearCache } from '@/lib/bmad-cache';
+import { processDiscoveryWorkflow } from '@/lib/bmad-workflow';
 import fs from 'fs';
 import path from 'path';
 
@@ -24,7 +24,7 @@ function findBmadRoot(): string | null {
   return hasIndicators ? currentDir : null;
 }
 
-// Force refresh cache endpoint
+// Force refresh assessments endpoint
 export async function POST() {
   try {
     const bmadRoot = findBmadRoot();
@@ -33,14 +33,36 @@ export async function POST() {
       return NextResponse.json({ error: 'BMAD project not found' }, { status: 404 });
     }
     
-    clearCache(bmadRoot);
+    // Re-run assessment workflow to update frontmatter assessments
+    const docsPath = path.join(bmadRoot, 'docs');
+    const testContentPath = path.join(bmadRoot, 'test-content');
+    
+    let processedCount = 0;
+    
+    // Process docs directory
+    if (fs.existsSync(docsPath)) {
+      const result = await processDiscoveryWorkflow(docsPath);
+      processedCount += result.processedFiles.length;
+    }
+    
+    // Process test-content directories
+    if (fs.existsSync(testContentPath)) {
+      for (const category of ['discovery', 'development', 'opportunity']) {
+        const categoryPath = path.join(testContentPath, category);
+        if (fs.existsSync(categoryPath)) {
+          const result = await processDiscoveryWorkflow(categoryPath);
+          processedCount += result.processedFiles.length;
+        }
+      }
+    }
     
     return NextResponse.json({ 
-      message: 'Cache cleared successfully',
+      message: 'Assessments refreshed successfully',
+      processedFiles: processedCount,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Error clearing cache:', error);
-    return NextResponse.json({ error: 'Failed to clear cache' }, { status: 500 });
+    console.error('Error refreshing assessments:', error);
+    return NextResponse.json({ error: 'Failed to refresh assessments' }, { status: 500 });
   }
 }

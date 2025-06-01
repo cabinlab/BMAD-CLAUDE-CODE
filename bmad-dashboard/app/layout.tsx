@@ -5,11 +5,13 @@ import './globals.css'
 const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 })
 
 const jetbrainsMono = JetBrains_Mono({ 
   subsets: ['latin'],
   variable: '--font-jetbrains',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

@@ -3,22 +3,22 @@
 ## Vision Statement
 [What is the transformative vision for this project? What change will it bring to the world?]
 
-## Problem Statement
+## Problem Statement [discovery-critical: problem-validation]
 [What specific problem are we solving? Who experiences this problem and why does it matter?]
 
-## Target Users
+## Target Users [discovery-critical: user-clarity]
 [Who are the primary users? What are their needs, contexts, and constraints?]
 
-## Core Value Proposition
+## Core Value Proposition [discovery-critical: value-definition]
 [What unique value does this solution provide? Why would users choose this over alternatives?]
 
 ## Domain Context
 [What domain-specific knowledge or regulations apply? Industry standards, compliance requirements, or specialized terminology?]
 
-## Success Metrics
+## Success Metrics [discovery-helpful: validation-approach]
 [How will we measure success? What are the key performance indicators?]
 
-## Technical Considerations
+## Technical Considerations [discovery-critical: technical-viability]
 
 ### Development Philosophy
 [What principles will guide technical decisions? Examples: Developer experience, maintainability, performance, accessibility]
@@ -38,7 +38,7 @@
 - **Team**: [Available skills and capacity]
 - **Technical**: [Existing systems, migration needs, platform limitations]
 
-## Risk Factors
+## Risk Factors [discovery-helpful: risk-awareness]
 [What could prevent success? Technical, business, or organizational risks?]
 
 ## Out of Scope

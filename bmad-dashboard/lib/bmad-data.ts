@@ -1,3 +1,34 @@
+export interface DiscoveryIdea {
+  name: string;
+  signal_strength: number;
+  dimensions: {
+    problem_validation?: number;
+    user_clarity?: number;
+    value_definition?: number;
+    technical_viability?: number;
+    validation_approach?: number;
+    risk_awareness?: number;
+    scope_definition?: number;
+    success_measurement?: number;
+  };
+  claude_perspective?: {
+    stance: 'advocate' | 'neutral' | 'cautious';
+    key_insight: string;
+    recommendation: string;
+    confidence: number;
+  };
+  category: 'discovery' | 'development' | 'opportunity';
+  last_updated?: string;
+  missing: string[];
+}
+
+export interface DashboardData {
+  discovery: DiscoveryIdea[];
+  development: DiscoveryIdea[];
+  opportunity: DiscoveryIdea[];
+}
+
+// Legacy interface for backward compatibility during transition
 export interface Idea {
   name: string;
   viability: number;
@@ -7,12 +38,6 @@ export interface Idea {
   missing: string;
   notes?: string;
   estimatedStories?: number;
-}
-
-export interface DashboardData {
-  explorations: Idea[];
-  mvp: Idea[];
-  opportunities: Idea[];
 }
 
 // Fetch BMAD data from API route
@@ -32,47 +57,68 @@ export async function getBmadData(): Promise<DashboardData> {
     
     // Fallback dummy data if API fails
     return {
-      explorations: [
+      discovery: [
         {
           name: "AI Task Manager",
-          viability: 78,
-          completeness: 40,
-          business: 45,
-          technical: 33,
-          missing: "AI cost model, integration approach",
-          notes: "Strong user feedback, unclear on AI infrastructure costs"
-        },
-        {
-          name: "Team Workspace", 
-          viability: 25,
-          completeness: 15,
-          business: 15,
-          technical: 10,
-          missing: "Most details - early exploration",
-          notes: "Just started exploring this concept"
+          signal_strength: 78,
+          dimensions: {
+            problem_validation: 85,
+            user_clarity: 75,
+            value_definition: 80,
+            technical_viability: 60
+          },
+          claude_perspective: {
+            stance: 'advocate',
+            key_insight: 'Strong problem-solution fit, needs technical validation',
+            recommendation: 'Validate AI integration approach and costs',
+            confidence: 0.8
+          },
+          category: 'discovery',
+          missing: ['Technical approach', 'AI cost model'],
+          last_updated: new Date().toISOString()
         }
       ],
-      mvp: [
+      development: [
         {
           name: "Smart Calendar",
-          viability: 85,
-          completeness: 70,
-          business: 48,
-          technical: 37,
-          missing: "Final pricing validation",
-          notes: "Ready for development",
-          estimatedStories: 12
+          signal_strength: 85,
+          dimensions: {
+            problem_validation: 90,
+            user_clarity: 85,
+            value_definition: 88,
+            technical_viability: 80,
+            scope_definition: 85
+          },
+          claude_perspective: {
+            stance: 'advocate',
+            key_insight: 'Well-validated concept ready for implementation',
+            recommendation: 'Begin MVP development',
+            confidence: 0.9
+          },
+          category: 'development',
+          missing: [],
+          last_updated: new Date().toISOString()
         }
       ],
-      opportunities: [
+      opportunity: [
         {
           name: "Customer Analytics",
-          viability: 90,
-          completeness: 85,
-          business: 50,
-          technical: 40,
-          missing: "Resource allocation decision",
-          notes: "Strong business case, clear tech path - waiting for capacity"
+          signal_strength: 90,
+          dimensions: {
+            problem_validation: 95,
+            user_clarity: 90,
+            value_definition: 85,
+            technical_viability: 88
+          },
+          claude_perspective: {
+            stance: 'advocate',
+            key_insight: 'Excellent validation, awaiting resource allocation',
+            recommendation: 'High priority for next development cycle',
+            confidence: 0.95
+          },
+          category: 'opportunity',
+          missing: [],
+          last_updated: new Date().toISOString()
         }
       ]
     };

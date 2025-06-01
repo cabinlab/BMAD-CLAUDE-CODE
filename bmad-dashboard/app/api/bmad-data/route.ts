@@ -1,23 +1,36 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { NextResponse } from 'next/server';
-import { getCachedProject, saveProjectToCache } from '@/lib/bmad-cache';
+import { getAssessmentSummary, scanDiscoveryDirectory } from '../../../lib/bmad-workflow';
 
-export interface Idea {
+export interface DiscoveryIdea {
   name: string;
-  viability: number;
-  completeness: number;
-  business: number;
-  technical: number;
-  missing: string;
-  notes?: string;
-  estimatedStories?: number;
+  signal_strength: number;
+  dimensions: {
+    problem_validation?: number;
+    user_clarity?: number;
+    value_definition?: number;
+    technical_viability?: number;
+    validation_approach?: number;
+    risk_awareness?: number;
+    scope_definition?: number;
+    success_measurement?: number;
+  };
+  claude_perspective?: {
+    stance: 'advocate' | 'neutral' | 'cautious';
+    key_insight: string;
+    recommendation: string;
+    confidence: number;
+  };
+  category: 'discovery' | 'development' | 'opportunity';
+  last_updated?: string;
+  missing: string[];
 }
 
 export interface DashboardData {
-  explorations: Idea[];
-  mvp: Idea[];
-  opportunities: Idea[];
+  discovery: DiscoveryIdea[];
+  development: DiscoveryIdea[];
+  opportunity: DiscoveryIdea[];
 }
 
 // Try to find BMAD project root by looking for key files
@@ -44,250 +57,189 @@ function findBmadRoot(): string | null {
   return hasIndicators ? currentDir : null;
 }
 
-// Parse markdown files to extract project information
-function parseProjectInfo(bmadRoot: string): DashboardData {
+// Parse discovery documents using frontmatter assessments
+async function parseDiscoveryProjects(bmadRoot: string): Promise<DashboardData> {
   const data: DashboardData = {
-    explorations: [],
-    mvp: [],
-    opportunities: []
+    discovery: [],
+    development: [],
+    opportunity: []
   };
   
   try {
-    // Check for project brief
-    const projectBriefPath = path.join(bmadRoot, 'docs/project-brief.md');
-    if (fs.existsSync(projectBriefPath)) {
-      const brief = fs.readFileSync(projectBriefPath, 'utf-8');
-      const projectName = extractProjectName(brief);
-      if (projectName) {
-        // Try to get cached data first
-        const cached = getCachedProject(bmadRoot, projectName);
-        
-        let idea: Idea;
-        if (cached) {
-          // Use cached data
-          idea = {
-            name: cached.name,
-            viability: cached.viability,
-            completeness: cached.completeness,
-            business: cached.business,
-            technical: cached.technical,
-            missing: cached.missing,
-            notes: cached.notes,
-            estimatedStories: cached.estimatedStories
-          };
-        } else {
-          // Calculate fresh data
-          const completeness = calculateCompleteness(bmadRoot);
-          const viability = calculateViability(bmadRoot, completeness);
-          
-          idea = {
-            name: projectName,
-            viability: viability,
-            completeness: completeness,
-            business: calculateBusinessScore(bmadRoot),
-            technical: calculateTechnicalScore(bmadRoot),
-            missing: identifyMissingComponents(bmadRoot),
-            notes: extractProjectNotes(brief),
-            estimatedStories: countStories(bmadRoot)
-          };
-          
-          // Save to cache
-          saveProjectToCache(bmadRoot, projectName, idea);
-        }
-        
-        // Categorize based on completeness and viability
-        if (idea.viability >= 80 && idea.completeness >= 60) {
-          data.mvp.push(idea);
-        } else if (idea.viability >= 70 && idea.completeness >= 80) {
-          data.opportunities.push(idea);
-        } else {
-          data.explorations.push(idea);
+    // Scan for discovery documents in both docs and test-content directories
+    const docsPath = path.join(bmadRoot, 'docs');
+    const testContentPath = path.join(bmadRoot, 'test-content');
+    
+    let allAssessmentSummaries: any[] = [];
+    
+    // Scan docs directory
+    if (fs.existsSync(docsPath)) {
+      const { assessmentSummaries: docsAssessments } = await scanDiscoveryDirectory(docsPath);
+      allAssessmentSummaries.push(...docsAssessments);
+    }
+    
+    // Scan test-content directory structure
+    if (fs.existsSync(testContentPath)) {
+      for (const category of ['discovery', 'development', 'opportunity']) {
+        const categoryPath = path.join(testContentPath, category);
+        if (fs.existsSync(categoryPath)) {
+          const { assessmentSummaries: categoryAssessments } = await scanDiscoveryDirectory(categoryPath);
+          allAssessmentSummaries.push(...categoryAssessments);
         }
       }
     }
+    
+    // Convert assessment summaries to dashboard format
+    for (const { file, summary } of allAssessmentSummaries) {
+      if (!summary) continue;
+      
+      const discoveryIdea: DiscoveryIdea = {
+        name: summary.name,
+        signal_strength: summary.signalStrength,
+        dimensions: summary.dimensions || {},
+        claude_perspective: summary.claudePerspective,
+        category: summary.category,
+        last_updated: summary.lastUpdated,
+        missing: generateMissingList(summary.dimensions || {})
+      };
+      
+      // Categorize based on assessment
+      switch (summary.category) {
+        case 'development':
+          data.development.push(discoveryIdea);
+          break;
+        case 'opportunity':
+          data.opportunity.push(discoveryIdea);
+          break;
+        case 'discovery':
+        default:
+          data.discovery.push(discoveryIdea);
+          break;
+      }
+    }
+    
+    console.log(`Found ${allAssessmentSummaries.length} assessed discovery documents`);
+    
   } catch (error) {
-    console.warn('Error parsing BMAD project data:', error);
+    console.warn('Error parsing discovery project data:', error);
   }
   
   return data;
 }
 
-// Helper functions for extracting information
-function extractProjectName(brief: string): string | null {
-  const match = brief.match(/^#\s+(.+)/m);
-  return match ? match[1].trim() : null;
+// Generate missing items list based on dimension scores
+function generateMissingList(dimensions: Record<string, number>): string[] {
+  const missing: string[] = [];
+  
+  const thresholds = {
+    problem_validation: { threshold: 70, label: 'Problem validation' },
+    user_clarity: { threshold: 70, label: 'User definition' },
+    value_definition: { threshold: 70, label: 'Value proposition' },
+    technical_viability: { threshold: 60, label: 'Technical approach' },
+    validation_approach: { threshold: 60, label: 'Success metrics' },
+    scope_definition: { threshold: 60, label: 'MVP scope' }
+  };
+  
+  Object.entries(thresholds).forEach(([dimension, { threshold, label }]) => {
+    const score = dimensions[dimension] || 0;
+    if (score < threshold) {
+      missing.push(label);
+    }
+  });
+  
+  return missing.slice(0, 3); // Top 3 missing items
 }
 
-function calculateCompleteness(bmadRoot: string): number {
-  const requiredFiles = [
-    'docs/project-brief.md',
-    'docs/prd.md', 
-    'docs/architecture.md',
-    'docs/stories'
-  ];
-  
-  const existingFiles = requiredFiles.filter(file => 
-    fs.existsSync(path.join(bmadRoot, file))
-  );
-  
-  return Math.round((existingFiles.length / requiredFiles.length) * 100);
-}
-
-function calculateViability(bmadRoot: string, completeness: number): number {
-  // Base viability on completeness and presence of key validation
-  let viability = completeness;
-  
-  // Bonus for having PRD (shows thinking through business case)
-  if (fs.existsSync(path.join(bmadRoot, 'docs/prd.md'))) {
-    viability += 10;
-  }
-  
-  // Bonus for having architecture (shows technical feasibility)
-  if (fs.existsSync(path.join(bmadRoot, 'docs/architecture.md'))) {
-    viability += 15;
-  }
-  
-  return Math.min(viability, 100);
-}
-
-function calculateBusinessScore(bmadRoot: string): number {
-  const prdPath = path.join(bmadRoot, 'docs/prd.md');
-  if (!fs.existsSync(prdPath)) return 10;
-  
-  const prd = fs.readFileSync(prdPath, 'utf-8');
-  let score = 20;
-  
-  // Look for business validation indicators
-  if (prd.includes('market') || prd.includes('competition')) score += 15;
-  if (prd.includes('revenue') || prd.includes('monetization')) score += 15;
-  if (prd.includes('user') || prd.includes('customer')) score += 10;
-  
-  return Math.min(score, 50);
-}
-
-function calculateTechnicalScore(bmadRoot: string): number {
-  const archPath = path.join(bmadRoot, 'docs/architecture.md');
-  if (!fs.existsSync(archPath)) return 5;
-  
-  const arch = fs.readFileSync(archPath, 'utf-8');
-  let score = 15;
-  
-  // Look for technical detail indicators
-  if (arch.includes('database') || arch.includes('schema')) score += 10;
-  if (arch.includes('api') || arch.includes('endpoint')) score += 10;
-  if (arch.includes('security') || arch.includes('auth')) score += 10;
-  if (arch.includes('deployment') || arch.includes('infrastructure')) score += 5;
-  
-  return Math.min(score, 50);
-}
-
-function identifyMissingComponents(bmadRoot: string): string {
-  const missing = [];
-  
-  if (!fs.existsSync(path.join(bmadRoot, 'docs/prd.md'))) {
-    missing.push('PRD');
-  }
-  if (!fs.existsSync(path.join(bmadRoot, 'docs/architecture.md'))) {
-    missing.push('architecture');
-  }
-  if (!fs.existsSync(path.join(bmadRoot, 'docs/stories'))) {
-    missing.push('user stories');
-  }
-  
-  return missing.length > 0 ? missing.join(', ') : 'Planning refinement';
-}
-
-function extractProjectNotes(brief: string): string {
-  // Extract summary or first paragraph as notes
-  const lines = brief.split('\n').filter(line => line.trim());
-  const contentLines = lines.slice(1).filter(line => !line.startsWith('#'));
-  return contentLines.slice(0, 2).join(' ').substring(0, 100) + '...';
-}
-
-function countStories(bmadRoot: string): number | undefined {
-  const storiesDir = path.join(bmadRoot, 'docs/stories');
-  if (!fs.existsSync(storiesDir)) return undefined;
-  
-  try {
-    const files = fs.readdirSync(storiesDir);
-    return files.filter(file => file.endsWith('.md')).length;
-  } catch {
-    return undefined;
-  }
+// Helper function to extract project name from file
+function extractProjectName(filePath: string): string {
+  const basename = path.basename(filePath, '.md');
+  return basename.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
 // Dummy data for new/empty projects
 function getDummyData(): DashboardData {
   return {
-    explorations: [
+    discovery: [
       {
         name: "AI Task Manager",
-        viability: 78,
-        completeness: 40,
-        business: 45,
-        technical: 33,
-        missing: "AI cost model, integration approach",
-        notes: "Strong user feedback, unclear on AI infrastructure costs"
+        signal_strength: 78,
+        dimensions: {
+          problem_validation: 85,
+          user_clarity: 75,
+          value_definition: 80,
+          technical_viability: 60
+        },
+        claude_perspective: {
+          stance: 'advocate',
+          key_insight: 'Strong problem-solution fit, needs technical validation',
+          recommendation: 'Validate AI integration approach and costs',
+          confidence: 0.8
+        },
+        category: 'discovery',
+        missing: ['Technical approach', 'AI cost model'],
+        last_updated: new Date().toISOString()
       },
       {
         name: "Team Workspace", 
-        viability: 25,
-        completeness: 15,
-        business: 15,
-        technical: 10,
-        missing: "Most details - early exploration",
-        notes: "Just started exploring this concept"
-      },
-      {
-        name: "Voice Note Transcription",
-        viability: 65,
-        completeness: 30,
-        business: 35,
-        technical: 30,
-        missing: "Transcription accuracy validation, pricing model",
-        notes: "Good market demand, technical feasibility proven"
+        signal_strength: 25,
+        dimensions: {
+          problem_validation: 40,
+          user_clarity: 20,
+          value_definition: 30,
+          technical_viability: 10
+        },
+        claude_perspective: {
+          stance: 'cautious',
+          key_insight: 'Early stage exploration with significant gaps',
+          recommendation: 'Define problem and users before proceeding',
+          confidence: 0.3
+        },
+        category: 'discovery',
+        missing: ['Problem validation', 'User definition', 'Value proposition'],
+        last_updated: new Date().toISOString()
       }
     ],
-    mvp: [
+    development: [
       {
         name: "Smart Calendar",
-        viability: 85,
-        completeness: 70,
-        business: 48,
-        technical: 37,
-        missing: "Final pricing validation",
-        notes: "Ready for development",
-        estimatedStories: 12
-      },
-      {
-        name: "Note Taking App",
-        viability: 80,
-        completeness: 65,
-        business: 35,
-        technical: 45,
-        missing: "Market positioning clarity", 
-        notes: "Strong tech foundation, unclear differentiation",
-        estimatedStories: 8
+        signal_strength: 85,
+        dimensions: {
+          problem_validation: 90,
+          user_clarity: 85,
+          value_definition: 88,
+          technical_viability: 80,
+          scope_definition: 85
+        },
+        claude_perspective: {
+          stance: 'advocate',
+          key_insight: 'Well-validated concept ready for implementation',
+          recommendation: 'Begin MVP development',
+          confidence: 0.9
+        },
+        category: 'development',
+        missing: [],
+        last_updated: new Date().toISOString()
       }
     ],
-    opportunities: [
+    opportunity: [
       {
         name: "Customer Analytics",
-        viability: 90,
-        completeness: 85,
-        business: 50,
-        technical: 40,
-        missing: "Resource allocation decision",
-        notes: "Strong business case, clear tech path - waiting for capacity"
-      },
-      {
-        name: "Mobile App",
-        viability: 75,
-        completeness: 60,
-        business: 40,
-        technical: 35,
-        missing: "Platform prioritization (iOS vs Android)",
-        notes: "User demand validated, platform decision pending"
+        signal_strength: 90,
+        dimensions: {
+          problem_validation: 95,
+          user_clarity: 90,
+          value_definition: 85,
+          technical_viability: 88
+        },
+        claude_perspective: {
+          stance: 'advocate',
+          key_insight: 'Excellent validation, awaiting resource allocation',
+          recommendation: 'High priority for next development cycle',
+          confidence: 0.95
+        },
+        category: 'opportunity',
+        missing: [],
+        last_updated: new Date().toISOString()
       }
     ]
   };
@@ -299,10 +251,10 @@ export async function GET() {
     const bmadRoot = findBmadRoot();
     
     if (bmadRoot) {
-      const realData = parseProjectInfo(bmadRoot);
+      const realData = await parseDiscoveryProjects(bmadRoot);
       
       // If we found real project data, use it
-      if (realData.explorations.length > 0 || realData.mvp.length > 0 || realData.opportunities.length > 0) {
+      if (realData.discovery.length > 0 || realData.development.length > 0 || realData.opportunity.length > 0) {
         return NextResponse.json(realData);
       }
     }
@@ -310,7 +262,7 @@ export async function GET() {
     // Fall back to dummy data for new/empty projects
     return NextResponse.json(getDummyData());
   } catch (error) {
-    console.error('Error fetching BMAD data:', error);
+    console.error('Error fetching BMAD discovery data:', error);
     // Return dummy data if anything goes wrong
     return NextResponse.json(getDummyData());
   }

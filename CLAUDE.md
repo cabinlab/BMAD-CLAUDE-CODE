@@ -37,6 +37,19 @@ ALWAYS check for APIs when:
 4. Test with minimal example (curl, etc.)
 5. Only then add debug code
 
+## Estimation Guidelines
+
+### Token-Based Estimates (When Providing Estimates)
+When estimating effort for phases, tasks, or implementation work, use **token requirements** instead of time estimates:
+
+- **Small task**: ~1K-5K tokens (simple template updates, single file changes)
+- **Medium task**: ~5K-15K tokens (multi-file coordination, logic implementation)
+- **Large task**: ~15K+ tokens (complex system integration, multiple components)
+
+**Example**: "Phase 1 template marking: ~3K tokens" instead of "Phase 1: 1-2 days"
+
+**Rationale**: Token usage is more predictable and measurable than time, which varies greatly by context, interruptions, and complexity discovery.
+
 ## Setup Instructions for Using BMAD with Claude Code
 
 To use the BMAD Method in your project with Claude Code:

@@ -18,8 +18,11 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
       {...props}
     >
       <div
-        className="h-full bg-completeness transition-all duration-300 ease-in-out"
-        style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
+        className="h-full transition-all duration-300 ease-in-out"
+        style={{ 
+          width: `${Math.max(0, Math.min(100, value))}%`,
+          backgroundColor: '#4FC3C1'  // Cyan complementary to Claude orange
+        }}
       />
     </div>
   )
