@@ -182,8 +182,10 @@ download_directory() {
         # Count total files and group by directory
         local total_files=0
         local current_files=0
-        declare -A dir_files
-        declare -A dir_file_lists
+        # Use regular arrays for compatibility with older bash versions
+        local dir_names=()
+        local dir_file_counts=()
+        local dir_file_lists_array=()
         
         # First pass: group all files by directory
         while IFS= read -r file_path; do
@@ -195,34 +197,54 @@ download_directory() {
                 # Normalize directory path (remove ./ prefix if present)
                 file_dir="${file_dir#./}"
                 
-                # Append file to directory's file list
-                if [[ -z "${dir_file_lists["$file_dir"]}" ]]; then
-                    dir_file_lists["$file_dir"]="$file_path"
-                else
-                    dir_file_lists["$file_dir"]="${dir_file_lists["$file_dir"]}"$'\n'"$file_path"
-                fi
+                # Find or add directory to arrays
+                local dir_index=-1
+                for i in "${!dir_names[@]}"; do
+                    if [[ "${dir_names[i]}" == "$file_dir" ]]; then
+                        dir_index=$i
+                        break
+                    fi
+                done
                 
-                # Count files per directory
-                dir_files["$file_dir"]=$((${dir_files["$file_dir"]:-0} + 1))
+                # If directory not found, add it
+                if [[ $dir_index -eq -1 ]]; then
+                    dir_names+=("$file_dir")
+                    dir_file_counts+=(1)
+                    dir_file_lists_array+=("$file_path")
+                else
+                    # Increment count and append file
+                    dir_file_counts[$dir_index]=$((${dir_file_counts[$dir_index]} + 1))
+                    dir_file_lists_array[$dir_index]="${dir_file_lists_array[$dir_index]}"$'\n'"$file_path"
+                fi
             fi
         done < "$temp_file"
         
         # Now download files grouped by directory
         local color_index=0
         local colors=($DARK_ORANGE $CYAN)
-        declare -A failed_files
+        local failed_files_list=()
         
         # Get sorted list of directories
-        local sorted_dirs=$(printf '%s\n' "${!dir_files[@]}" | sort)
+        local sorted_dirs=$(printf '%s\n' "${dir_names[@]}" | sort)
         
         # Process each directory with all its files
         while IFS= read -r dir; do
-            if [[ -n "$dir" && -n "${dir_file_lists["$dir"]}" ]]; then
-                echo -e "    ${CYAN}📦${NC} Creating: ${GRAY}${dir}/${NC}"
+            if [[ -n "$dir" ]]; then
+                # Find the directory index
+                local dir_index=-1
+                for i in "${!dir_names[@]}"; do
+                    if [[ "${dir_names[i]}" == "$dir" ]]; then
+                        dir_index=$i
+                        break
+                    fi
+                done
                 
-                local dir_current=0
-                local dir_failed=0
-                local dir_file_count=${dir_files["$dir"]}
+                if [[ $dir_index -ne -1 && -n "${dir_file_lists_array[$dir_index]}" ]]; then
+                    echo -e "    ${CYAN}📦${NC} Creating: ${GRAY}${dir}/${NC}"
+                    
+                    local dir_current=0
+                    local dir_failed=0
+                    local dir_file_count=${dir_file_counts[$dir_index]}
                 
                 # Process all files in this directory
                 while IFS= read -r file_path; do
@@ -235,7 +257,7 @@ download_directory() {
                         else
                             # Track failed downloads
                             dir_failed=$((dir_failed + 1))
-                            failed_files["$file_path"]=1
+                            failed_files_list+=("$file_path")
                             # Debug: log which file failed  
                             echo -e "\n      ${RED}⚠ Failed: $file_path${NC}" >&2
                         fi
@@ -244,7 +266,7 @@ download_directory() {
                         local bar_color=${colors[$color_index]}
                         show_progress_bar "$dir_current" "$dir_file_count" "      " "$bar_color"
                     fi
-                done <<< "${dir_file_lists["$dir"]}"
+                done <<< "${dir_file_lists_array[$dir_index]}"
                 
                 # Ensure final newline and show failed count if any
                 echo ""
@@ -252,13 +274,14 @@ download_directory() {
                     echo -e "      ${RED}⚠ Failed to download $dir_failed file(s)${NC}"
                 fi
                 
-                # Move to next color in rotation
-                color_index=$(( (color_index + 1) % ${#colors[@]} ))
+                    # Move to next color in rotation
+                    color_index=$(( (color_index + 1) % ${#colors[@]} ))
+                fi
             fi
         done <<< "$sorted_dirs"
         
         # Show total summary if there were any failures
-        local total_failed=${#failed_files[@]}
+        local total_failed=${#failed_files_list[@]}
         if [[ $total_failed -gt 0 ]]; then
             echo ""
             echo -e "    ${RED}⚠ Total files failed: $total_failed${NC}"
